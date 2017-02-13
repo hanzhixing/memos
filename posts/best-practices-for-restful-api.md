@@ -44,8 +44,10 @@
 - [国家化](#h8)
 - [资源授权、身份验证、权限验证](#h9)
   - [OAuth 2.0](#h9.1)
-- [HATEOAS](#h10)
-- [穿过特殊的网络环境](#h11)
+- [频率限制](#h10)
+- [缓存](h11)
+- [HATEOAS](#h12)
+- [穿过特殊的网络环境](#h13)
 
 
 ## <a name="h1">设计原则</a><sup>[&#x2191;top](#top)</sup>
@@ -596,7 +598,20 @@ API对任何应用，在分层角度上都是偏“底层”的“数据源”�
 
 ### <a name="h9.1">OAuth 2.0</a><sup>[&#x2191;top](#top)</sup>
 
-## <a name="h10">HATEOAS</a><sup>[&#x2191;top](#top)</sup>
+## <a name="h10">频率限制</a><sup>[&#x2191;top](#top)</sup>
+TODO
+
+- X-Rate-Limit-Limit
+- X-Rate-Limit-Remaining
+- X-Rate-Limit-Reset 
+
+
+## <a name="h11">缓存</a><sup>[&#x2191;top](#top)</sup>
+
+TODO
+
+
+## <a name="h12">HATEOAS</a><sup>[&#x2191;top](#top)</sup>
 >**H**ypermedia **a**s **t**he **E**ngine **o**f **A**pplication **S**tate
 
 为客户端提供利用API进一步查找数据的附加信息。
@@ -616,7 +631,7 @@ API对任何应用，在分层角度上都是偏“底层”的“数据源”�
 }
 ```
 
-## <a name="h11">穿过特殊的网络环境</a><sup>[&#x2191;top](#top)</sup>
+## <a name="h13">穿过特殊的网络环境</a><sup>[&#x2191;top](#top)</sup>
 >网络环境中有的代理服务可能只支持GET和POST方法
 
 服务端最好利用自定义的HTTP Header来识别PUT、DELETE等请求。
