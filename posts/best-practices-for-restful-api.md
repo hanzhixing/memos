@@ -1,4 +1,4 @@
-# <a name="top">合理地设计更好的RESTful API</a>
+# <a name="top">合理地设计更好的RESTful API（持续更新...）</a>
 
 >如果你看到更好的文章，有更好的点子，或者知道改进方法，请帮助我完善它。
 
@@ -204,7 +204,7 @@ HTTP头这样的信息是，要么通过浏览器插件，要么通过程序中�
 // Good!
 {
     "id": 134,
-    "title": "
+    "title": "Any useful infomations for title",
     ...
 }
 ```
@@ -308,8 +308,8 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
   // 实体key。
   // 仅返回操作成功的实体对象。如果所有实体对象都没有被成功操作，则不返回这个对象。
   // 如果是单个实体操作就返回对象，如果是批量操作则返回数组。
-  // 单个对象时，entity或object。
-  // 多个对象时，entities或objects。
+  // 单个对象时，entity或object或item。
+  // 多个对象时，entities或objects或items。
   // 根据团队实际情况协商约定，然后在所有API中始终如一地使用相同的key。
   "entities": [
     {
