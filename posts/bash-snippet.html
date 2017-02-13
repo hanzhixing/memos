@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>bash-snippet.html</title>
+
+</head>
+
+<body>
+
+<hr />
+
+<p>layout: post
+title:  "有用的Bash小技巧"
+date:   2015-12-25 10:24:54
+categories: Shell
+tags:</p>
+
+<h2>    - linux commands</h2>
+
+<h2>检查一个进程是否在存在</h2>
+
+<p><code>bash
+$ kill -p $PID &amp;&gt;/dev/null
+</code></p>
+
+<p><code>bash
+$ ps -p $PID | grep -q $PID
+</code>
+<code>bash
+$ test -x /proc/$PID
+</code></p>
+
+<h2>获取当前路径</h2>
+
+<p>```bash</p>
+
+<h1>!/bin/bash</h1>
+
+<p>DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null &amp;&amp; pwd)"
+```</p>
+
+</body>
+</html>
