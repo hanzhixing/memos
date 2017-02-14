@@ -1,11 +1,6 @@
----
-layout: post
-title:  "有用的Bash小技巧"
-date:   2015-12-25 10:24:54
-categories: Shell
-tags:
-    - linux commands
----
+[返回首页](../README.md)
+
+# 有用的Bash代码片段
 
 ## 检查一个进程是否在存在
 ```bash

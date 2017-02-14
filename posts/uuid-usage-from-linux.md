@@ -1,12 +1,6 @@
----
-layout: post
-title:  "UUID和Linux"
-date:   2015-12-12 12:45:00
-categories: Linux
-tags:
-    - uuid
-    - linux commands
----
+[返回首页](../README.md)
+
+# Linux下UUID的使用
 
 ## UUID的背景
 可以看一下[wikipedia上的Universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)。

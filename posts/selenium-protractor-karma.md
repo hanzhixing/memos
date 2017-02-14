@@ -1,16 +1,9 @@
----
-layout: post
-title:  "WEB前端自动化测试"
-excerpt: "SeleniumGrid, Karma和Protractor配置"
-date:   2015-11-24 16:00:00
-categories: Front-end
-tags:
-    - selenium
-    - karma
----
+[返回首页](../README.md)
+
+# Selenium, Protractor, Karma
 
 ## 工作原理
-![](/images/SeleniumGridDiagram.png)
+![](../images/SeleniumGridDiagram.png)
 
 ## 远程服务器
 1. 因为要使用jar文件，所以得有java环境。
@@ -34,7 +27,7 @@ $ /usr/bin/java \
 },
 ...
 ```
----
+
 ```javascript
 // file: protractor-conf.js
 ...

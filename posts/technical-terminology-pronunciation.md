@@ -1,25 +1,17 @@
----
-layout: post
-title:  "技术术语发音、读音"
-date:   2015-12-29 10:31:56
-categories: Terminology
-tags:
-    - terminology
----
+[返回首页](../README.md)
 
-## 参考
-它们的官网
-[Webster在线词典](http://www.merriam-webster.com/)
+# 技术术语发音、读音
 
+参考了它们的各个官网和[Webster在线词典](http://www.merriam-webster.com/)。
 
-### 1. Nginx
+## 1. Nginx
 ```
 engine x ['ɛndʒɪn][eks]
 ```
 http://nginx.org/en/
 >nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server, originally written by Igor Sysoev.
 
-### 2. MySQL
+## 2. MySQL
 ```
   My Ess Que Ell [ɛs][kjuː][ɛl]
 ```
@@ -30,7 +22,7 @@ My sequel [maɪ]['sikwəl]
 https://dev.mysql.com/doc/refman/5.7/en/what-is-mysql.html
 >The official way to pronounce “MySQL” is “My Ess Que Ell” (not “my sequel”), but we do not mind if you pronounce it as “my sequel” or in some other localized way.
 
-### 3. Linux
+## 3. Linux
 ```
 [ˈlɪnəks]
 ```
@@ -43,13 +35,13 @@ https://www.youtube.com/watch?v=5IfHm6R5le0
 [ˈlɪnɪks]
 ```
 
-### 4. Git
+## 4. Git
 ```
 [ɡɪt]
 ```
 Git是Linux的作者Linus Torvalds所编写。对它没有找到官方的文字记载的音标信息。
 
-### 5. Ubuntu
+## 5. Ubuntu
 ```
 [ʊ'bʊntʊ]
 ```
@@ -60,7 +52,7 @@ https://www.youtube.com/watch?v=5T0qACvWcYo
 南非黑人反种族隔离活动家-纳尔逊.曼德拉(Nelson Mandel)生前在视频上提到ubuntu:
 https://www.youtube.com/watch?v=UT-3Eh65kkA
 
-### 6. Apache
+## 6. Apache
 ```
 [ə'pæʃ]
 ```
