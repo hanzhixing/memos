@@ -677,7 +677,7 @@ PUT方法只会以幂等方式修改已有的数据。
 | <= | 小于等于 |
 
 ```javascript
-/posts?user_id>=16g&tags!=12,22
+/posts?user_id>=16&tags!=12,22
 ```
 
 #### <a name="h6.2.2">利用POST的Body</a><sup>[&#x2191;top](#top)</sup>
