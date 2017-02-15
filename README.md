@@ -12,6 +12,7 @@
 - [Selenium, Protractor, Karma](./posts/selenium-protractor-karma.md)
 - [技术术语发音、读音](./posts/technical-terminology-pronunciation.md)
 - [Linux下UUID的使用](./posts/uuid-usage-from-linux.md)
+- [多版本Node.js共存](./posts/nvm.md)
 
 ## 各种列表
 - [编程中的经典问题列表](./posts/programming-classic-problems.md)
