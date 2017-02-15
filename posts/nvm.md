@@ -164,12 +164,12 @@ $ nvm install 6 --reinstall-packages-from=5命令
    $ npm list --global --parseable --depth=0 | grep -v 'npm' | sed -n '1!p' | xargs basename | paste -s -d' ' -
    fis3 hexo-cli highlight.js mockjs tern vmd # 复制这个模块名列表
    ```
-4. 切换到新版本，并安装模块。
+4. 切换到新版本，argon或者boron，并安装模块。
    ```bash
    $ nvm use --lts=argon
    $ npm install -g 这里粘贴上一步复制的模块名列表
    ```
-   或者，使用下面这个命令一次性搞定，把其中的版本号替换成你自己系统中对应的旧版本号。
+   或者，使用下面这个命令一次性搞定，把其中的代号argon和版本号v4.7.2替换成你自己系统中对应的。
    ```bash
    $ nvm use --lts=argon >/dev/null 2>&1 && npm install -g `nvm use v4.7.2 >/dev/null 2>&1 && npm list --global --parseable --depth=0 | grep -v 'npm' | sed -n '1!p' | xargs basename | paste -s -d' ' -`
    ```
@@ -178,3 +178,8 @@ $ nvm install 6 --reinstall-packages-from=5命令
    ```bash
    $ nvm version > ~/.nvmrc
    ```
+
+## 删除老版本
+```bash
+$ nvm uninstall v4.7.2
+```
