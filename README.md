@@ -14,6 +14,7 @@
 - [Linux下UUID的使用](./posts/uuid-usage-from-linux.md)
 - [多版本Node.js共存](./posts/nvm.md)
 - [多版本Java共存](./posts/jenv.md)
+- [Tomcat的虚拟主机](./posts/tomcat-vhost.md)
 
 ## 各种列表
 - [编程中的经典问题列表](./posts/programming-classic-problems.md)
