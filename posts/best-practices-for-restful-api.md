@@ -3,6 +3,10 @@
 # <a name="top">合理地设计更好的RESTful API（持续更新...）</a>
 >如果你看到更好的文章，有更好的点子，或者知道改进方法，请帮助我完善它。
 
+最近看json-server的时候看到与实体对象的schema无关的字段使用下划线开头的命名法，看上去比较合理。
+
+可以考虑根据这种思路修改。（待定）
+
 ## 目录
 - [原则](#h1)
 - [URL](#h2)
@@ -886,6 +890,12 @@ TODO
 - [List of HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
 - [List of HTTP header fields](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)
 - [HTTP Request methods](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods)
+- [Best Practices for Designing a Pragmatic RESTful API](http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api)
+- [10 Best Practices for Better RESTful API](http://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/)
+- [json-server](https://github.com/typicode/json-server)
+- [API Design Cheat Sheet](https://github.com/RestCheatSheet/api-cheat-sheet#api-design-cheat-sheet)
+- [Platform-Building Cheat Sheet](https://github.com/RestCheatSheet/platform-cheat-sheet#platform-building-cheat-sheet)
+- [RESTful API Best Practices and Common Pitfalls](https://medium.com/@schneidenbach/restful-api-best-practices-and-common-pitfalls-7a83ba3763b5#.a4zxx9nlr)
 
 
 
