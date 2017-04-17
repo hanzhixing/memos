@@ -896,6 +896,8 @@ TODO
 - [API Design Cheat Sheet](https://github.com/RestCheatSheet/api-cheat-sheet#api-design-cheat-sheet)
 - [Platform-Building Cheat Sheet](https://github.com/RestCheatSheet/platform-cheat-sheet#platform-building-cheat-sheet)
 - [RESTful API Best Practices and Common Pitfalls](https://medium.com/@schneidenbach/restful-api-best-practices-and-common-pitfalls-7a83ba3763b5#.a4zxx9nlr)
+- [Proper REST response for empty table?](http://stackoverflow.com/questions/13366730/proper-rest-response-for-empty-table)
+- [What is the proper REST response code for a valid request but an empty data?](http://stackoverflow.com/questions/11746894/what-is-the-proper-rest-response-code-for-a-valid-request-but-an-empty-data)
 
 
 
