@@ -50,8 +50,8 @@ export JAVA_OPTS="-Xmx2048m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -Df
         unpackWARs="true"
         autoDeploy="true">
 
-        <!-- path="" 和 docBase=""不能少 -->
-        <Context path="" docBase="" crossContext="false" reloadable="true" />
+        <!-- 至少在Tomcat7，path="" 和 docBase=""不能少 -->
+        <Context path="" docBase="/path/to/the/build/directory/of/your/java/project" crossContext="false" reloadable="true" />
 
         <!-- ... -->
 
