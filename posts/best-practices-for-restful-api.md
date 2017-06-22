@@ -34,7 +34,7 @@
     - [多实体](#h5.3.2) 
   - [查](#h5.4)
     - [单实体](#h5.4.1) 
-    - [多实体](#h5.4.2) 
+    - [多实体-复杂操作](#h5.4.2) 
       - [关系](#h6.1)
       - [过滤](#h6.2)
         - [利用URL（推荐）](#h6.2.1)
@@ -147,7 +147,7 @@ API和数据库层虽然都是对应用中的各种实体对象，以及它们�
 
 不要对资源实体对象进行修饰描述。
 
-如果没有这项限制，你很难阻止你的团队的成员在将来定义出postItems、postEntitis、commentObjects等千奇百怪的命名，最后导致你的团队成员们对实体对象的命名没办法有稳定的预期，
+如果没有这项限制，你很难阻止你的团队的成员在将来定义出postItems、postEntitis、commentObjects等千奇百怪的命名，最后导致你的团队成员们对实体对象的命名没办法有稳定的预期。
 
 ```javascript
 // Evil!
@@ -165,9 +165,9 @@ API和数据库层虽然都是对应用中的各种实体对象，以及它们�
 
 实际上在请求阶段会把表单项键值对拼接成key1=value1&key2[]=value21&key2[]=value22这种字符串放在Body中发送。
 
-它并不是什么HTTP的“默认”数据格式，而是早些年实现的浏览器自以为是的默认行为实现。这个默认行为也要看具体是什么样的表单项，如果是大文件上传，这个格式可能会变成multipart/form-data，并不是application/x-www-form-urlencoded。因此，事实上没有什么所谓HTTP的默认格式。
+它并不是什么HTTP的“默认”数据格式，而是早些年实现的浏览器的默认行为实现。这个默认行为也要看具体是什么样的表单项，如果是大文件上传，这个格式可能会变成multipart/form-data，并不是application/x-www-form-urlencoded。因此，事实上没有什么所谓HTTP的默认格式。
 
-最新的Javascript框架或库，以angular为例，已经不再把老式浏览器的默认MIME type作为自己默认的数据格式，而是转而使用application/json。
+最新的Javascript框架或库，以angular为例，也已经不再把老式浏览器的默认MIME type作为自己默认的数据格式，而是转而使用application/json，或者让开发者自己定义。
 
 application/x-www-form-urlencoded由于受限于它自身的定义，尤其描述复杂的数据关系的时候是无能为力。
 
@@ -189,7 +189,7 @@ HTTP协议中定义Accept和Content-Type头，正是为了达到客户端和服�
 
 下面是可以构造HTTP请求的浏览器插件。
 
-- Chrome: [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/bljmokabgbdkoefbmccaeficehkmlnao)
+- Chrome: [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?utm_source=chrome-ntp-icon), [Advanced REST client](https://chrome.google.com/webstore/detail/advanced-rest-client/bljmokabgbdkoefbmccaeficehkmlnao)
 - Firefox: [RESTClient, a debugger for RESTful web services](https://addons.mozilla.org/en-US/firefox/addon/restclient/)
 
 ### <a name="h3.3">.json/.xml/.html</a><sup>[&#x2191;top](#top)</sup>
@@ -240,19 +240,21 @@ HTTP头这样的信息是，要么通过浏览器插件，要么通过程序中�
 有时，这种“信封信息”(Envelope)并不完全是“废话”。
 
 例如:
-- 使用total_count来为翻页功能提供必要的信息。
+- 使用total来为翻页功能提供必要的信息。
 - 为jsonp形式的请求返回不同的callback表达式。
 ```javascript
 {
-    "total_count": 123432, // 总帖子数
-    "posts": [
-        {
-            "id": 134,
-            "title": "我是标题内容",
+    "total": 123432, // 总帖子数
+    "entities": { // 这里entities的意义是避免实体对象的数据与total等meta信息散列在同一级
+        "posts": [
+            {
+                "id": 134,
+                "title": "我是标题内容",
+                ...
+            },
             ...
-        },
-        ...
-    ],
+        ],
+    }
     "callback": "renderPostListPage(posts, total_count, 344)",
     ...
 }
@@ -282,7 +284,7 @@ HTTP头这样的信息是，要么通过浏览器插件，要么通过程序中�
 
 ### <a name="h3.6">格式化和性能</a><sup>[&#x2191;top](#top)</sup>
 
-> ?pretty=true
+> ?_pretty=true
 
 这里的格式化是指使用空白符缩进进行格式化的对人友好的数据展现。因此同样考虑对人友好，HTTP头等其他手段都会增加成本，只有URL的GET参数是最小成本的，同时实现它的代价也是微乎其微。
 
@@ -350,13 +352,30 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 经在不同场景试用，如下这种方案比较实用。
 
 ```javascript
+// 单实体
+{
+  "error": {
+    "code": 1024, 
+    "msg": "Invalid characters in username",
+    // 以上是异常情况的总体描述，除此之外，你往往还需要资源每个属性项的异常信息。
+    "detail": [ // 可选
+      {
+        "field" : "username",
+        "code" : 5432,
+        "msg" : "用户名包含非法字段。" // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
+      }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
+      ...
+    ],
+  }
+}
+```
+
+```javascript
+// 多实体
 {
   // 实体key。
   // 仅返回操作成功的实体对象。如果所有实体对象都没有被成功操作，则不返回这个对象。
-  // 如果是单个实体操作就返回对象，如果是批量操作则返回数组。
-  // 单个对象时，entity或object或item。
-  // 多个对象时，entities或objects或items。
-  // 根据团队实际情况协商约定，然后在所有API中始终如一地使用相同的key。
+  // entities或objects或items，根据团队实际情况协商约定，然后在所有API中始终如一地使用相同的key。
   "entities": [
     {
       "id": 3432,
@@ -366,41 +385,46 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
   ],
   // 异常详情key。
   // 仅在发生异常时返回，如果没有发生异常，则不返回这个对象。
-  // 单个对象时，error。
-  // 多个对象时，errors。
-  "errors": {
-    // code字段根据实际情况可以不使用。
-    // 服务端想返回的消息内容和客户端希望使用的消息内容不一样的场景较多的时候，尽量使用。
-    // 比如，如果msg内容足以帮助客户端为用户提供友好的反馈或者基于它直接进行国际化等处理，那么你可以不使用它。
-    "code": 1024, 
-    // 消息内容在任何时候都不应该省略，一是服务端从记录日志角度可能需要它，客户端也有可能直接使用它的内容。
-    "msg": "Invalid characters in username",
-    // 以上是异常情况的总体描述，除此之外，你往往还需要每个表单项的异常信息。
-    "detail": [
-      {
-        "field" : "username",
-        "code" : 5432,
-        "msg" : "用户名包含非法字段。" // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
-      }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
-      ...
-    ],
-  }
-  // entities和errors对象作为可选项，而不是必选项的原因是:
-  // 大多数场景下判断返回数据中是否存在errors对象比其他形式更佳简单。
-  // 而处理errors或者entities内部详情，总会是在先判断是否存在异常之后才会进一步细化处理。
-  /**
-   * if (typeof response.errors === 'undefined') {
-   *   // ... // everythings are going well
-   * } else {
-   *   if (response.errors.code === 5432) {
-   *     // ... do some thing
-   *   }
-   *   if (typeof response.errors.detail !== 'undefined') {
-   *     response.errors.detail
-   *   }
-   * }
-   */
+  "errors": [
+    {
+      "index": 1, // 提交时的数组下标
+      // code字段根据实际情况可以不使用。
+      // 服务端想返回的消息内容和客户端希望使用的消息内容不一样的场景较多的时候，尽量使用。
+      // 比如，如果msg内容足以帮助客户端为用户提供友好的反馈或者基于它直接进行国际化等处理，那么你可以不使用它。
+      "code": 1024, 
+      // 消息内容在任何时候都不应该省略，一是服务端从记录日志角度可能需要它，客户端也有可能直接使用它的内容。
+      "msg": "Invalid characters in username",
+      // 以上是异常情况的总体描述，除此之外，你往往还需要每个表单项的异常信息。
+      "detail": [
+        {
+          "field" : "username",
+          "code" : 5432,
+          "msg" : "用户名包含非法字段。" // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
+        }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
+        ...
+      ],
+    },
+    ...
+  ]
 }
+```
+
+```javascript
+// entities和errors对象作为可选项，而不是必选项的原因是:
+// 大多数场景下判断返回数据中是否存在errors对象比其他形式更佳简单。
+// 而处理errors或者entities内部详情，总会是在先判断是否存在异常之后才会进一步细化处理。
+
+if (typeof response.errors === 'undefined') {
+  // ... // everythings are going well
+} else {
+  if (response.errors.code === 5432) {
+    // ... do some thing
+  }
+  if (typeof response.errors.detail !== 'undefined') {
+    response.errors.detail
+  }
+}
+
 ```
 
 
@@ -531,7 +555,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 
 ```javascript
 // 请求
-// Request URL: https://api.domain.com/rest/v1/blogs?ids=123,456,789
+// Request URL: https://api.domain.com/rest/v1/blogs?id=123,456,789
 // Request Method: DELETE
 // Accept: application/json
 // Accept-Language: zh-CN
@@ -680,13 +704,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 ]
 ```
 
-#### <a name="h5.4.1">单实体</a><sup>[&#x2191;top](#top)</sup>
-
-### <a name="h5.5">搜</a><sup>[&#x2191;top](#top)</sup>
-见[复杂操作](#h6)
-
-
-## <a name="h6">复杂操作</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.4.2">多实体-复杂操作</a><sup>[&#x2191;top](#top)</sup>
 >它们是RESTful API的设计难点
 
 ### <a name="h6.1">关系</a><sup>[&#x2191;top](#top)</sup>
@@ -712,7 +730,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
   下面是这种方案的实现方法。在数据获取方式的描述上，要增加约定好的GET参数。
   个人更佳倾向外链方式。
 
->内嵌方式：/posts/123?embeded=user.id,user.username,user.email,tags.id,tags.name
+>内嵌方式：/posts/123?_embed=user.id,user.username,user.email,tags.id,tags.name
 
 ```javascript
 // 内嵌方式
@@ -744,7 +762,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 }
 ```
 
->外链方式：/posts/123?linked=user.id.user.username,user.email,tags.id,tags.name 
+>外链方式：/posts/123?_extend=user.id.user.username,user.email,tags.id,tags.name 
 
 ```javascript
 // 外链方式
@@ -753,7 +771,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
     "id": 123
     "user_id": 32423,
     "title": "用心设计",
-    "tag_ids": [
+    "tag_id": [
       12, 23
     ],
     "content": "
@@ -816,7 +834,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 | , | 用来分割多个排序字段 |
 
 ```javascript
-/posts?sort=tags,-insert_datetime
+/posts?_sort=tags,-insert_datetime
 ```
 
 ### <a name="h6.4">字段挑选</a><sup>[&#x2191;top](#top)</sup>
@@ -830,7 +848,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 | , | 用来分割多个字段 |
 
 ```javascript
-/posts?fields=id,title,tags&linked=tags.id,tags.name
+/posts?_field=id,title,tags&_extend=tags.id,tags.name
 ```
 
 ### <a name="h6.5">翻页</a><sup>[&#x2191;top](#top)</sup>
@@ -841,26 +859,13 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 
 优点是直观，好理解，缺点是可能的命名冲突。
 
->对服务端友好
-
 | 符号 | 含义 |
 | --- | --- |
-| offset | 数据偏移量。等于MySQL的LIMIT语句的第一个参数。 |
-| count | 查询记录数。等于MySQL的LIMIT语句的第二个参数。 |
+| _offset | 数据偏移量。等于MySQL的LIMIT语句的第一个参数。 |
+| _limit | 查询记录数。等于MySQL的LIMIT语句的第二个参数。 |
 
 ```javascript
-/posts?offset=2400&count=20
-```
-
->对客户端友好
-
-| 符号 | 含义 |
-| --- | --- |
-| page | 当前页码。 |
-| page_size | 每页记录数。 |
-
-```javascript
-/posts?page=24&page_size=20
+/posts?_offset=2400&_limit=20
 ```
 
 ##### <a name="h6.5.1.2">利用自定义Header</a><sup>[&#x2191;top](#top)</sup>
@@ -879,7 +884,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 | Header | 含义 | 实例 |
 | --- | --- | --- |
 | X-Total-Count | 总记录数。 | X-Total-Count: 3243 |
-| Link | 见HATEOAS。 | Link: </posts?offset=15&limit=5>; rel="next",<br /></posts?offset=50&limit=3>; rel="last",<br /></posts?offset=0&limit=5>; rel="first",<br /></posts?offset=5&limit=5>; rel="prev"                 |
+| Link | 见HATEOAS。 | Link: </posts?_offset=15&_limit=5>; rel="next",<br /></posts?_offset=50&_limit=3>; rel="last",<br /></posts?_offset=0&_limit=5>; rel="first",<br /></posts?_offset=5&_limit=5>; rel="prev"         |
 
 ##### <a name="h6.5.2.2">利用HTTP Body</a><sup>[&#x2191;top](#top)</sup>
 
@@ -888,7 +893,7 @@ API为客户端反馈异常情况的时候，往往状态码和简单的一句�
 | 符号 | 含义 |
 | --- | --- |
 | total | 总记录数 |
-| entities或items | 实体数据对象列表 |
+| entities | 实体数据对象列表 |
 
 ```javascript
 {
@@ -912,8 +917,7 @@ API设计过程当中，也会碰到一些无法用以上的操作无法描述�
 - 激活操作。可以用PATCH提交{activated: false}。
   但往往可以通过把activated属性抽象成目标资源的属性的方式来解决。
 - 收藏、取消收藏。
-  可以在URL中把这种信息描述成子对象。
-  Github是用PUT /gists/123/star表示收藏，用DELETE /gists/123/star表示取消收藏。
+  收藏可以是一种资源，或者是某个资源的一个属性。
 - 跨对象的搜索。
   关键字来进行搜索，但可能会匹配文章，可能会匹配评论，也有可能会匹配新闻公告等。
   这种情况下是没有办法事先明确资源。因此系统提供/search这种专用的URL是比较可取的。
@@ -940,6 +944,7 @@ API对任何应用，在分层角度上都是偏“底层”的“数据源”�
 /restful/v2/...
 /api/v3/...
 /resources/v4/...
+/rest/v1/...?v=1.1
 ```
 
 ## <a name="h8">国际化</a><sup>[&#x2191;top](#top)</sup>
@@ -1012,6 +1017,7 @@ TODO
 - [RESTful API Best Practices and Common Pitfalls](https://medium.com/@schneidenbach/restful-api-best-practices-and-common-pitfalls-7a83ba3763b5#.a4zxx9nlr)
 - [Proper REST response for empty table?](http://stackoverflow.com/questions/13366730/proper-rest-response-for-empty-table)
 - [What is the proper REST response code for a valid request but an empty data?](http://stackoverflow.com/questions/11746894/what-is-the-proper-rest-response-code-for-a-valid-request-but-an-empty-data)
+- [Amazon S3 REST API Introduction](http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html)
 
 
 
