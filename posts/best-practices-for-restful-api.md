@@ -18,37 +18,25 @@
   - [不使用修饰词](#h3.4)
   - [命名风格](#h3.5)
   - [格式化和性能](#h3.6)
-  - [关系描述](#h3.7)
-- [状态反馈](#h4)
-  - [状态码](#h4.1)
-  - [异常详情](#h4.2)
+- [状态码](#h4)
 - [数据操作](#h5)
-  - [增](#h5.1) 
-    - [单实体](#h5.1.1) 
-    - [多实体](#h5.1.2) 
-  - [删](#h5.2)
-    - [单实体](#h5.2.1) 
-    - [多实体](#h5.2.2) 
-  - [改](#h5.3)
-    - [单实体](#h5.3.1) 
-    - [多实体](#h5.3.2) 
-  - [查](#h5.4)
-    - [单实体](#h5.4.1) 
-    - [多实体-复杂操作](#h5.4.2) 
-      - [关系](#h6.1)
-      - [过滤](#h6.2)
-        - [利用URL（推荐）](#h6.2.1)
-        - [利用POST的Body](#h6.2.2)
-      - [排序](#h6.3)
-      - [字段挑选](#h6.4)
-      - [翻页](#h6.5)
-        - [Request](#h6.5.1)
-          - [利用URL（推荐）](#h6.5.1.1)
-          - [利用自定义Header](#h6.5.1.2)
-        - [Response](#h6.5.2)
-          - [利用HTTP Header](#h6.5.2.1)
-          - [利用HTTP Body（推荐）](#h6.5.2.2)
-      - [其他](#h6.6)
+  - [单实体操作](#h5.1)
+    - [增](#h5.1.1) 
+    - [删](#h5.1.2)
+    - [改](#h5.1.3)
+    - [查](#h5.1.4)
+      - [关系](#h5.1.4)
+    - [异常](#h5.1.5)
+  - [多实体操作(批量操作)](#h5.2)
+    - [增](#h5.2.1) 
+    - [删](#h5.2.2)
+    - [改](#h5.2.3)
+    - [查](#h5.2.4)
+      - [过滤](#h5.2.4.1)
+      - [排序](#h5.2.4.2)
+      - [翻页](#h5.2.4.3)
+    - [异常](#h5.2.5)
+  - [其他](#h5.3)
 - [版本化](#h7)
 - [国家化](#h8)
 - [资源授权、身份验证、权限验证](#h9)
@@ -305,14 +293,8 @@ HTTP头这样的信息是，要么通过浏览器插件，要么通过程序中�
 - Firefox: [JSONView](https://addons.mozilla.org/en-us/firefox/addon/jsonview/)
 
 
-### <a name="h3.7">关系描述</a><sup>[&#x2191;top](#top)</sup>
+## <a name="h4">状态码</a><sup>[&#x2191;top](#top)</sup>
 
-见[复杂操作](#h6)中的[关系](#h6.1)。
-
-
-## <a name="h4">状态反馈</a><sup>[&#x2191;top](#top)</sup>
-
-### <a name="h4.1">状态码</a><sup>[&#x2191;top](#top)</sup>
 HTTP状态码很多，可以看[List of HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)了解一下。 
 
 使用HTTP的状态码来描述状态，服务端和客户端都有需要分别处理它们的代价。
@@ -340,93 +322,6 @@ HTTP状态码很多，可以看[List of HTTP status codes](https://en.wikipedia.
 | 429 | Too Many Requests | 限制频率的API应该使用它。 |
 | 500 | Internal Server Error | 任何一个API都应该避免让web服务返回5XX的状态码。不应让客户端能够感知到服务端配置错了或者写错了代码。 |
 
-### <a name="h4.2">异常详情</a><sup>[&#x2191;top](#top)</sup>
-
-API为客户端反馈异常情况的时候，往往状态码和简单的一句描述，是远远不够的。
-
-例如客户端提交注册表单，希望能够友好地提示用户哪些表单项填错了，是怎么错的。
-
-又例如API是接收多个实体对象，服务端操作的时候检测到部分实体对象的操作由于某种原因无法完成。
-这种情况下也要告知客户端到底发生什么事情了，只有这样客户端才能够对用户反馈有价值的提示或警告信息。
-
-经在不同场景试用，如下这种方案比较实用。
-
-```javascript
-// 单实体
-{
-  "error": {
-    "code": 1024, 
-    "msg": "Invalid characters in username",
-    // 以上是异常情况的总体描述，除此之外，你往往还需要资源每个属性项的异常信息。
-    "detail": [ // 可选
-      {
-        "field" : "username",
-        "code" : 5432,
-        "msg" : "用户名包含非法字段。" // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
-      }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
-      ...
-    ],
-  }
-}
-```
-
-```javascript
-// 多实体
-{
-  // 实体key。
-  // 仅返回操作成功的实体对象。如果所有实体对象都没有被成功操作，则不返回这个对象。
-  // entities或objects或items，根据团队实际情况协商约定，然后在所有API中始终如一地使用相同的key。
-  "entities": [
-    {
-      "id": 3432,
-      "title": "Any useful text",
-    },
-    ...
-  ],
-  // 异常详情key。
-  // 仅在发生异常时返回，如果没有发生异常，则不返回这个对象。
-  "errors": [
-    {
-      "index": 1, // 提交时的数组下标
-      // code字段根据实际情况可以不使用。
-      // 服务端想返回的消息内容和客户端希望使用的消息内容不一样的场景较多的时候，尽量使用。
-      // 比如，如果msg内容足以帮助客户端为用户提供友好的反馈或者基于它直接进行国际化等处理，那么你可以不使用它。
-      "code": 1024, 
-      // 消息内容在任何时候都不应该省略，一是服务端从记录日志角度可能需要它，客户端也有可能直接使用它的内容。
-      "msg": "Invalid characters in username",
-      // 以上是异常情况的总体描述，除此之外，你往往还需要每个表单项的异常信息。
-      "detail": [
-        {
-          "field" : "username",
-          "code" : 5432,
-          "msg" : "用户名包含非法字段。" // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
-        }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
-        ...
-      ],
-    },
-    ...
-  ]
-}
-```
-
-```javascript
-// entities和errors对象作为可选项，而不是必选项的原因是:
-// 大多数场景下判断返回数据中是否存在errors对象比其他形式更佳简单。
-// 而处理errors或者entities内部详情，总会是在先判断是否存在异常之后才会进一步细化处理。
-
-if (typeof response.errors === 'undefined') {
-  // ... // everythings are going well
-} else {
-  if (response.errors.code === 5432) {
-    // ... do some thing
-  }
-  if (typeof response.errors.detail !== 'undefined') {
-    response.errors.detail
-  }
-}
-
-```
-
 
 ## <a name="h5">数据操作</a><sup>[&#x2191;top](#top)</sup>
 
@@ -434,7 +329,9 @@ if (typeof response.errors === 'undefined') {
 
 >你还需要了解《[异常详情](#h4.2)》两节。
 
-### <a name="h5.1">增</a><sup>[&#x2191;top](#top)</sup>
+### <a name="h5.1">单实体操作</a><sup>[&#x2191;top](#top)</sup>
+
+#### <a name="h5.1.1">增</a><sup>[&#x2191;top](#top)</sup>
 
 相当于SQL中的INSERT。
 
@@ -443,8 +340,6 @@ if (typeof response.errors === 'undefined') {
 因此，建议返回新创建的实体对象。
 
 成功时状态码：**201**
-
-#### <a name="h5.1.1">单实体</a><sup>[&#x2191;top](#top)</sup>
 
 ```javascript
 // 请求
@@ -473,7 +368,247 @@ if (typeof response.errors === 'undefined') {
 }
 ```
 
-#### <a name="h5.1.2">多实体</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.1.2">删</a><sup>[&#x2191;top](#top)</sup>
+
+这个操作逻辑上也能知道只能成功一次。
+
+对后续多次请求应返回“对象不存在”的状态。
+
+成功时建议使用HTTP状态码：**204**
+
+建议不要返回实体数据。
+
+```javascript
+// 请求
+// Request URL: https://api.domain.com/rest/v1/blogs/123
+// Request Method: DELETE
+// Accept: application/json
+// Accept-Language: zh-CN
+```
+
+```javascript
+// 响应
+// Status Code: 204 No Content
+// Content-Type: application/json; charset=utf-8
+// Content-Encoding: gzip
+//
+// 想在删除后返回被删除对象，是需要至少执行两个SQL语句。
+// 一般删除操作向最终用户反馈删除成功与否即可。
+// 事实上用户确认自己要删除的目标对象那一步，往往是需要在提交删除操作之前要完成。
+```
+
+#### <a name="h5.1.3">改</a><sup>[&#x2191;top](#top)</sup>
+
+幂等方式修改已有的数据。
+
+相当于SQL中的UPDATE，HTTP Body相当于SET的参数，而URL相当于WHERE。
+
+成功时建议使用HTTP状态码：**200**
+
+建议返回被更改的实体对象数据。
+
+
+```javascript
+// 请求
+// Request URL: https://api.domain.com/rest/v1/blogs/123
+// Request Method: PUT
+// Accept: application/json
+// Accept-Language: zh-CN
+{
+  "user_id": 12,
+  "title": "用心设计",
+  "sub_title": "整理各种设计约定",
+}
+
+// 响应
+// Status Code: 200 Ok
+// Content-Type: application/json; charset=utf-8
+// Content-Encoding: gzip
+{
+  "id": 123
+  "user_id": 12,
+  "title": "用心设计",
+  "sub_title": "整理各种设计约定",
+  "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
+  "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
+}
+```
+
+#### <a name="h5.1.4">查</a><sup>[&#x2191;top](#top)</sup>
+
+相当于SQL中的SELECT。而URL则相当于WHERE。
+
+```javascript
+/posts/2341/comments/5543
+// 1. 所有帖子中找到编号为2341的帖子。
+// 2. 在这个帖子的所有评论中，找到编号为5543的评论。
+
+/posts/2341/comments?user_id=3244&rate=5
+// 1. 所有帖子中找到编号为2341的帖子。
+// 2. 在这个帖子的所有评论中，找到用户编号为3244，并且被赞5次的所有评论。
+```
+
+成功时建议使用HTTP状态码：**200**
+
+一定返回实体数据。
+
+
+```javascript
+// 请求
+// Request URL: https://api.domain.com/rest/v1/blogs/123/posts
+// Request Method: GET
+// Accept: application/json
+// Accept-Language: zh-CN
+
+// 响应
+// Status Code: 200 Ok
+// Content-Type: application/json; charset=utf-8
+// Content-Encoding: gzip
+{
+  "id": 35135,
+  "blog_id": 123,
+  "tags": [12, 17, 34, 25],
+  "title": "合理的设计RESTful API",
+  "content": "..."
+  "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
+  "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
+}
+```
+
+##### <a name="h5.1.4.1">关系</a><sup>[&#x2191;top](#top)</sup>
+如果，你已经阅读到这里，那么心里应该已经有很大的困惑：
+>我的API要表达多种实体数据，而且还要把它们的关系表达出来，这个怎么办？
+
+所以，我把这种关系的描述，放在了“复杂操作”中的第一个。同时，其他操作中，多少都会涉及到关系的描述。
+
+如[前面](#h2.4)提到，[URL中描述关系](#h2.4)的时候很难描述实体关系比较复杂的情况。
+
+而Body内容中，描述这种关系，也不是那么简单。有几种选择。
+
+- 所有API都只操作单个实体对象。
+  这意味着由非常多的简单API构成系统，同时会导致只有依赖很多次API请求才能完成很多业务逻辑。
+  而这对受限于有限的HTTP连接数的浏览器应用来讲，相应的异步操作的等待时间会增加。
+  没有良好的交互设计，可能会给用户带来非常糟糕的体验。
+- 所有API都返回固定的数据结构，实体之间的关系用嵌套对象来描述，这样实现起来比较简单。
+  但是，实体之间的关系比较复杂的系统中，这种方式会带来很多交互数据上的冗余。
+  而这种冗余意味着很多场景下，实际的HTTP数据包要比真正需要的数据包要大。
+  同时，在某些实体对象到底通过A接口，还是B接口的选择上，非常考验设计者在很高层次上的抽象能力。
+- 最后一个选项，从逻辑上，是最佳方案。但实现代价也最高。
+  就是让客户端来决定是否获取关联的实体对象，如果获取，用什么方式组织响应体的结构。
+  下面是这种方案的实现方法。在数据获取方式的描述上，要增加约定好的GET参数。
+  个人更佳倾向外链方式。
+
+>内嵌方式：/posts/123?_embed=user,tags
+
+```javascript
+// 内嵌方式
+{
+  "id": 123
+  "user": {
+    "id": 32423,
+    "username": "hanzhixing",
+    "email": "zhixing.han.0409@gmail.com",
+  }
+  "tags": [
+    {
+      "id": 23,
+      "name": "restful",
+    },
+    {
+      "id": 12,
+      "name": "convention",
+    }
+  ],
+  "title": "用心设计",
+  "content": "...",
+  "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
+  "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
+}
+```
+
+>外链方式：/posts/123?_extend=user,tags
+
+```javascript
+// 外链方式
+{
+  "post": {
+    "id": 123
+    "user_id": 32423,
+    "title": "用心设计",
+    "tags": [12, 23],
+    "content": "..."
+    "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
+    "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
+  },
+  "user": {
+    "id": 32423,
+    "username": "hanzhixing",
+    "email": "zhixing.han.0409@gmail.com",
+  },
+  "tags": [
+    {
+      "id": 12,
+      "name": "convention",
+    },
+    {
+      "id": 23,
+      "name": "restful",
+    },
+    // ...
+  ],
+}
+```
+
+##### <a name="h5.1.4.2">字段挑选</a><sup>[&#x2191;top](#top)</sup>
+
+>可以按需获取所需要的信息，减少通信数据的大小。需要约定。
+
+```javascript
+// 请求
+// Request Method: GET
+// Accept: application/json
+// _field: 字段列表，英文“,”分割。
+/posts?_field=id,title,tags.id,tags.name&_extend=tags
+```
+
+#### <a name="h5.1.5">异常</a><sup>[&#x2191;top](#top)</sup>
+
+API为客户端反馈异常情况的时候，往往状态码和简单的一句描述，是远远不够的。
+
+例如客户端提交注册表单，希望能够友好地提示用户哪些表单项填错了，是怎么错的。
+
+又例如API是接收多个实体对象，服务端操作的时候检测到部分实体对象的操作由于某种原因无法完成。
+这种情况下也要告知客户端到底发生什么事情了，只有这样客户端才能够对用户反馈有价值的提示或警告信息。
+
+经在不同场景试用，如下这种方案比较实用。
+
+```javascript
+// 单实体
+{
+  "error": {
+    // code字段根据实际情况可以不使用。
+    // 服务端想返回的消息内容和客户端希望使用的消息内容不一样的场景较多的时候，尽量使用。
+    // 比如，如果msg内容足以帮助客户端为用户提供友好的反馈或者基于它直接进行国际化等处理，那么你可以不使用它。
+    "code": 422, 
+    // 消息内容在任何时候都不应该省略，一是服务端从记录日志角度可能需要它，客户端也有可能直接使用它的内容。
+    "msg": "Invalid characters in username",
+    // 以上是异常情况的总体描述，除此之外，你往往还需要资源每个属性项的异常信息。
+    "detail": [ // 可选
+      {
+        "key" : "username",
+        "code" : 422001,
+        // 警告！如果考虑OAuth这种标准，msg里边应该只返回英文描述。
+        "msg" : "The 'username' can only contains alphabets, numbers and '_'."
+      }, // 同时对同一个字段，针对不同的异常情况，也会有不同的错误码和消息内容。
+      ...
+    ],
+  }
+}
+```
+
+### <a name="h5.2">多实体操作(批量操作)</a><sup>[&#x2191;top](#top)</sup>
+
+#### <a name="h5.2.1">增</a><sup>[&#x2191;top](#top)</sup>
 
 ```javascript
 // 请求
@@ -518,40 +653,9 @@ if (typeof response.errors === 'undefined') {
 ]
 ```
 
-### <a name="h5.2">删</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.2.2">删</a><sup>[&#x2191;top](#top)</sup>
 
-这个操作逻辑上也能知道只能成功一次。
-
-对后续多次请求应返回“对象不存在”的状态。
-
-成功时建议使用HTTP状态码：**204**
-
-建议不要返回实体数据。
-
-#### <a name="h5.2.1">单实体</a><sup>[&#x2191;top](#top)</sup>
-
-```javascript
-// 请求
-// Request URL: https://api.domain.com/rest/v1/blogs/123
-// Request Method: DELETE
-// Accept: application/json
-// Accept-Language: zh-CN
-```
-
-```javascript
-// 响应
-// Status Code: 204 No Content
-// Content-Type: application/json; charset=utf-8
-// Content-Encoding: gzip
-//
-// 想在删除后返回被删除对象，是需要至少执行两个SQL语句。
-// 一般删除操作向最终用户反馈删除成功与否即可。
-// 事实上用户确认自己要删除的目标对象那一步，往往是需要在提交删除操作之前要完成。
-```
-
-#### <a name="h5.2.2">多实体</a><sup>[&#x2191;top](#top)</sup>
-
-隐含《查-多实体》操作。
+隐含“多实体”的“查”操作。
 
 ```javascript
 // 请求
@@ -568,45 +672,7 @@ if (typeof response.errors === 'undefined') {
 // Content-Encoding: gzip
 ```
 
-### <a name="h5.3">改</a><sup>[&#x2191;top](#top)</sup>
-
-幂等方式修改已有的数据。
-
-相当于SQL中的UPDATE，HTTP Body相当于SET的参数，而URL相当于WHERE。
-
-成功时建议使用HTTP状态码：**200**
-
-建议返回被更改的实体对象数据。
-
-#### <a name="h5.3.1">单实体</a><sup>[&#x2191;top](#top)</sup>
-
-```javascript
-// 请求
-// Request URL: https://api.domain.com/rest/v1/blogs/123
-// Request Method: PUT
-// Accept: application/json
-// Accept-Language: zh-CN
-{
-  "user_id": 12,
-  "title": "用心设计",
-  "sub_title": "整理各种设计约定",
-}
-
-// 响应
-// Status Code: 200 Ok
-// Content-Type: application/json; charset=utf-8
-// Content-Encoding: gzip
-{
-  "id": 123
-  "user_id": 12,
-  "title": "用心设计",
-  "sub_title": "整理各种设计约定",
-  "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
-  "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
-}
-```
-
-#### <a name="h5.3.2">多实体</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.2.3">改</a><sup>[&#x2191;top](#top)</sup>
 
 ```javascript
 // 请求
@@ -653,261 +719,94 @@ if (typeof response.errors === 'undefined') {
 ]
 ```
 
-### <a name="h5.4">查</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.2.4">查</a><sup>[&#x2191;top](#top)</sup>
 
-相当于SQL中的SELECT。而URL则相当于WHERE。
+>它们是RESTful API的设计难点
 
-```javascript
-/posts/2341/comments/5543
-// 1. 所有帖子中找到编号为2341的帖子。
-// 2. 在这个帖子的所有评论中，找到编号为5543的评论。
-
-/posts/2341/comments?user_id=3244&rate=5
-// 1. 所有帖子中找到编号为2341的帖子。
-// 2. 在这个帖子的所有评论中，找到用户编号为3244，并且被赞5次的所有评论。
-```
-
-成功时建议使用HTTP状态码：**200**
-
-一定返回实体数据。
-
-#### <a name="h5.4.1">单实体</a><sup>[&#x2191;top](#top)</sup>
+##### <a name="h5.2.4.1">过滤</a><sup>[&#x2191;top](#top)</sup>
 
 ```javascript
 // 请求
-// Request URL: https://api.domain.com/rest/v1/blogs/123/posts
 // Request Method: GET
 // Accept: application/json
-// Accept-Language: zh-CN
-
-// 响应
-// Status Code: 200 Ok
-// Content-Type: application/json; charset=utf-8
-// Content-Encoding: gzip
-// 可能是单个实体对象{}，也有可能是多个实体对象数组[{...},...]
-[
-  {
-    "id": 35135,
-    "blog_id": 123,
-    "tags": [
-      12, 17, 34, 25 
-    ],
-    "title": "合理的设计RESTful API",
-    "content": "
-       ... ...
-       ... ...
-    ",
-    "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
-    "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
-  },
-  ...
-]
+// =, !=, >=, <=
+/posts?id=123,456&user_id>=16&tag_id!=12,22
 ```
 
-#### <a name="h5.4.2">多实体-复杂操作</a><sup>[&#x2191;top](#top)</sup>
->它们是RESTful API的设计难点
-
-### <a name="h6.1">关系</a><sup>[&#x2191;top](#top)</sup>
-如果，你已经阅读到这里，那么心里应该已经有很大的困惑：
->我的API要表达多种实体数据，而且还要把它们的关系表达出来，这个怎么办？
-
-所以，我把这种关系的描述，放在了“复杂操作”中的第一个。同时，其他操作中，多少都会涉及到关系的描述。
-
-如[前面](#h2.4)提到，[URL中描述关系](#h2.4)的时候很难描述实体关系比较复杂的情况。
-
-而Body内容中，描述这种关系，也不是那么简单。有几种选择。
-
-- 所有API都只操作单个实体对象。
-  这意味着由非常多的简单API构成系统，同时会导致只有依赖很多次API请求才能完成很多业务逻辑。
-  而这对受限于有限的HTTP连接数的浏览器应用来讲，相应的异步操作的等待时间会增加。
-  没有良好的交互设计，可能会给用户带来非常糟糕的体验。
-- 所有API都返回固定的数据结构，实体之间的关系用嵌套对象来描述，这样实现起来比较简单。
-  但是，实体之间的关系比较复杂的系统中，这种方式会带来很多交互数据上的冗余。
-  而这种冗余意味着很多场景下，实际的HTTP数据包要比真正需要的数据包要大。
-  同时，在某些实体对象到底通过A接口，还是B接口的选择上，非常考验设计者在很高层次上的抽象能力。
-- 最后一个选项，从逻辑上，是最佳方案。但实现代价也最高。
-  就是让客户端来决定是否获取关联的实体对象，如果获取，用什么方式组织响应体的结构。
-  下面是这种方案的实现方法。在数据获取方式的描述上，要增加约定好的GET参数。
-  个人更佳倾向外链方式。
-
->内嵌方式：/posts/123?_embed=user.id,user.username,user.email,tags.id,tags.name
-
+##### <a name="h5.2.4.2">排序</a><sup>[&#x2191;top](#top)</sup>
 ```javascript
-// 内嵌方式
-{
-  "id": 123
-  "user": {
-    "id": 32423,
-    "username": "hanzhixing",
-    "email": "zhixing.han.0409@gmail.com",
-  }
-  "tags": [
-    {
-      "id": 23,
-      "name": "restful",
-    },
-    {
-      "id": 12,
-      "name": "convention",
-    },
-    // ...
-  ],
-  "title": "用心设计",
-  "content": "
-    // ...
-  ",
-  // ...
-  "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
-  "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
-}
+// 请求
+// Request Method: GET
+// Accept: application/json
+// 无符号表示正排，英文“-”表示倒排，英文“,”分割字段，顺序影响排序结果。
+/posts?_sort=user_id,-update_datetime,tag_id
 ```
 
->外链方式：/posts/123?_extend=user.id.user.username,user.email,tags.id,tags.name 
+##### <a name="h5.2.4.3">翻页</a><sup>[&#x2191;top](#top)</sup>
 
 ```javascript
-// 外链方式
-{
-  "post": {
-    "id": 123
-    "user_id": 32423,
-    "title": "用心设计",
-    "tag_id": [
-      12, 23
-    ],
-    "content": "
-      // ...
-    ",
-    // ...
-    "insert_datetime_6": "2017-02-14T11:29:54.326386+08:00",
-    "update_datetime_6": "2017-02-14T11:50:02.231576+08:00"
-  },
-  "user": {
-    "id": 32423,
-    "username": "hanzhixing",
-    "email": "zhixing.han.0409@gmail.com",
-  },
-  "tags": [
-    {
-      "id": 12,
-      "name": "convention",
-    },
-    {
-      "id": 23,
-      "name": "restful",
-    },
-    // ...
-  ],
-}
-```
-
-### <a name="h6.2">过滤</a><sup>[&#x2191;top](#top)</sup>
-
-#### <a name="h6.2.1">利用URL</a><sup>[&#x2191;top](#top)</sup>
-
-优点是，直观，好理解，缺点是需要服务端自行解析字符串。
-
-| 符号 | 含义 |
-| --- | --- |
-| = | 等于 |
-| != | 不等于 |
-| > | 大于 |
-| >= | 大于等于 |
-| <= | 小于等于 |
-
-```javascript
-/posts?user_id>=16&tags!=12,22
-```
-
-#### <a name="h6.2.2">利用POST的Body</a><sup>[&#x2191;top](#top)</sup>
-
-优点是可以描述比较复杂的条件，缺点是作为《查询》操作，与《新增》的操作含义冲突。
-
-### <a name="h6.3">排序</a><sup>[&#x2191;top](#top)</sup>
->需要注意字段出现的顺序。
-
-优点是直观，好理解，缺点是需要约定排序字段，并且不能被字段命名冲突，同时需要服务端自行解析字符串。
-
-| 符号 | 含义 |
-| --- | --- |
-| 无 | 正排 |
-| - | 倒排 |
-| , | 用来分割多个排序字段 |
-
-```javascript
-/posts?_sort=tags,-insert_datetime
-```
-
-### <a name="h6.4">字段挑选</a><sup>[&#x2191;top](#top)</sup>
->可以按需获取所需要的信息，减少通信数据的大小。
-
-优点是直观，好理解，缺点是需要约定排序字段，并且不能被字段命名冲突，同时需要服务端自行解析字符串。
-
-| 符号 | 含义 |
-| --- | --- |
-| fields | 挑选的字段列表 |
-| , | 用来分割多个字段 |
-
-```javascript
-/posts?_field=id,title,tags&_extend=tags.id,tags.name
-```
-
-### <a name="h6.5">翻页</a><sup>[&#x2191;top](#top)</sup>
-
-#### <a name="h6.5.1">Request</a><sup>[&#x2191;top](#top)</sup>
-
-##### <a name="h6.5.1.1">利用URL</a><sup>[&#x2191;top](#top)</sup>
-
-优点是直观，好理解，缺点是可能的命名冲突。
-
-| 符号 | 含义 |
-| --- | --- |
-| _offset | 数据偏移量。等于MySQL的LIMIT语句的第一个参数。 |
-| _limit | 查询记录数。等于MySQL的LIMIT语句的第二个参数。 |
-
-```javascript
+// 请求
+// Request Method: GET
+// Accept: application/json
+// _offset表示数据便宜量，_limit表示查询个数
 /posts?_offset=2400&_limit=20
 ```
 
-##### <a name="h6.5.1.2">利用自定义Header</a><sup>[&#x2191;top](#top)</sup>
-
-优点是URL干净，缺点是客户端和服务端都需要自行处理Header。
-
-
-#### <a name="h6.5.2">Response</a><sup>[&#x2191;top](#top)</sup>
-
->需要告知客户端总共还有多少数据，要不然页面上无法显示总页数。
-
-##### <a name="h6.5.2.1">利用HTTP Header</a><sup>[&#x2191;top](#top)</sup>
-
-优点是响应的Body内容干净，缺点是需要自行处理Header。
-
-| Header | 含义 | 实例 |
-| --- | --- | --- |
-| X-Total-Count | 总记录数。 | X-Total-Count: 3243 |
-| Link | 见HATEOAS。 | Link: </posts?_offset=15&_limit=5>; rel="next",<br /></posts?_offset=50&_limit=3>; rel="last",<br /></posts?_offset=0&_limit=5>; rel="first",<br /></posts?_offset=5&_limit=5>; rel="prev"         |
-
-##### <a name="h6.5.2.2">利用HTTP Body</a><sup>[&#x2191;top](#top)</sup>
-
-优点是不需要自行处理Header，缺点是可能的命名冲突，结构也会多一层。
-
-| 符号 | 含义 |
-| --- | --- |
-| total | 总记录数 |
-| entities | 实体数据对象列表 |
+```javascript
+// 响应（推荐）
+// 需要告知客户端总共还有多少数据，要不然页面上无法显示总页数。Link客户端往往可以自行拼接。
+// X-Total-Count: 3243
+// Link: </posts?_offset=15&_limit=5>; rel="next",</posts?_offset=50&_limit=3>; rel="last",</posts?_offset=0&_limit=5>; rel="first",</posts?_offset=5&_limit=5>; rel="prev"
+```
 
 ```javascript
+// 响应（需要信封）
+// 优点是不需要自行处理Header，缺点是可能的命名冲突，结构也会多一层。
 {
-    total: 1343,
-    entities: [
-        {
-           ...
-        },
+  total: 1343,
+  entities: [
+    {
         ...
-    ],
+    },
+    ...
+  ],
 }
 ```
 
-## <a name="h6.6">其他</a><sup>[&#x2191;top](#top)</sup>
+#### <a name="h5.2.5">异常</a><sup>[&#x2191;top](#top)</sup>
+```javascript
+{
+  // 实体key。
+  // 仅返回操作成功的实体对象。如果所有实体对象都没有被成功操作，则不返回这个对象。
+  "entities": [
+    {
+      "id": 3432,
+      "title": "Any useful text",
+    },
+    ...
+  ],
+  // 仅在发生异常时返回errors，如果没有发生异常，则不返回这个对象。
+  "errors": [
+    {
+      "index": 1, // 提交时的数组下标
+      "code": 422, 
+      "msg": "Invalid characters in username",
+      // 以上是异常情况的总体描述，除此之外，你往往还需要每个表单项的异常信息。
+      "detail": [
+        {
+          "key" : "username",
+          "code" : 422001,
+          "msg" : "The 'username' can only contains alphabets, numbers and '_'."
+        },
+        ...
+      ],
+    },
+    ...
+  ]
+}
+```
+
+### <a name="h5.3">其他</a><sup>[&#x2191;top](#top)</sup>
 
 API设计过程当中，也会碰到一些无法用以上的操作无法描述的操作。
 
@@ -917,7 +816,7 @@ API设计过程当中，也会碰到一些无法用以上的操作无法描述�
 - 激活操作。可以用PATCH提交{activated: false}。
   但往往可以通过把activated属性抽象成目标资源的属性的方式来解决。
 - 收藏、取消收藏。
-  收藏可以是一种资源，或者是某个资源的一个属性。
+  收藏对象也可以是一种资源。
 - 跨对象的搜索。
   关键字来进行搜索，但可能会匹配文章，可能会匹配评论，也有可能会匹配新闻公告等。
   这种情况下是没有办法事先明确资源。因此系统提供/search这种专用的URL是比较可取的。
@@ -927,36 +826,40 @@ API设计过程当中，也会碰到一些无法用以上的操作无法描述�
 
 当然同时需要利用对域名的良好的命名为不同类型的资源划分好领域。
 
-版本规范见[Semantic Versioning 2.0.0](http://semver.org/)，但除了MAJOR位，其他一般用不到。
+版本规范见[Semantic Versioning 2.0.0](http://semver.org/)。
 
 API对任何应用，在分层角度上都是偏“底层”的“数据源”层。不大可能在双方没有预定的情况下随意增加删除字段。
 
 但它们是也和任何一种程序一样，不可能永远不变。随着时间的推移，一定会需要升级更新。
 
-版本化为API的平滑重构、流量控制、多版本适配提供很多便利。
-
-版本信息按道理，理应出现在自定义Header中，但是这样一来你就没有办法用简单的GET方法（比如用浏览器）阅览多个版本API的响应数据了。
-
-所以，建议在URL描述。
+版本化为API的平滑重构、流量控制、多版本适配提供很多便利。同时也为API的用户提供方便。
 
 ```javascript
+// MAJOR位前置
 /rest/v1/...
-/restful/v2/...
 /api/v3/...
-/resources/v4/...
-/rest/v1/...?v=1.1
+// MINOR和PATCH位使用query参数
+/rest/v1/posts/123?_ver=v1.1
+/rest/v1/posts/123?_ver=v1.1.5
 ```
 
 ## <a name="h8">国际化</a><sup>[&#x2191;top](#top)</sup>
 
-| 类型 | HTTP头 | 实例 |
-| --- | --- | --- |
-| 请求 | Accept-Language | en-US、en-UK、zh-CN、zh-TW、co-KR、co-JP... |
-| 响应 | Content-Language | 略。参考请求。|
+```javascript
+// 请求
+// Accept-Language: zh-CN;q=0.8,zh;q=0.6,en-US;q=0.4,en;q=0.2 
+```
+
+```javascript
+// 响应
+// Content-Language: zh-CN
+```
 
 ## <a name="h9">资源授权、身份验证、权限验证</a><sup>[&#x2191;top](#top)</sup>
 
 ### <a name="h9.1">OAuth 2.0</a><sup>[&#x2191;top](#top)</sup>
+
+TODO
 
 ## <a name="h10">频率限制</a><sup>[&#x2191;top](#top)</sup>
 TODO
@@ -967,7 +870,6 @@ X-Rate-Limit-Limit, X-Rate-Limit-Remaining, X-Rate-Limit-Reset
 ## <a name="h11">缓存</a><sup>[&#x2191;top](#top)</sup>
 
 TODO
-
 
 ## <a name="h12">HATEOAS</a><sup>[&#x2191;top](#top)</sup>
 >**H**ypermedia **a**s **t**he **E**ngine **o**f **A**pplication **S**tate
@@ -991,15 +893,16 @@ TODO
 ```
 
 ## <a name="h13">穿过特殊的网络环境</a><sup>[&#x2191;top](#top)</sup>
+
 >网络环境中有的代理服务可能只支持GET和POST方法
 
 服务端最好利用自定义的HTTP Header来识别PUT、DELETE等请求。
 
-| Header | 说明 |
-| --- | --- |
-| X-HTTP-Method-Override | PUT、DELETE、TRACE等... |
-
-
+```javascript
+// 请求
+// Request Method: GET
+// X-HTTP-Method-Override: PUT
+```
 
 ## <a name="h999">Links</a><sup>[&#x2191;top](#top)</sup>
 
@@ -1018,6 +921,8 @@ TODO
 - [Proper REST response for empty table?](http://stackoverflow.com/questions/13366730/proper-rest-response-for-empty-table)
 - [What is the proper REST response code for a valid request but an empty data?](http://stackoverflow.com/questions/11746894/what-is-the-proper-rest-response-code-for-a-valid-request-but-an-empty-data)
 - [Amazon S3 REST API Introduction](http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html)
+- [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
+- [React.js and Spring Data REST](https://spring.io/guides/tutorials/react-and-spring-data-rest/)
 
 
 
