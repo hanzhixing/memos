@@ -12,8 +12,8 @@
 4. 然后执行命令
 ```bash
 $ /usr/bin/java \
--jar /any/where/selenium-server-standalone-2.48.2.jar \
--Dwebdriver.chrome.driver=/any/where/chromedriver
+-Dwebdriver.chrome.driver=/any/where/chromedriver \
+-jar /any/where/selenium-server-standalone-2.48.2.jar
 ```
 
 ## Protractor(e2e)
