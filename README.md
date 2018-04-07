@@ -15,6 +15,7 @@
 - [多版本Node.js共存](./posts/nvm.md)
 - [多版本Java共存](./posts/jenv.md)
 - [Tomcat的虚拟主机](./posts/tomcat-vhost.md)
+- [org-mode文件内配置](./org-mode-config.md)
 
 ## 各种列表
 - [编程中的经典问题列表](./posts/programming-classic-problems.md)
