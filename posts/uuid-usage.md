@@ -1,6 +1,6 @@
 [返回首页](../README.md)
 
-# Linux下UUID的使用
+# UUID的使用
 
 ## UUID的背景
 可以看一下[wikipedia上的Universally unique identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)。
@@ -35,6 +35,10 @@ $ uuid -v 4
 $ apt-get insall uuid-runtime
 $ uuid-runtime
 64a2b630-05ed-4e54-9cab-d56836c34114
+```
+4. MacOS
+```
+$ uuidgen | tr "[:upper:]" "[:lower:]"
 ```
 
 ## Linux下查看设备的UUID

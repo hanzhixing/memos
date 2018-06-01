@@ -11,7 +11,7 @@
 - [正则表达式](./posts/regular-expression.md)
 - [Selenium, Protractor, Karma](./posts/selenium-protractor-karma.md)
 - [技术术语发音、读音](./posts/technical-terminology-pronunciation.md)
-- [Linux下UUID的使用](./posts/uuid-usage-from-linux.md)
+- [UUID的使用](./posts/uuid-usage.md)
 - [多版本Node.js共存](./posts/nvm.md)
 - [多版本Java共存](./posts/jenv.md)
 - [Tomcat的虚拟主机](./posts/tomcat-vhost.md)
