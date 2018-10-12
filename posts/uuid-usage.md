@@ -68,3 +68,8 @@ $ apt-get install hwinfo
 $ /usr/sbin/hwinfo
 ```
 输出内容比较多。
+
+5. 生成
+```bash
+cat /dev/urandom | tr -dc 'a-zA-Z0-9-_!@#$%^&*()_+{}|:<>?=' | fold -w 10 | head -n 10
+```
