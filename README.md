@@ -20,4 +20,4 @@
 ## 各种列表
 - [编程中的经典问题列表](./posts/programming-classic-problems.md)
 - [有用的工具列表](./posts/useful-tools.md)
-- [开发工具配置列表](./posts/dev-tool-config.md)
+- [git配置](./posts/git-config.md)
