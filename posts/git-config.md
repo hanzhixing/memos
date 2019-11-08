@@ -19,7 +19,12 @@
         ''- %C(bold cyan)%ad [%cd]%C(reset) %C(bold green)(%ar)%C(reset) \
         ''%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n\
         ''          %C(white)%s%C(reset)'
+    log4 = log --pretty=tformat: --numstat
+[user]
+	email = zhixing.han.0409@gmail.com
+	name = Zhixing Han
 [commit]
     template = ~/.gitmessage
 [rerere]
 	enabled = true
+```
