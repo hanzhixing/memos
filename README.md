@@ -17,6 +17,11 @@
 - [Tomcat的虚拟主机](./posts/tomcat-vhost.md)
 - [org-mode文件内配置](./org-mode-config.md)
 
+## VirtualBox
+- [最小化安装Debian12](./posts/virtualbox-minium-debian12/index.md)
+- [初始化试验用虚拟机](./posts/virtualbox-clone-and-init/index.md)
+- [搭建k8s集群](./posts/virtualbox-k8s-cluster/index.md)
+
 ## 各种列表
 - [编程中的经典问题列表](./posts/programming-classic-problems.md)
 - [有用的工具列表](./posts/useful-tools.md)
