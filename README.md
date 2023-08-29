@@ -15,7 +15,9 @@
 - [多版本Node.js共存](./posts/nvm.md)
 - [多版本Java共存](./posts/jenv.md)
 - [Tomcat的虚拟主机](./posts/tomcat-vhost.md)
-- [org-mode文件内配置](./org-mode-config.md)
+- [org-mode文件内配置](./posts/org-mode-config.md)
+- [git配置](./posts/git-config.md)
+- [Doom Emacs使用](./posts/doomemacs.md)
 
 ## VirtualBox
 - [最小化安装Debian12](./posts/virtualbox-minium-debian12/index.md)
@@ -23,6 +25,4 @@
 - [搭建k8s集群](./posts/virtualbox-k8s-cluster/index.md)
 
 ## 各种列表
-- [编程中的经典问题列表](./posts/programming-classic-problems.md)
 - [有用的工具列表](./posts/useful-tools.md)
-- [git配置](./posts/git-config.md)
