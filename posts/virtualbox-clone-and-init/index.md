@@ -159,9 +159,9 @@ vim /etc/hosts
 测试。
 
 ```shell
-ping -c v11.vbox
+ping -c 4 v11.vbox
 
-ping -c v11 # 依赖/etc/resolv.conf中的search指令
+ping -c 4 v11 # 依赖/etc/resolv.conf中的search指令
 
 cat /etc/resolv.conf
 ```

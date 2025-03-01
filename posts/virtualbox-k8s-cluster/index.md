@@ -361,7 +361,7 @@ As the default settings are now deprecated, you should set the endpoint instead.
 
 按照[Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)的说明，为`crictl`添加配置文件，或修改。
 
-`crio`完会穿件该文件，`containerd`不会。
+`crio`会创建该文件，`containerd`不会。
 
 ```shell
 vim /etc/crictl.yaml
@@ -371,9 +371,9 @@ vim /etc/crictl.yaml
 
 ```shell
 runtime-endpoint: "unix:///var/run/crio/crio.sock"
-runtime-endpoint: "unix:///var/run/containerd/containerd.sock"
-# 或
 image-endpoint: "unix:///var/run/crio/crio.sock"
+# 或
+runtime-endpoint: "unix:///var/run/containerd/containerd.sock"
 image-endpoint: "unix:///var/run/containerd/containerd.sock"
 
 timeout: 10
