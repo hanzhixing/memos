@@ -10,43 +10,43 @@
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-- [搭建kubernetes集群](#搭建kubernetes集群)
-    - [检查主机名、路由、IP](#检查主机名路由ip)
-    - [开启系统内核模块](#开启系统内核模块)
-    - [关闭swap](#关闭swap)
-        - [关闭swap](#关闭swap-1)
-        - [禁止挂载swap分区](#禁止挂载swap分区)
-    - [设置系统全局代理](#设置系统全局代理)
-    - [设置`apt`的代理](#设置apt的代理)
-    - [安装基础工具](#安装基础工具)
-    - [安装Container Runtime（二选一）](#安装container-runtime二选一)
-        - [安装CRI-O（选项一）](#安装cri-o选项一)
-            - [设置安装需要的环境变量。](#设置安装需要的环境变量)
-            - [为`apt`添加`cri-o-runc`和`cri-o`的源。](#为apt添加cri-o-runc和cri-o的源)
-            - [安装`cri-o`, `cri-o-runc`, `cri-tools`](#安装cri-o-cri-o-runc-cri-tools)
-            - [配置](#配置)
-            - [启动并设置为开机启动](#启动并设置为开机启动)
-            - [检查状态](#检查状态)
-        - [安装containerd（选项二）](#安装containerd选项二)
-            - [安装](#安装)
-            - [配置](#配置-1)
-            - [启动并设置为开机启动](#启动并设置为开机启动-1)
-            - [检查状态](#检查状态-1)
-        - [注意事项](#注意事项)
-        - [配置`crictl`](#配置crictl)
-    - [安装kubernetes](#安装kubernetes)
-        - [为`apt`添加Google Cloud的源](#为apt添加google-cloud的源)
-        - [安装`kubelet`, `kubeadm`, `kubectl`](#安装kubelet-kubeadm-kubectl)
-        - [初始化`control-plane`节点](#初始化control-plane节点)
-        - [用户环境变量配置](#用户环境变量配置)
-        - [查看集群基本信息](#查看集群基本信息)
-        - [安装CNI plugin(Calico)](#安装cni-plugincalico)
-        - [查看集群状态](#查看集群状态)
-    - [添加第一个`worker`节点](#添加第一个worker节点)
-        - [新的虚拟机](#新的虚拟机)
-        - [加入集群](#加入集群)
-        - [检查集群状态](#检查集群状态)
-    - [验证](#验证)
+- [搭建kubernetes集群](#kubernetes)
+  - [检查主机名、路由、IP](#ip)
+  - [开启系统内核模块](#)
+  - [关闭swap](#swap)
+    - [关闭swap](#swap-1)
+    - [禁止挂载swap分区](#swap)
+  - [设置系统全局代理](#)
+  - [设置`apt`的代理](#apt)
+  - [安装基础工具](#)
+  - [安装Container Runtime（二选一）](#container-runtime)
+    - [安装CRI-O（选项一）](#cri-o)
+      - [添加`apt`源](#apt)
+      - [安装`cri-o`](#cri-o)
+      - [配置`cri-o` ](#cri-o)
+      - [配置CNI bridge插件](#cni-bridge)
+      - [启动服务、设置为开机启动、检查状态](#)
+    - [安装containerd（选项二）](#containerd)
+      - [添加`apt`源](#apt-1)
+      - [安装](#)
+      - [配置](#)
+      - [启动服务、设置为开机启动、检查状态](#-1)
+    - [Container Runtime的代理配置](#container-runtime)
+  - [安装kubernetes](#kubernetes)
+    - [添加`apt`源](#apt-2)
+    - [安装`kubelet`, `kubeadm`, `kubectl`](#kubelet-kubeadm-kubectl)
+    - [初始化`control-plane`节点](#control-plane)
+    - [用户环境变量配置](#)
+    - [查看集群基本信息](#)
+    - [安装CNI plugin(Calico)](#cni-plugincalico)
+    - [查看集群状态](#)
+    - [配置`crictl`](#crictl)
+  - [添加第一个`worker`节点](#worker)
+    - [新的虚拟机](#)
+    - [加入集群](#)
+    - [检查集群状态](#)
+  - [使用单机集群](#)
+  - [验证](#)
 
 <!-- markdown-toc end -->
 
@@ -119,11 +119,9 @@ vim /etc/fstab
 
 ## 设置系统全局代理
 
-接下来的安装过程中，会使用curl下载Google Cloud源的apt-key。
+安装过程中有不少需要代理访问。
 
-除此之外，向本地网络的请求不得请求代理服务器，否则不少`k8s`的命令都会失败。
-
-另外把该代理配置写入到`root`的`.bashrc`文件中，以便下次登陆时也生效。
+代理配置写到`.bashrc`文件中，以便下次登陆时也生效。
 
 ```shell
 export https_proxy="http://10.0.2.2:7890"
@@ -137,13 +135,7 @@ vim ~/.bashrc
 ## 设置`apt`的代理
 
 ```shell
-vim /etc/apt/apt.conf.d/90proxy.conf
-```
-
-添加以下内容。
-
-```shell
-Acquire::HTTPS::proxy "http://10.0.2.2:7890";
+echo 'Acquire::HTTPS::proxy "http://10.0.2.2:7890";' > /etc/apt/apt.conf.d/90proxy.conf
 ```
 
 ![09](./images/09.png "09")
@@ -160,6 +152,7 @@ apt install curl gnupg
 ```
 
 ## 安装Container Runtime（二选一）
+[k8s官方文档](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
 
 - CRI-O
 - containerd
@@ -167,75 +160,109 @@ apt install curl gnupg
 
 ### 安装CRI-O（选项一）
 
-#### 设置安装需要的环境变量。
+[CRI-O官方文档](https://github.com/cri-o/packaging/blob/main/README.md)
+中是一口气安装`k8s`和`CRI-O`。
 
-在编写这片文章的时刻，CRI-O的源地址还没有Debian12的，只有Debian11的。
+因为要
+[k8s官方文档](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)优先，
+所以只安装`cri-o`。
 
-```shell
-export OS=Debian_11
-export VERSION=1.27
-```
-
-#### 为`apt`添加`cri-o-runc`和`cri-o`的源。
+#### 添加`apt`源
 
 ```shell
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | gpg --dearmor -o /etc/apt/keyrings/libcontainers-archive-keyring.gpg
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | gpg --dearmor -o /etc/apt/keyrings/libcontainers-crio-archive-keyring.gpg
-```
+export CRIO_VERSION=v1.32
 
-```shell
-echo "deb [signed-by=/etc/apt/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-echo "deb [signed-by=/etc/apt/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+    tee /etc/apt/sources.list.d/cri-o.list
+    
+apt update
 ```
 
 ![21](./images/21.png "21")
 
-#### 安装`cri-o`, `cri-o-runc`, `cri-tools`
+#### 安装`cri-o`
 
 ```
-apt update
-
-apt install cri-o cri-o-runc cri-tools
+apt install cri-o
 ```
 
-#### 配置 
+#### 配置`cri-o` 
 
-修改`/etc/crio/crio.conf`。
+新版本的`cri-o`在Debian系统中不创建默认的配置文件。
+
+用默认配置生成一个配置文件。
+
+```shell
+crio config --default > /etc/crio/crio.conf
+```
+
+![28](./images/28.png "28")
+
+从输出内容中配置文件的加载顺序可以得知，自定义配置可以放到`/etc/crio/crio.conf.d/`目录中。
+
+打开配置文件并检查，
 
 ```shell
 vim /etc/crio/crio.conf
 ```
 
-在`[crio.network]`段中，找到`network_dir`和`plugin_dir`取消注释。
+确保`[crio.network]`段中，`network_dir`和`plugin_dir`，是未被注释的。
 
 ![22](./images/22.png "22")
 
-修改`/etc/cni/net.d/100-crio-bridge.conflist`。
+确保`[crio.image]`段中，`pause_image`未被注释。
+
+![29](./images/29.png "29")
+
+#### 配置CNI bridge插件
+
+`cri-o`自带的`bridge`插件的配置默认是禁用的。
+
+复制一份开启的
 
 ```shell
-vim /etc/cni/net.d/100-crio-bridge.conflist
+cp /etc/cni/net.d/10-crio-bridge.conflist.disabled /etc/cni/net.d/10-crio-bridge.conflist
+
+cat /etc/cni/net.d/10-crio-bridge.conflist
 ```
 
-找到`subnet`，将IPV4的值修改为`10.0.11.0/24`。
+我们使用默认的`subnet`, `10.85.0.0/16`。
 
 ![23](./images/23.png "23")
 
-#### 启动并设置为开机启动
+#### 启动服务、设置为开机启动、检查状态
 
 ```shell
 systemctl restart crio.service
 systemctl enable crio.service 
-```
-
-#### 检查状态
-
-```shell
 systemctl status crio.service
 ```
 
-![23](./images/23.png "23")
+![30](./images/30.png "30")
 
 ### 安装containerd（选项二）
+
+[官方安装文档](https://github.com/containerd/containerd/blob/main/docs/getting-started.md)
+
+Debian的需要从Docker仓库安装。
+
+[Docker官方文档](https://docs.docker.com/engine/install/debian/)
+
+#### 添加`apt`源
+
+```shell
+curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list
+  
+apt update
+```
 
 #### 安装
 
@@ -244,48 +271,43 @@ apt install containerd
 ```
 
 #### 配置
-apt安装的containerd的配置文件内容很少，并且我没有Cgroup驱动相关的选项。
+apt安装的containerd的配置文件内容很少，并且没有Cgroup驱动相关的选项。
 
-用containerd的默认配置覆盖`/etc/containerd/config.toml`。
+用containerd的默认配置覆盖`/etc/containerd/config.toml`，并修改。
 
 ```shell
 containerd config default > /etc/containerd/config.toml 
-```
 
-![05](./images/05.png "05")
-
-修改配置。
-
-```
 vim /etc/containerd/config.toml
 ```
 
-找到`[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]`，`cgroup`驱动选择使用`systemd`，选项`SystemdCgroup`的值修改为`true`。
+找到`[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]`段，
+`SystemdCgroup`的值修改为`true`。
 
 ![06](./images/06.png "06")
 
-#### 启动并设置为开机启动
+找到`[plugins."io.containerd.grpc.v1.cri"]`段，检查`sandbox_image`的值。
+
+![05](./images/05.png "05")
+
+#### 启动服务、设置为开机启动、检查状态
 
 ```shell
 systemctl restart containerd.service
 systemctl enable containerd.service 
-```
-
-#### 检查状态
-
-```shell
 systemctl status containerd.service
 ```
 
 ![07](./images/07.png "07")
 
-### 注意事项
+### Container Runtime的代理配置
 
-在使用`systemd`管理服务的系统中，通过`kubeadm`初始化集群的时候，`kubeadm`会与通过`systemd`启动的`Container Runtime`的服务进程通信，让`Container Runtime`服务从网络下载初始化集群所需要的镜像。
+在使用`systemd`管理的系统中，
+`kubeadm`会通过`systemd`启动的`Container Runtime`的服务从网络下载镜像。
 
-或许是`kubeadm`不给`crio`或`containerd`服务进程传入正确的环境变量，或许是被`systemd`管理的服务进程不被允许使用系统全局代理，或许`crio`或`containerd`的实现有问题。
+`systemd`默认是不会读取`shell`的环境变量，包括我们设置的代理配置。
 
-总之，即便设置了系统全局代理，kubeadm无法顺利拉取初始化所需要的镜像。
+我们在`shell`环境中设置的代理配置，无法让`kubeadm`顺利拉取初始化所需要的镜像。
 
 相关的issue链接：
 
@@ -299,36 +321,37 @@ Docker官方文档中也有通过systemd的服务配置文件为docker进程设�
 
 [Configure the Docker daemon to use a proxy server](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy)
 
-具体方法如下。
+根据进一步查到的`systemd`的资料表明，这样的行为是`systemd`有意所为。
 
-通常，安装配置新的服务，并通过`systemctl enable <服务名>.service`命令允许开启启动之后，在`/etc/systemd/system`目录下都会创建服务配置文件的软连接。
+虽然有为`systemd`全局设置环境变量的方法，但这里选择分别针对需要代理配置的服务设置环境变量。
 
-- `crio`会创建`/etc/systemd/system/cri-o.service`。
+通常，通过`systemctl enable <服务名>.service`命令允许开启启动之后，
+在`/etc/systemd/system`目录下都会创建服务配置文件的软连接。
+
+- `crio`会创建`/etc/systemd/system/cri-o.service`软链接。
 - `containerd`不会创建。
 
-根据服务名，为指定服务创建附加配置目录。
+根据服务名，为指定服务创建配置目录，并创建代理配置文件。
+
+文件名其实无所谓是什么。
+
+`<NAME>.service`服务启动的时候，会加载`<NAME>.service.d`目录下的所有配置文件。
 
 ```shell
 mkdir -p /etc/systemd/system/cri-o.service.d
 
-# 或
-
-mkdir -p /etc/systemd/system/containerd.service.d
+touch /etc/systemd/system/cri-o.service.d/proxy.conf
 ```
 
-创建配置文件。
-
-文件名其实无所谓是什么，`<NAME>.service`服务启动的时候，会加载`<NAME>.service.d`目录下的所有配置文件。
+或
 
 ```shell
-vim /etc/systemd/system/cri-o.service.d/proxy.conf
+mkdir -p /etc/systemd/system/containerd.service.d
 
-# 或
-
-vim /etc/systemd/system/containerd.service.d/proxy.conf
+touch /etc/systemd/system/containerd.service.d/proxy.conf
 ```
 
-填写以下内容
+在`proxy.conf`文件中，填写以下内容。
 
 ```shell
 [Service]
@@ -336,13 +359,17 @@ Environment="HTTPS_PROXY=http://10.0.2.2:7890"
 Environment="NO_PROXY=127.0.0.1/8,10.0.0.0/8,192.168.0.0/16,localhost,.vbox"
 ```
 
-保存退出。
+![31](./images/31.png "31")
 
-重新加载`systemd`配置，重启服务。。
+重新加载`systemd`配置。
 
 ```shell
 systemctl daemon-reload
+```
 
+重启服务
+
+```shell
 systemctl restart crio.service 
 
 # 或
@@ -350,51 +377,17 @@ systemctl restart crio.service
 systemctl restart containerd.service
 ```
 
-![26](./images/26.png "26")
-
-### 配置`crictl`
-安装完k8s之后，通过`crictl image list`查看镜像列表是，可能会遇到如下错误。
-
-```shell
-As the default settings are now deprecated, you should set the endpoint instead.
-```
-
-按照[Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)的说明，为`crictl`添加配置文件，或修改。
-
-`crio`会创建该文件，`containerd`不会。
-
-```shell
-vim /etc/crictl.yaml
-```
-
-内容如下
-
-```shell
-runtime-endpoint: "unix:///var/run/crio/crio.sock"
-image-endpoint: "unix:///var/run/crio/crio.sock"
-# 或
-runtime-endpoint: "unix:///var/run/containerd/containerd.sock"
-image-endpoint: "unix:///var/run/containerd/containerd.sock"
-
-timeout: 10
-debug: true
-```
-
-- unix:///var/run/crio/crio.sock
-- unix:///var/run/containerd/containerd.sock
-
-![27](./images/27.png "27")
 
 ## 安装kubernetes
 
-### 为`apt`添加Google Cloud的源
+### 添加`apt`源
 
 ```shell
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-```
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
-```shell
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+apt update
 ```
 
 ![08](./images/08.png "08")
@@ -402,10 +395,11 @@ echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://a
 ### 安装`kubelet`, `kubeadm`, `kubectl`
 
 ```shell
-apt update
 apt install kubelet kubeadm kubectl
-```
 
+# 锁住版本
+apt-mark hold kubelet kubeadm kubectl 
+```
 
 ### 初始化`control-plane`节点
 
@@ -414,20 +408,20 @@ apt install kubelet kubeadm kubectl
 
 kubeadm init \
     --apiserver-advertise-address=192.168.56.11 \
-    --pod-network-cidr=10.0.11.0/24
+    --pod-network-cidr=10.85.0.0/16
 
 # 稳妥起见，最好加上--cri-socket。
 
 kubeadm init \
     --apiserver-advertise-address=192.168.56.11 \
-    --pod-network-cidr=10.0.11.0/24 \
+    --pod-network-cidr=10.85.0.0/16 \
     --cri-socket=unix:///var/run/crio/crio.sock
     
 # 或
 
 kubeadm init \
     --apiserver-advertise-address=192.168.56.11 \
-    --pod-network-cidr=10.0.11.0/24 \
+    --pod-network-cidr=10.85.0.0/16 \
     --cri-socket=unix:///var/run/containerd/containerd.sock
 ```
 
@@ -521,6 +515,44 @@ kubectl get pods --all-namespaces
 
 ![17](./images/17.png "17")
 
+### 配置`crictl`
+
+按照[Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)的说明，
+为`crictl`添加配置文件`/etc/crictl.yaml`。
+
+`cri-o`会创建该文件，内容为。
+
+```
+timeout: 0
+debug: false
+```
+
+`containerd`不会创建该文件，需要自己添加。
+
+```shell
+vim /etc/crictl.yaml
+```
+
+以`crio`为例，修改内容如下
+
+```shell
+runtime-endpoint: "unix:///var/run/crio/crio.sock"
+image-endpoint: "unix:///var/run/crio/crio.sock"
+timeout: 0
+debug: false
+```
+
+![27](./images/27.png "27")
+
+如果是`containerd`，内容如下
+
+```shell
+runtime-endpoint: "unix:///var/run/containerd/containerd.sock"
+image-endpoint: "unix:///var/run/containerd/containerd.sock"
+timeout: 0
+debug: false
+```
+
 ## 添加第一个`worker`节点
 
 ### 新的虚拟机
@@ -535,7 +567,7 @@ kubectl get pods --all-namespaces
 准备好之后，把该节点添加到集群。
 
 ```shell
-kubeadm join 192.168.56.11:6443 --token 699hup.fic8guqu7do3lrn2 --discovery-token-ca-cert-hash sha256:3ab8054e739ef88b18a54224ad692836ad492f860b0d0e84c733917cb10dd44b
+kubeadm join 192.168.56.11:6443 --token hc4yq2.f4zgmsakcjt2gto2 --discovery-token-ca-cert-hash sha256:145db387bebd548da8133774513f8bd88e798e4cdc190bd0a9ef515b9d1f8710
 ```
 
 ![18](./images/18.png "18")
@@ -552,6 +584,26 @@ kubectl get nodes -o wide
 可以看到新节点已经加入集群。
 
 ![19](./images/19.png "19")
+
+## 使用单机集群
+
+如果不想额外添加worker节点，使用单机集群。
+
+在`control-plane`节点，执行命令。
+
+```shell
+kubectl taint nodes $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
+```
+
+会返回
+
+```
+node/$HOSTNAME untainted
+```
+
+之后就可以用kubectl部署对象。
+
+生产环境绝对不能这样用，因为不正确的部署，可能会导致`control-plane`当机。
 
 ## 验证
 
@@ -577,4 +629,3 @@ kubectl get svc
 在任意能够访问`192.168.56.11`的机器（宿主机或虚拟机）上，通过浏览器或者`curl`访问查到的端口。
 
 能够访问到`NginX`的欢迎页，就说明大功告成。
-
