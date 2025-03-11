@@ -14,13 +14,13 @@
 - [[./posts/virtualbox-k8s-cluster/index.md][搭建k8s集群]]
 
 * 技术备忘
+- [[./posts/uuid-usage.org][UUID的使用]]
 - [[./posts/bash-snippet.md][有用的Bash代码片段]]
 - [[./posts/bash_environment_initialization.md][Bash环境初始化过程]]
 - [[./posts/iso-8601.md][时间格式]]
 - [[./posts/regular-expression.md][正则表达式]]
 - [[./posts/selenium-protractor-karma.md][Selenium, Protractor, Karma]]
 - [[./posts/technical-terminology-pronunciation.md][技术术语发音、读音]]
-- [[./posts/uuid-usage.md][UUID的使用]]
 - [[./posts/nvm.md][多版本Node.js共存]]
 - [[./posts/jenv.md][多版本Java共存]]
 - [[./posts/tomcat-vhost.md][Tomcat的虚拟主机]]

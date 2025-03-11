@@ -1,0 +1,74 @@
+#+title UUID的使用
+
+* UUID的背景
+
+[[https://en.wikipedia.org/wiki/Universally_unique_identifier][Universally Unique Identifier (wikipedia)]]
+
+#+begin_quote
+A Universally Unique Identifier (UUID) is a 128-bit label used to uniquely identify objects in computer systems. The term Globally Unique Identifier (GUID) is also used, mostly in Microsoft systems.
+#+end_quote
+
+
+* UUID的生成 (V4)
+MacOS/Linux下大小写转换可以用以下方法。
+
+#+begin_src shell
+tr "[:upper:]" "[:lower:]"
+# 或
+tr "[:lower:]" "[:upper:]"
+#+end_src
+
+** MacOS
+*** uuidgen
+#+begin_src shell
+uuidgen
+#+end_src
+** Linux (Debian为例)
+*** /proc系统
+#+begin_src shell
+cat /proc/sys/kernel/random/uuid
+#+end_src
+*** uuid-runtime
+#+begin_src shell
+apt install uuid-runtime
+uuidgen
+#+end_src
+*** uuid
+#+begin_src shell
+apt insall uuid
+uuid -v 4
+#+end_src
+** Windows
+*** PowerShell
+#+begin_src shell
+[guid]::NewGuid()
+#+end_src
+
+** 网站
+- https://www.uuidgenerator.net
+- https://www.uuid.online/
+- https://1024tools.com/
+
+* 其他相关冷知识
+** Linux下查看磁盘设备的UUID
+#+begin_src shell
+ls -l /dev/disk/by-uuid/
+#+end_src
+
+** Linux下使用libblkid查看设备UUID
+#+begin_src shell
+apt install libblkid1
+blkid
+#+end_src
+
+** Linux下查看磁盘分区的UUID
+
+#+begin_src shell
+cat /etc/fstab | grep 'UUID'
+#+end_src
+
+** Linux下生成指定长度、指定个数的随机字符串
+#+begin_src shell
+# fold -w 指定长度，head -n 指定个数
+/dev/urandom | tr -dc 'a-zA-Z0-9-_!@#$%^&*()_+{}|:<>?=' | fold -w 10 | head -n 10
+#+end_src
