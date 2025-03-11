@@ -16,10 +16,9 @@
 * 技术备忘
 - [[./posts/uuid-usage.org][UUID的使用]]
 - [[./posts/iso-8601.org][时间格式-ISO 8601]]
+- [[./posts/regular-expression.org][正则表达式]]
 - [[./posts/bash-snippet.md][有用的Bash代码片段]]
 - [[./posts/bash_environment_initialization.md][Bash环境初始化过程]]
-- [[./posts/regular-expression.md][正则表达式]]
-- [[./posts/selenium-protractor-karma.md][Selenium, Protractor, Karma]]
 - [[./posts/technical-terminology-pronunciation.md][技术术语发音、读音]]
 - [[./posts/nvm.md][多版本Node.js共存]]
 - [[./posts/jenv.md][多版本Java共存]]
@@ -27,6 +26,7 @@
 - [[./posts/org-mode-config.md][org-mode文件内配置]]
 - [[./posts/git-config.md][git配置]]
 - [[./posts/doomemacs.md][Doom Emacs使用]]
+- [[./posts/selenium-protractor-karma.md][Selenium, Protractor, Karma]]
 
 * 各种列表
 - [[./posts/useful-tools.md][有用的工具列表]]

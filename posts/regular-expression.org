@@ -1,0 +1,29 @@
+#+title: 正则表达式
+
+* 引擎
+不同的计算机语言，不同的工具或者环境中实现的解释引擎不完全一致。
+
+实现上关键算法有NFA和DFA。
+
+- [[https://unstop.com/blog/difference-between-dfa-and-nfa][What Is The Difference Between DFA And NFA?]]
+- [[https://www.cnblogs.com/cpaulyz/p/14284671.html][编译原理：深入理解正则表达式与NFA、DFA状态机]]
+- [[https://blog.csdn.net/weixin_50094312/article/details/127581508][编译原理：正则表达式-＞NFA-＞DFA-＞DFA最小化]]
+
+* 标准
+因为解释引擎实现有差异，标准也有很多种。
+
+[[https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended][BRE]]和[[https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended][ERE]]在Linux的很多命令中都用到。
+
+[[http://www.pcre.org/current/doc/html/][PCRE]]也基本是必装的库，很多开源项目都依赖它或者扩展使用它。
+
+* 实际应用
+- *grep* 默认使用BRE，加上参数可以使用ERE和PCRE。
+- *find* 默认使用Emacs的标准。加上参数可以使用awk，BRE，ERE。
+- *awk* 使用ERE，但有点不一样。
+- *sed* 默认使用BRE，但有点不一样。加上参数可以使用ERE。
+- *ripgrep* 默认使用Rust的标准，加上参数可以使用PCRE。
+- *Vim* 使用自己的标准。
+- *Emacs* 使用自己的标准。介于BRE和ERE。
+- *NginX* 是使用PCRE。
+- *Rust* 使用自己的标准，很接近PCRE很接近。
+- *PHP* 只推荐PCRE。
