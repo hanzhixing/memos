@@ -4,7 +4,7 @@
 ## 技术随笔
 - [合理设计RESTful API](https://hanzhixing.gitbooks.io/better-restful-api-design/)
 - [合理设计RESTful API](./posts/restful.md)
-- [优秀编码原则](./posts/principles-for-good-coding.md)
+- [优秀编码原则](./posts/principles-for-good-coding.org)
 
 ## VirtualBox
 - [最小化安装Debian12](./posts/virtualbox-minium-debian12/index.md)
