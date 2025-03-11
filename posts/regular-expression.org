@@ -25,5 +25,5 @@
 - *Vim* 使用自己的标准。
 - *Emacs* 使用自己的标准。介于BRE和ERE。
 - *NginX* 是使用PCRE。
-- *Rust* 使用自己的标准，很接近PCRE很接近。
+- *Rust* 使用自己的标准，很接近PCRE。
 - *PHP* 只推荐PCRE。
