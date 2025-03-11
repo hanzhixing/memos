@@ -772,3 +772,5 @@ Status Code: 409 Conflict
 /rest/v1/posts/123?$ver=v1.1.0
 /rest/v1/posts/123?$ver=v1.1.5
 ```
+
+https://hanzhixing.gitbooks.io/better-restful-api-design/
