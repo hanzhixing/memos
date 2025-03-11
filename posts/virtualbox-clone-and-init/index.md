@@ -1,22 +1,6 @@
-[返回首页](../../README.md)
-
 # 初始化试验用虚拟机
 
 我们会使用[《最小化安装Debian12》](../virtualbox-minium-debian12/index.md)中准备好的种子虚拟机。
-
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
-
-- [初始化试验用虚拟机](#初始化试验用虚拟机)
-    - [克隆全新的虚拟机](#克隆全新的虚拟机)
-    - [新增Host-only网络适配器](#新增host-only网络适配器)
-    - [账号配置](#账号配置)
-    - [网络配置](#网络配置)
-    - [主机名及其映射IP](#主机名及其映射ip)
-    - [验证网络通信](#验证网络通信)
-
-<!-- markdown-toc end -->
-
 
 ## 克隆全新的虚拟机
 

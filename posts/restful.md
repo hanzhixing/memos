@@ -1,44 +1,4 @@
-[返回首页](../README.md)
-
 # 合理设计RESTful API
-
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
-
-- [合理设计RESTful API](#合理设计restful-api)
-    - [原则](#原则)
-    - [写在前面](#写在前面)
-    - [`URI`和`URL`](#uri和url)
-    - [命名风格](#命名风格)
-    - [Meta](#meta)
-    - [Path](#path)
-        - [不使用动词，而是使用名词](#不使用动词而是使用名词)
-        - [使用单数，而不是复数](#使用单数而不是复数)
-        - [一致的模式](#一致的模式)
-        - [不使用修饰词](#不使用修饰词)
-    - [`Header`](#header)
-        - [关于《X-》开头的`Header`](#关于x-开头的header)
-        - [`X-Total-Count`](#x-total-count)
-        - [`X-Request-Id`](#x-request-id)
-    - [Query](#query)
-        - [URL Encode](#url-encode)
-        - [数组](#数组)
-        - [过滤 - 比较运算符](#过滤---比较运算符)
-        - [排序 - `$sort`](#排序---sort)
-        - [搜索 - `$keyword`](#搜索---keyword)
-        - [分页 - `$page`和`$count`（推荐）](#分页---page和count推荐)
-        - [分页 - `$offset`和`$limit`](#分页---offset和limit)
-        - [分页 - `$cursor`和`$count`](#分页---cursor和count)
-    - [状态码](#状态码)
-    - [异常](#异常)
-        - [401 - 身份验证未通过](#401---身份验证未通过)
-        - [403 - 权限验证未通过](#403---权限验证未通过)
-        - [404 - 资源不存在](#404---资源不存在)
-        - [409 - 资源冲突](#409---资源冲突)
-        - [400 - 其他客户端异常](#400---其他客户端异常)
-    - [版本化](#版本化)
-
-<!-- markdown-toc end -->
 
 ## 原则
 图形界面作为面向用户的用户接口，一般都需要考虑用户体验。

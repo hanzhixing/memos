@@ -1,54 +1,9 @@
-[返回首页](../../README.md)
-
 # 搭建kubernetes集群
 
 我们会使用通过[《初始化试验用虚拟机》](../virtualbox-clone-and-init/index.md)中的办法克隆创建的2个虚拟机。
 
 - `v11`为`control-plain`节点
 - `v12`为`worker`节点。
-
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-**Table of Contents**
-
-- [搭建kubernetes集群](#kubernetes)
-  - [检查主机名、路由、IP](#ip)
-  - [开启系统内核模块](#)
-  - [关闭swap](#swap)
-    - [关闭swap](#swap-1)
-    - [禁止挂载swap分区](#swap)
-  - [设置系统全局代理](#)
-  - [设置`apt`的代理](#apt)
-  - [安装基础工具](#)
-  - [安装Container Runtime（二选一）](#container-runtime)
-    - [安装CRI-O（选项一）](#cri-o)
-      - [添加`apt`源](#apt)
-      - [安装`cri-o`](#cri-o)
-      - [配置`cri-o` ](#cri-o)
-      - [配置CNI bridge插件](#cni-bridge)
-      - [启动服务、设置为开机启动、检查状态](#)
-    - [安装containerd（选项二）](#containerd)
-      - [添加`apt`源](#apt-1)
-      - [安装](#)
-      - [配置](#)
-      - [启动服务、设置为开机启动、检查状态](#-1)
-    - [Container Runtime的代理配置](#container-runtime)
-  - [安装kubernetes](#kubernetes)
-    - [添加`apt`源](#apt-2)
-    - [安装`kubelet`, `kubeadm`, `kubectl`](#kubelet-kubeadm-kubectl)
-    - [初始化`control-plane`节点](#control-plane)
-    - [用户环境变量配置](#)
-    - [查看集群基本信息](#)
-    - [安装CNI plugin(Calico)](#cni-plugincalico)
-    - [查看集群状态](#)
-    - [配置`crictl`](#crictl)
-  - [添加第一个`worker`节点](#worker)
-    - [新的虚拟机](#)
-    - [加入集群](#)
-    - [检查集群状态](#)
-  - [使用单机集群](#)
-  - [验证](#)
-
-<!-- markdown-toc end -->
 
 ## 检查主机名、路由、IP
 ```
