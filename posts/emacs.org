@@ -1,0 +1,195 @@
+#+title: Emacs的使用
+
+纯净版Emacs太折腾，[[https://github.com/syl20bnr/spacemacs][Spacemacs]]太臃肿，所以[[https://github.com/doomemacs/doomemacs][Doom Emacs]]为主，毕竟它2秒就能启动。
+
+Doom Emacs的官方文档还不那么完善，不少知识是找起来比较困难的。
+
+有的在Github Issue里，有的在Discord，有的在源码里。
+
+把辅助回忆的和比较容易忘记的记录在这里，防止重复查找资料。
+
+* Emacs的安装
+Doom Emacs的官方文档中，首要推荐emacs-mac，次要推荐emacs-plus。
+
+Spacemacs的官方文档中，首要推荐emacs-plus，次要推荐emacs-mac。
+
+emacs-mac从29开始--with-modules是默认参数。
+
+emacs-mac安装之后，
+希望在Terminal启动emacs的时候打开GUI版本，
+和双击打开/Applications/Emacs.app一样的效果，
+需要加上--with-starter参数。
+
+写文章时最新版的emacs-29.1-mac-10.0，在编辑文件时切换输入法会让emacs停止响应。
+
+emacs-plus没有这个问题，最新版为30.1。
+
+但是emacs-plus的安装比较麻烦。
+
+见https://github.com/d12frosted/homebrew-emacs-plus/issues/742
+
+#+begin_src shell
+brew tap d12frosted/emacs-plus
+
+brew install emacs-plus --with-modern-black-dragon-icon
+
+osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@30/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
+
+codesign --force --deep --sign - -v --strip-disallowed-xattrs /usr/local/Cellar/emacs-plus@30/30.1/Emacs.app
+#+end_src
+
+* Chemacs2
+Emacs 29增加了--init-directory参数，但是解决不了env的问题。
+
+Chemacs2在已经安装好doomemacs和spacemacs之后切换是好用。
+
+但是更改配置重新执行doom sync或者启动spacemacs，总是会出问题。
+
+Doom Emacs和Spacemacs都可以通过创建2个软链接进行替换。
+
+感觉Chemacs2的用处不大。
+
+* 特殊文件
+** .project
+让projectile确定项目根目录。
+
+见[[https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-projects.el#L78-L103][doomemacs/lisp/doom-projects.el]]。
+
+** .ignore
+定义ivy搜索文件时排除项。
+
+如果存在.gitignore，ivy会使用.gitignore，不需要.ignore。
+
+* 查找文件
+** SPC . 或 SPC f f
+文件系统中查找文件。
+
+** SPC SPC
+当前项目中查找文件。
+
+** SPC p r
+当前项目中最近打开过的文件。
+
+* 搜索文本
+** /
+在当前Buffer（文件中）中搜索。用 *n* 和 *N* 可以正反方向跳转。
+
+** SPC s p
+在当前项目中搜索文本。
+
+** C-c C-e
+搜索到的匹配内容及文件之后，编辑所有（跨文件，多个文件）。
+
+* 快速定位跳转
+快速移动光标到目标位置。
+
+** s + 2个字符（当前行）
+通过[[https://github.com/hlissner/evil-snipe][evil-snipe]]实现。
+
+功能和vim的  *f* 和 *F* 跳转类似。
+
+只不过输入的是2个连续的字符。
+
+输入 *s* 或 *S* 之后会在输出栏显示 *2>* ，接着输入2个字符即可。
+
+*s* 对应vim的 *f* ， *S* 对应vim的 *F* 。
+
+跳转成功之后，
+
+可以使用 *;* （正向）和 "," （反向）继续跳转到满足匹配规则的位置。
+
+这很像vim中搜索到文本之后通过 *n* 和 *N* 查找下一个。
+
+** g s / + 2个字符（可视区域）
+具体代码在[[https://github.com/doomemacs/doomemacs/blob/8846d151814ebbf7fb90d9d5dd16cd737257408e/modules/editor/evil/config.el#L529-L538][doomemacs/modules/editor/evil/config.el文件中]]。
+
+输入 *g s /* 之后，
+
+先输入目标位置或附近的字符，该字符会变成英文字母。
+
+接着，依次输入目标位置新出现的英文字母，即可完成跳转。
+
+完成跳转之后，标识位置的英文字母自动消失，恢复原来内容。
+
+* 多点编辑（多个光标）
+Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]和[[https://github.com/gabesoft/evil-mc][evil-mc]]来提供同时编辑多处文本的功能。
+
+整体上， *evil-multiedit* 会更容易使用，但是功能没有 *evil-mc* 强大。
+
+** evil-multiedit
+在VISUAL模式下选中文本，再输入 *R* ，就会选中所有匹配的文本。
+
+通过 *C-n* （正向）和 *C-p* （反向）移动光标。
+
+按 *RET* （回车键）可以取消选中光标所在处的匹配项。
+
+输入 *I* 或 *A* 进入INPUT模式，就可以根据需要同时修改选中的所有内容。
+
+*ESC* 或 *C-[* 来退出多点编辑模式。
+
+** evil-mc
+*** g z z
+在光标所在处新建虚拟光标。
+
+在虚拟光标跟随移动的模式下，会退出跟随模式。
+
+*** g z u
+移除所有虚拟光标。
+
+*** g z t
+关闭或开启虚拟光标跟随模式。
+
+*** g z j (向下) 和 g z k (向上)
+在光标所在位置新建虚拟光标，并移动到下一行。
+
+*** g z m
+在匹配选中文本的所有位置都插入虚拟光标。
+
+*** g z d (正向) 和 g z D (反向)
+在光标所在位置新建虚拟光标，并移动到下一个匹配处。
+
+* 撤销/重做
+通过 *u* 来撤销， *C-r* 来重做。
+
+底层使用Emacs中更强大的 *undo-tree* 系统。
+
+* 代码跳转
+** g d 或 SPC c d
+跳转到定义位置。
+
+** g D 或 SPC c D
+来列出所有引用。
+
+** K 或 SPC c k
+外部搜索（Google或Wikepedia等）。
+
+* Narrowing和Widening
+两个功能都是Emacs特有的编辑方式。
+
+文本替换时，有时我们只希望把一部分文本块中的特定内容替换成其他的。
+
+这个时候Narrowing和Widening功能就比较有用。
+
+** SPC b
+进入或退出（Widen）Narrow状态。
+
+* 其他
+** g c c
+注释/取消注释
+
+** SPC x
+打开 *scratch* Buffer。
+
+* Org Mode
+
+** 文件内配置
+添加到org文件头部即可生效。
+
+#+begin_example
+# Local Variables:
+# org-todo-keyword-faces: (("TODO" . "red") ("DOING" . "yellow") ("WAITING" . "orange") ("DONE" . "green") ("CANCEL" . "black"))
+# End:
+#+TODO: TODO(t) DOING(i) WAITING(w) | DONE(d) CANCEL(c)
+#+TAGS: READING(r) CODING(c) DEVENV(e)
+#+PROPERTY: Estimate_ALL 0 1/2 1 2 3 5 8 13 20 40 100
+#+end_example

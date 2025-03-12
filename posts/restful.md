@@ -675,7 +675,7 @@ Status Code: 409 Conflict
 ### 400 - 其他客户端异常
 凡是需要具体内容才能够描述清楚的客户端异常应该都使用`400`响应，并且`Body`按照如下格式。
 
-```json
+```
 {
     "code": "E611", // 可枚举的错误码，类型和值均可以通过协商定义
     "msg": "Form fields vailidation is failed.",
@@ -733,4 +733,5 @@ Status Code: 409 Conflict
 /rest/v1/posts/123?$ver=v1.1.5
 ```
 
+## TODO
 https://hanzhixing.gitbooks.io/better-restful-api-design/

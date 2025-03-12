@@ -23,21 +23,25 @@ tr "[:lower:]" "[:upper:]"
 #+begin_src shell
 uuidgen
 #+end_src
+
 ** Linux (Debian为例)
 *** /proc系统
 #+begin_src shell
 cat /proc/sys/kernel/random/uuid
 #+end_src
+
 *** uuid-runtime
 #+begin_src shell
 apt install uuid-runtime
 uuidgen
 #+end_src
+
 *** uuid
 #+begin_src shell
 apt insall uuid
 uuid -v 4
 #+end_src
+
 ** Windows
 *** PowerShell
 #+begin_src shell
