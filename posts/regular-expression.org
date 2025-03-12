@@ -22,6 +22,7 @@
 - *awk* 使用ERE，但有点不一样。
 - *sed* 默认使用BRE，但有点不一样。加上参数可以使用ERE。
 - *ripgrep* 默认使用Rust的标准，加上参数可以使用PCRE。
+- *git* 绝大多数场景使用ERE，指定参数可以用PCRE，但具体要看执行哪个命令。
 - *Vim* 使用自己的标准。
 - *Emacs* 使用自己的标准。介于BRE和ERE。
 - *NginX* 是使用PCRE。

@@ -32,7 +32,9 @@ Emacs 29增加了新的指定初始化目录的参数`–init-directory`，将�
 
 ### `.project `
 
-[core-projects.el](https://github.com/doomemacs/doomemacs/blob/develop/core/core-projects.el#L53-L69)文件中可以知道Doom Emacs是如何识别项目根目录的。
+[doomemacs/lisp
+/doom-projects.el](https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-projects.el#L78-L103)
+文件中可以知道Doom Emacs是如何识别项目根目录的。
 
 ### `.ignore`
 

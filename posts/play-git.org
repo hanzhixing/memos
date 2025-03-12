@@ -1,0 +1,98 @@
+#+title: 玩转Git
+
+* 怎么学？
+多看[[https://git-scm.com/doc][官方文档]]。
+
+这才是捷径，其他都是弯路。
+
+至今没见过比官方的[[https://git-scm.com/book/en/v2][《Pro Git》]]更好的学习资料。
+
+尤其以下几个章节值得精读。
+
+- [[https://git-scm.com/book/en/v2/Git-Branching-Rebasing][3.7 Rebasing]]
+- [[https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History][7.6 Rewriting History]]
+- [[https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified][7.7 Reset Demystified]]
+- [[https://git-scm.com/book/en/v2/Git-Tools-Rerere][7.9 Rerere]]（你早晚有一天会回来看）
+
+* commit原则
+- 永远把自己的commit，追加到别人的commit后面。（不管是merge还是rebase）
+- commit超过1个，merge的时候加上 =--no-ff= 。
+- 不要rebase已push的commit。
+- 不要revert。（想象以下“否定的否定的否定的否定的否定”）
+
+* git log
+** 查看每个commit变更哪些文件
+同时会显示每个文件变更行数。
+
+每个文件后面显示的+++---是按照增加和删除行数的比例关系显示的。
+
+#+begin_src shell
+git log --stat
+#+end_src
+
+** 变更统计
+--stat会显示总变更行数，--numstat可以分别显示增加和删除的行数。
+
+加上空的format，我们可以作为其他工具的输入内容，进一步加工统计结果。
+
+#+begin_src shell
+git log --numstat --format=
+#+end_src
+
+** 按人统计变更量
+#+begin_src shell
+git log --numstat --format= --author="<Name>" commit1..commit2 | awk '{plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
+#+end_src
+
+** 查看指定文件详细的历史变更内容
+可以根据需要加--stat或--numstat。
+
+#+begin_src shell
+git log --find-renames --patch --follow path/to/file.ext
+
+# 可以简写成
+git log -M -P --follow path/to/file.ext
+#+end_src
+
+#+RESULTS:
+
+** 根据变更内容
+这里用到的对象，在git中叫 =pickaxe= 。
+
+详细文档见[[https://git-scm.com/docs/gitdiffcore#_diffcore_pickaxe_for_detecting_additiondeletion_of_specified_string][diffcore-pickaxe: For Detecting Addition/Deletion of Specified String]] 。
+
+#+begin_src shell
+# -S: 字符串匹配
+# -G: 正则（ERE）匹配
+git log -S"变更内容"
+git log -G"变更内容"
+#+end_src
+
+** 查看两个分支分别都干了什么
+除了分支，也可以换成任何commit指针，如HEAD, hash等。
+
+需要有共同祖先。
+#+begin_src shell
+git log --left-right master...experiment
+#+end_src
+
+
+* TODO git diff
+
+* git reflog
+记录会保存在.git/logs目录下。
+
+所以只要没删除.git目录，你可以撤销任何git操作。
+
+无参数的 =git reflog= 与 =git reflog show= 等价。
+
+#+begin_src shell
+git reflog show
+#+end_src
+与
+#+begin_src shell
+git log --walk-reflogs --abbrev-commit --pretty=oneline
+#+end_src
+等价。
+
+即便是本地提交，也好好写commit message，要不然reflog也救不了你。
