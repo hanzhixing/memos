@@ -1,0 +1,101 @@
+#+title: 易忘的Shell知识
+
+* Bash环境初始化过程
+只有了解了初始化过程中加载哪些脚本，你才能够在正确的脚本中加入正确的代码。
+
+根据是否有用户登陆分： *login shell* 和 *non-login shell* 。
+
+根据是否为交互环境分： *interactive shell* 和 *non-interactive shell* 。
+
+- [[https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html][Bash Startup Files]]
+- [[https://guide.bash.academy/expansions/#toc12][Shell Initialization]]
+
+** login/non-login
+如果输入用户名密码，那么进入的会是login shell。
+
+一般Linux桌面环境是输入用户名密码进入，所以桌面环境本身是login shell。
+
+但桌面环境中打开Terminal，是不需要用户名密码，所以它是non-login shell。
+
+实际上，是由调用/bin/bash命令的时候，是否传入--login参数决定的。
+
+/etc/passwd文件中定义了每个用户的登陆shell。
+
+- login shell加载顺序
+  #+begin_quote
+  1. /etc/profile
+  2. ~/.bash_profile
+  3. ~/.bash_login
+  4. ~/.profile
+  #+end_quote
+- non-login shell加载顺序
+  #+begin_quote
+  1. ~/.bashrc
+  #+end_quote
+
+
+#+begin_src shell
+# 判断是否为login-shell
+shopt login_shell
+#+end_src
+
+** interactive/non-interactive
+人机交互方式使用时，就是interactive shell。
+
+执行bash脚本文件时，就是non-interactive shell。
+
+- interactive shell加载顺序
+  #+begin_quote
+  参考login/non-login
+  #+end_quote
+
+- non-interactive shell加载顺序
+  #+begin_quote
+  继承父进程的环境
+  #+end_quote
+
+
+#+begin_src shell
+# 方法1
+# 它可能会输出himBHs, hBc, hBs等
+# 这些字母序列中如果包含i，则为interactive shell
+echo $- ，
+
+# 方法2
+# 如果有输出内容，则为interactive shell
+echo $PS1
+
+# 测试non-interactive
+bash -c 'echo $-; echo $PS1'
+#+end_src
+
+
+* 根据当前文件引用其他文件
+
+- [[https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html][Bash Special Parameters]]
+- [[https://tldp.org/LDP/abs/html/internalvariables.html][Bash Built-in Internal Variables]]
+- [[https://guide.bash.academy/expansions/#:~:text=Shell%20variables%20are%20parameters%20that,variable%20name%20with%20a%20%24%20symbol][Bash Variables and Expansions Explained]]
+
+#+begin_src shell
+# 最简洁
+. "${0%/*}"/sub/path/to/file.sh
+
+# 当前文件路径
+CURRENT_FILE="$(readlink ${BASH_SOURCE[0])"
+CURRENT_DIR="$(cd -P $(dirname $CURRENT_FILE) && pwd)"
+#+end_src
+
+# Relative to current script: source "${0%/*}"/path/to/file.sh
+
+* 检查一个进程是否在存在
+
+#+begin_src shell
+# 方法1
+kill -p $PID &>/dev/null
+
+# 方法2
+ps -p $PID | grep -q $PID
+
+# 方法3
+test -x /proc/$PID
+#+end_src
