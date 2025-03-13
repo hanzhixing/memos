@@ -1,37 +1,7 @@
-[返回首页](../README.md)
+#+title: 当我们谈论Scrum时，究竟在实践什么？
+#+subtitle: 敏捷方法论的文化误读批判
 
-# <a name="top">我对Scrum的思考</a>
-
-## 目录
-- [大问号-我们为什么使用Scrum?](#h1)
-- [软件开发过程是什么样的？](#h2)
-  - [重量级方法](#h2.1)
-    - [非技术性文档](#h2.1.1)
-    - [UML](#h2.1.2)
-      - [概要](#h2.1.2.1)
-      - [结构视图(Structure Diagrams)](#h2.1.2.2)
-      - [行为视图(Behavior Diagrams)](#h2.1.2.3)
-  - [我们究竟会碰到哪些问题?](#h2.2)
-- [为什么会产生这些问题?](#h3)
-  - [敏捷方法之后总出问题? 这是一个伪命题!](#h3.1)
-  - [从小故事开始：给我一杯水](#h3.2)
-  - [什么是需求分析？](#h3.3)
-  - [怎么才算正确的需求分析？](#h3.4)
-    - [极端假设](#h3.4.1)
-- [Scrum到底解决哪些问题？](#h4)
-  - [再来几个小故事](#h4.1)
-    - [我们开房学习](#h4.1.1)
-    - [Make it warmer](#h4.1.2)
-- [Scrum中是怎么解决这些问题?它为什么能够解决这些问题？](#h5)
-  - [原则、宗旨](#h5.1)
-  - [用户故事](#h5.2)
-    - [用户故事之商业价值](#h5.2.1)
-  - [计划会议](#h5.3)
-    - [商业价值、重要性之头脑风暴](#h5.3.1)
-    - [用户故事大小之头脑风暴](#h5.3.2)
-
-## <a name="h1">大问号-我们为什么使用敏捷方法?</a><sup>[&#x2191;top](#top)</sup>
-
+* 大问号-我们为什么使用敏捷方法?
 在我们这个时代，互联网技术的发展以可怕的速度改变着我们的生活。软件开发领域的前辈们，也都在尝试和引领各式各样的软件开发方法论。
 
 如果你愿意花5分钟时间，用Google搜索Scrum相关的资料，你就会发现Scrum只是众多敏捷方法中的一种，而敏捷方法的族系是大的让人怯步，你不大可能把所有方法都试一遍。
@@ -39,31 +9,34 @@
 如果说只是想试试Scrum，或许真的不需要去理解什么历史背景，你按书本中的操作方法一步一步教条地执行下去就可以了。
 这也是最节省精力和时间的办法。
 
-我也相信你身边很有可能有人站出来说： “我们要站在巨人的肩膀上，只需要参考前人的经验就行了，不用想那么多。”
+我也相信你身边很有可能有人站出来说：
+"我们要站在巨人的肩膀上，只需要参考前人的经验就行了，不用想那么多。"
 
 但问题是在没有任何参照的情况下，你怎么才能知道自己有没有偏离正确的方向？
 
 我知道我自己是做不到，所以我在一个又一个断断续续地的阶段里，去无数次思考这样一个问题。
 
-> 我们为什么使用敏捷方法?
+#+begin_quote
+我们为什么使用敏捷方法?
+#+end_quote
 
 是的，问题很简单，但回答它似乎没有那么简单。
 
 举一个例子。
 
-“我们为什么坐飞机？除了飞机我们可是还有高铁、动车组、客轮等等交通工具的呀!？”
+"我们为什么坐飞机？除了飞机我们可是还有高铁、动车组、客轮等等交通工具的呀!？"
 
-对这样的问题你可能都不费任何脑细胞: 
+对这样的问题你可能都不费任何脑细胞:
 
-“因为飞机快呀!”
+"因为飞机快呀!"
 
 而且会很激动，心里想为什么会问这么傻逼的问题。
 
 就这么一个连幼儿园小朋友都能回答的问题，有什么值得分析的呢？
 
-那我就要问: 
+那我就要问:
 
-“你怎么定义的快？什么样的速度算快？600km/h算快吗？那800km/h呢？多快算快？”
+"你怎么定义的快？什么样的速度算快？600km/h算快吗？那800km/h呢？多快算快？"
 
 其实这个问题的关键不是飞机用什么样的速度飞行，而是我们心里边对飞机、高铁、动车组、客轮等交通工具的速度潜移默化形成的概念。
 
@@ -94,44 +67,49 @@
 - Scrum中是怎么解决这些问题?
 - Scrum为什么能够解决这些问题?
 
-## <a name="h2">软件开发过程是什么样的？</a><sup>[&#x2191;top](#top)</sup>
-
+* 软件开发过程是什么样的？
 前面提到敏捷方法，事实上它是很多具体方法的集合。
 如果你想了解一下是怎么个很多法，请看下面关于Agile那个链接里列举的方法。
 如果再把范围扩展到整个软件开发过程方法论的话，具体方法的数目就不再是屈指可数了，你也可以到下面的链接里边扫一眼。
 
-1. [Software development process](https://en.wikipedia.org/wiki/Software_development_process)
-2. [Systems development life cycle](https://en.wikipedia.org/wiki/Systems_development_life_cycle)
-3. [Agile software development](https://en.wikipedia.org/wiki/Agile_software_development)
+1. [[https://en.wikipedia.org/wiki/Software_development_process][Software development process]]
+2. [[https://en.wikipedia.org/wiki/Systems_development_life_cycle][Systems development life cycle]]
+3. [[https://en.wikipedia.org/wiki/Agile_software_development][Agile software development]]
 
 如果按阶段来讲，仅仅在测试阶段就会有路径测试、单元测试、系统测试、集成测试、黑盒测试、白盒测试、性能测试等等...，每个阶段都会有细分方法。
 
->软件工程是一项庞大的系统工程。
+#+begin_quote
+软件工程是一项庞大的系统工程。
+#+end_quote
 
-但是，大致可以分为两类。**重量级方法**和**轻量级方法**。
+但是，大致可以分为两类。*重量级方法*和*轻量级方法*。
 
 对70后、80后而言，早些年参加工作接触的，不管它们叫瀑布流方式开发还是别的什么，虽说叫法和具体实施上会有很大的差异，但基本思路都是重量级方法的思路。
 
-90后绝大多数人可能完全没有接触重量级方法的机会，遍地都是互联网企业，参加工作的第一个星期，“领导”告知“我们是搞敏捷开发的”，把人弄的一头雾水。然后跌跌撞撞工作几个月，熟悉了团队实施的那个所谓的敏捷开发。
+90后绝大多数人可能完全没有接触重量级方法的机会，遍地都是互联网企业，参加工作的第一个星期，"领导"告知“我们是搞敏捷开发的”，把人弄的一头雾水。然后跌跌撞撞工作几个月，熟悉了团队实施的那个所谓的敏捷开发。
 
 然后心里想：
 
->哦，原来这个叫敏捷方法!!!不过如此嘛~~
+#+begin_quote
+哦，原来这个叫敏捷方法!!!不过如此嘛~~
+#+end_quote
 
 但真是如此吗？
 
 不妨咱们先看看重量级方法是什么样的。
 
+** 重量级方法
+#+begin_quote
+软件工程是以技术人员的劳动作为核心的生产活动
+#+end_quote
 
-### <a name="h2.1">重量级方法</a><sup>[&#x2191;top](#top)</sup>
->软件工程是以技术人员的劳动作为核心的生产活动
-
-我理解重量级方法，也是因为有幸在恰当的时间点读到了[未舟](http://zwiter.com/)给我推荐的[《大象：Thinking in UML(第2版)》](https://book.douban.com/subject/10549583/)。
+我理解重量级方法，
+也是因为有幸在恰当的时间点读到了[[http://zwiter.com/][未舟]]给我推荐的[[https://book.douban.com/subject/10549583/][《大象：Thinking in UML(第2版)》]]。
 
 UML是软件工程中最为直接高效的文档形式，尤其是面向技术人员，可以精准地指导具体的技术实现。
 但实际项目过程中，由于很多需要解决的问题不都是技术问题，所以软件工程中很大比例的工作人员是非技术人员。
 
-如果你了解过[RUP (Rational Unified Process](https://en.wikipedia.org/wiki/Rational_Unified_Process))，那你一定也知道它作为IBM旗下Rational Software子公司推出的著名方法论，是众多重量级方法中最拔尖的那一个。
+如果你了解过[[https://en.wikipedia.org/wiki/Rational_Unified_Process][RUP (Rational Unified Process]])，那你一定也知道它作为IBM旗下Rational Software子公司推出的著名方法论，是众多重量级方法中最拔尖的那一个。
 而这公司的UML工具产品Rational Rose，基本上也可以秒杀市面上所有的UML工具。
 
 早些年我们接触过的形形色色的方法，其实你都可以理解为是类RUP的方法。
@@ -143,83 +121,79 @@ UML是软件工程中最为直接高效的文档形式，尤其是面向技术�
 
 图例可能和你正在使用的Visio、Eclipse等UML工具有些差异，但不要紧，它们在软件工程中的作用是一样的。
 
-#### <a name="h2.1.1">非技术性文档</a><sup>[&#x2191;top](#top)</sup>
-
-##### 需求文档
+*** 非技术性文档
+**** 需求文档
 这种涉及到交互的需求文档很多数人都见过。
 
-自文章[《移动直播App：直播间功能需求文档》](http://www.kejik.com/article/149091.html)。
-![](./images/1459170281762.png)
-##### 涉众概要文档
-![](./images/audiences.jpg)
-##### 用例（自然人）
+自文章《移动直播App：直播间功能需求文档》。
+[[./images/audiences.jpg]]
+***** 用例（自然人）
+[[./images/1459170281762.png]]
+***** 涉众概要文档
 RUP中用例的概念比较宽泛，主要是指和系统/模块打交道的角色。
 而这个角色有可能是自然人，也有可能是其他模块或者系统
-![](./images/audiences-detailed.jpg)
-##### 用例规约
-![](./images/user-case.jpg)
-##### 非功能性需求
-![](./images/non-functional-requirements.jpg)
-##### 非功能性需求可靠性
-![](./images/non-functional-requirements-reliability.jpg)
-##### 非功能性需求有效性
-![](./images/non-functional-requirements-validation.jpg)
+[[./images/audiences-detailed.jpg]]
+***** 用例规约
+[[./images/user-case.jpg]]
+***** 非功能性需求
+[[./images/non-functional-requirements.jpg]]
+***** 非功能性需求可靠性
+[[./images/non-functional-requirements-reliability.jpg]]
+***** 非功能性需求有效性
+[[./images/non-functional-requirements-validation.jpg]]
 
-
-#### <a name="h2.1.2">UML</a><sup>[&#x2191;top](#top)</sup>
-
-##### <a name="h2.1.2.1">概要</a><sup>[&#x2191;top](#top)</sup>
-
+*** UML
+**** 概要
 UML视图可以分为两大类
 
->结构视图(Structure Diagrams)，也叫静态视图(Static Diagrams)。
+#+begin_quote
+结构视图(Structure Diagrams)，也叫静态视图(Static Diagrams)。
+#+end_quote
 
->行为视图(Behavior Diagrams)，也叫动态视图(Dynamic Diagrams)。
+#+begin_quote
+行为视图(Behavior Diagrams)，也叫动态视图(Dynamic Diagrams)。
+#+end_quote
 
-![](./images/uml-24-diagrams.png)
+[[./images/uml-24-diagrams.png]]
 
+**** 结构视图(Structure Diagrams)
+***** 类图(Class Diagrams)
+[[./images/class-diagram-implementation-elements.png]]
+***** 对象图(Object Diagrams)
+[[./images/object-diagram-overview.png]]
+***** 包图(Package Diagrams)
+[[./images/package-diagram-elements.png]]
+***** 模型图(Model Diagrams)
+[[./images/model-diagram-elements.png]]
+***** 集成图(Composite Diagrams)
+[[./images/composite-internal-structure-diagram-elements.png]]
+***** 组件图(Component Diagrams)
+[[./images/component-diagram-overview.png]]
+***** ​实现图(Manifestation Diagrams)
+[[./images/deployment-diagram-overview-manifestation.png]]
+***** 部署图(Deployment Diagrams)
+[[./images/deployment-diagram-overview-specification.png]]
+***** 网络架构图(Network Architecture Diagrams)
+[[./images/network-diagram-overview.png]]
+***** 配置图(Profile Diagrams)
+[[./images/profile-apply.png]]
 
-##### <a name="h2.1.2.2">结构视图(Structure Diagrams)</a><sup>[&#x2191;top](#top)</sup>
-###### 类图(Class Diagrams)
-![](./images/class-diagram-implementation-elements.png)
-###### 对象图(Object Diagrams)
-![](./images/object-diagram-overview.png)
-###### 包图(Package Diagrams)
-![](./images/package-diagram-elements.png)
-###### 模型图(Model Diagrams)
-![](./images/model-diagram-elements.png)
-###### 集成图(Composite Diagrams)
-![](./images/composite-internal-structure-diagram-elements.png)
-###### 组件图(Component Diagrams)
-![](./images/component-diagram-overview.png)
-###### 实现图(Manifestation Diagrams)
-![](./images/deployment-diagram-overview-manifestation.png)
-###### 部署图(Deployment Diagrams)
-![](./images/deployment-diagram-overview-specification.png)
-###### 网络架构图(Network Architecture Diagrams)
-![](./images/network-diagram-overview.png)
-###### 配置图(Profile Diagrams)
-![](./images/profile-apply.png)
+**** 行为视图(Behavior Diagrams)
+***** 用例图(UseCase Diagram)
+[[./images/business-use-case-diagram-elements.png]]
+***** 活动图(Activity Diagram)
+[[./images/activity-frame.png]]
+***** 状态图(State Machine Diagram)
+[[./images/behavioral-state-machine-frame.png]]
+***** 交互图(Interaction Overview Diagram)
+[[./images/uml-interaction-overview-diagram-elements.png]]
+***** 序列图(Sequence Diagram)
+[[./images/sequence-diagram-overview.png]]​
+***** 通信图(Communication Diagram) [[./images/communication-diagram-overview.png]]
+***** 计时图(Timing Diagram)
+[[./images/timing-diagrams-overview.png]]
 
-##### <a name="h2.1.2.3">行为视图(Behavior Diagrams)</a><sup>[&#x2191;top](#top)</sup>
-###### 用例图(UseCase Diagram)
-![](./images/business-use-case-diagram-elements.png)
-###### 活动图(Activity Diagram)
-![](./images/activity-frame.png)
-###### 状态图(State Machine Diagram)
-![](./images/behavioral-state-machine-frame.png)
-###### 交互图(Interaction Overview Diagram)
-![](./images/uml-interaction-overview-diagram-elements.png)
-###### 序列图(Sequence Diagram)
-![](./images/sequence-diagram-overview.png)
-###### 通信图(Communication Diagram)
-![](./images/communication-diagram-overview.png)
-###### 计时图(Timing Diagram)
-![](./images/timing-diagrams-overview.png)
-
-
-### <a name="h2.2">我们究竟会碰到哪些问题?</a><sup>[&#x2191;top](#top)</sup>
-
+** 我们究竟会碰到哪些问题?
 这样的重量级方法可以覆盖工程的方方面面，保证滴水不漏。
 
 只要那些担当工程各个阶段的负责人的能力和道德是符合要求的(这一点可以通过严格的招聘流程保证)，
@@ -228,58 +202,66 @@ UML视图可以分为两大类
 
 然而，现实总是残酷的。
 
->1. 整个项目工期比预计要长。
->2. 投入的资源比预计要多。
->3. 客户揪着不符合自己预期的实现，一再推拖余款的支付，甚至可能会打官司。
->4. 领导也不满意。
+#+begin_quote
+1. 整个项目工期比预计要长。
+2. 投入的资源比预计要多。
+3. 客户揪着不符合自己预期的实现，一再推拖余款的支付，甚至可能会打官司。
+4. 领导也不满意。
+#+end_quote
 
 互联网技术的爆发给这样的重量级方法增添了更多的变量。
 
->1. 变化太多、太快，导致需求不断地被修改。
->2. 随之，人力和时间很快成为新的瓶颈。
+#+begin_quote
+1. 变化太多、太快，导致需求不断地被修改。
+2. 随之，人力和时间很快成为新的瓶颈。
+#+end_quote
 
 这些变量导致重量级方法在这个行业里一而再、再而三地酝酿出一个个悲剧。
 
 然后企业或者团队慢慢消失在互联网的茫茫海平面下，最终走向死亡。
 
-（围绕着重量级方法的问题，我们也能读到[《人月神话》](https://book.douban.com/subject/1102259/)这样的经典书籍。）
+（围绕着重量级方法的问题，我们也能读到[[https://book.douban.com/subject/1102259/][《人月神话》]]这样的经典书籍。）
 
 在这样的背景下，各式各样的敏捷方法得到了我们的关注。Facebook在敏捷方法应用上的成功，成为了老式企业和团队满怀期待的救命稻草。
 自从敏捷方法诞生后的几年时间里，无数的团队也是在各种程度上复制像Facebook这样成功企业的工程模式。
-敏捷方法似乎成为了很时髦的流行语。现在如果说自己不是搞敏捷方法的，都不好意思说自己是互联网企业。 
+敏捷方法似乎成为了很时髦的流行语。现在如果说自己不是搞敏捷方法的，都不好意思说自己是互联网企业。
 
 实施了一段时间敏捷方法后，会出现一大堆新的问题。最有可能的解释就是，我们技术人员目前是搞敏捷方法，而敏捷方法本身就是提倡快速迭代方式的试错。
 产品上积累越来越多的问题，最后导致生产力急剧下降，新功能的上线时间越来越被推迟。
 最后产品只能推倒重来一遍，或者干脆死掉。
 
-
-## <a name="h3">为什么会产生这些问题?</a><sup>[&#x2191;top](#top)</sup>
-
-### <a name="h3.1">敏捷方法之后总出问题? 这是一个伪命题!</a><sup>[&#x2191;top](#top)</sup>
-
-“用了敏捷方法”和“上线后总出问题”这两件事情，虽然是相关事件，但它们之间实际上不存在因果关系。
+* 为什么会产生这些问题?
+** 敏捷方法之后总出问题? 这是一个伪命题!
+"用了敏捷方法"和“上线后总出问题”这两件事情，虽然是相关事件，但它们之间实际上不存在因果关系。
 
 我们绝大多数的团队，以种种的“缘故”，非常巧妙地躲开了敏捷方法中那些解决问题最为关键的要素和实践。
 
 先看一下软件工程活动中的主要角色的职责。
 
-![](./images/responsibility.png)
+[[./images/responsibility.png]]
 
-#### 产品负责人
->职责上永远想更早的完成。因为想让用户能够尽快使用到新的Feature解决问题。
+*** 产品负责人
+#+begin_quote
+职责上永远想更早的完成。因为想让用户能够尽快使用到新的Feature解决问题。
+#+end_quote
 
-#### 研发工程师
->职责上永远想在质量上达到完美。因为当下对质量的对付，会变成将来寸步难行的原因。
+*** 研发工程师
+#+begin_quote
+职责上永远想在质量上达到完美。因为当下对质量的对付，会变成将来寸步难行的原因。
+#+end_quote
 
-这两个角色职责倾向上，永远都是对立的。 怎么找到中间的平衡取决于沟通，这没有任何标准答案。
+这两个角色职责倾向上，永远都是对立的。
+怎么找到中间的平衡取决于沟通，这没有任何标准答案。
 实际软件开发过程中，相比产品负责人的工作内容就是沟通，研发工程师一般都不怎么喜欢沟通，也不喜欢吵架。
 尽管这样，研发工程师都应该记得自己的职责是优先保证质量，有些让步和妥协是，你一旦做了，大家都得一块死。
 同时，正因为如此，敏捷方法对团队成员在理解能力上的要求是非常高的，互相之间得知道对方讲的是什么范畴的事情，核心点是什么。
 
-### <a name="h3.2">从小故事开始：给我一杯水</a><sup>[&#x2191;top](#top)</sup>
+** 从小故事开始：给我一杯水
 一次部门的产品会议上，一位产品负责人的同事说到：
 
->有人说给我一杯水，他不一定要喝，也有可能是想浇花。
+#+begin_quote
+有人说给我一杯水，他不一定要喝，也有可能是想浇花。
+#+end_quote
 
 在我为这类问题还没有找到很好的切入点的时候恰好听到了这个例子。
 
@@ -287,7 +269,7 @@ UML视图可以分为两大类
 
 注意上下箭头中的Why和How。
 
-![](./images/give-me-a-cup-of-water.png)
+[[./images/give-me-a-cup-of-water.png]]
 
 这和前面提到的重量级方法和敏捷方法有什么关系？
 
@@ -295,7 +277,9 @@ UML视图可以分为两大类
 
 因为面对问题
 
->切入的角度和方向，最终会决定你能得到的结论。没错，我特意使用了“方向”这个词。
+#+begin_quote
+切入的角度和方向，最终会决定你能得到的结论。没错，我特意使用了“方向”这个词。
+#+end_quote
 
 前面我们已经看过重量级方法中是怎么样解决问题的。
 重量级方法中，虽然说工程阶段就那么几个，但是从用户需求到产品交付这一条链是很长的。
@@ -313,7 +297,8 @@ UML视图可以分为两大类
 
 最后由工程师把具体代码填充进去。
 
-目前也有不少工具是只要设计工作做好了，工具可以自动生成对应的代码。例如Mule ESB或者ProFrame等。
+目前也有不少工具是只要设计工作做好了，工具可以自动生成对应的代码。例如Mule
+ESB或者ProFrame等。
 
 测试工程师工作内容上会有单元测试、模块级别测试、系统级别测试，最后再来一遍联调测试。然后负责需求的各个角色们再验收一下。
 在此之前，可能还会有alpha测试和beta测试、性能测试、AB测试等等。
@@ -342,19 +327,20 @@ UML视图可以分为两大类
 
 事实上，很多问题到最后才能够被发现实际上是需求分析、设计阶段就已经错了，但往往我们是没有办法在中途提出这一点，因为牵扯到太多人的利益，所以为了日后的和气共事，也只能大家一起错到底。最后没有实现预期的价值，也还好，因为法不责众嘛。
 
->我们是不是可以认为这种过程，就只能不断促使演化出，从它配套的制度上很自然就会有的，但我们并不希望看到的那种结果呢？这样的流程和方法到底出了什么问题呢？
+#+begin_quote
+我们是不是可以认为这种过程，就只能不断促使演化出，从它配套的制度上很自然就会有的，但我们并不希望看到的那种结果呢？这样的流程和方法到底出了什么问题呢？
+#+end_quote
 
 为了回答这个问题，我在前面已经多次提到“需求”这个词汇。这是一个很微妙的词汇。
 
-### <a name="h3.3">什么是需求分析？</a><sup>[&#x2191;top](#top)</sup>
-
+** 什么是需求分析？
 重量级方法中，闭环链条上的每一个节点与节点之间传递的信息，都是需求。
 
 需求的性质和粒度取决于具体做的事情。这东西，有的时候也叫用例详情。
 
 很显然，这种定义方式，和Scrum是不一样的。Scrum中需求应该是这样的。
 
-![](./images/boundary-between-user-and-system.png)
+[[./images/boundary-between-user-and-system.png]]
 
 需求永远都是用户和系统的边界上的事物（蓝色粗线）。
 
@@ -362,20 +348,24 @@ UML视图可以分为两大类
 
 明确边界之后，我们要对用户需求进行分析，这个过程在Scrum中叫做对用户故事的分析。
 
-### <a name="h3.4">怎么才算正确的需求分析？</a><sup>[&#x2191;top](#top)</sup>
-
+** 怎么才算正确的需求分析？
 如果你对“给我一杯水”的例子印象深刻，我希望现在能够直接下一个定义:
 
->需求分析的本质是Why方向上的推理。它是分析“用户的真正动机”。
+#+begin_quote
+需求分析的本质是Why方向上的推理。它是分析“用户的真正动机”。
+#+end_quote
 
->但重量级方法一直试图在How的方向上解决问题。它永远在分析“设计上的缺陷”。（不仅仅是需求分析环节上如此）
+#+begin_quote
+但重量级方法一直试图在How的方向上解决问题。它永远在分析“设计上的缺陷”。（不仅仅是需求分析环节上如此）
+#+end_quote
 
 下面我还是想用通俗的方式呈现这一点。
 
 需求本质上就是形形色色的，用户希望能够被解决的问题。
 
 而面对这种问题，用户在解决这个问题的时候，不管是自己解决，还是别人帮解决，
-> 在用户脑子里，在他自己的认知框架内，都会纯粹靠想象力创造出各种各样的“假想路径”。
+>
+在用户脑子里，在他自己的认知框架内，都会纯粹靠想象力创造出各种各样的“假想路径”。
 
 就像“给我一杯水”中，尽管用户只是要擦鞋，仍然会以为自己需要水，并且仍然会认为对方接下来会在杯子中盛满水递给他。
 
@@ -385,17 +375,19 @@ UML视图可以分为两大类
 
 只有Why方向上的深入思考，才能解开这个魔咒。
 
-### <a name="h3.4.1">极端假设</a><sup>[&#x2191;top](#top)</sup>
-“给我一杯水”再简单不过的一句话。
+** 极端假设
+"给我一杯水"再简单不过的一句话。
 
-但如果试图在How方向上找答案，“杯子”和“水”自然就会变成强需求，你一定要解决的问题。
+但如果试图在How方向上找答案，"杯子"和“水”自然就会变成强需求，你一定要解决的问题。
 
 在How的方向上，不妨假设更极端的情况：
 
->1. 如果手边没有杯子和水怎么办？
->2. 那周围1km内有没有卖杯子和水的超市？
->3. 如果整个城市的所有超市杯子和水都断货了怎么办？
->4. 我们是不是应该自己造杯子，或者挖口井？
+#+begin_quote
+1. 如果手边没有杯子和水怎么办？
+2. 那周围1km内有没有卖杯子和水的超市？
+3. 如果整个城市的所有超市杯子和水都断货了怎么办？
+4. 我们是不是应该自己造杯子，或者挖口井？
+#+end_quote
 
 你能想象到在这些情况下，试图在How方向解决问题，结果会多恐怖吗？
 
@@ -403,18 +395,17 @@ UML视图可以分为两大类
 
 如果先分析Why方向呢？
 
-## <a name="h4">Scrum到底解决哪些问题？</a><sup>[&#x2191;top](#top)</sup>
-
+* Scrum到底解决哪些问题？
 到此，我们对为什么使用敏捷方法也有一点点推论了。
 
->敏捷方法最有价值的地方是解决了重量级方法中的思考方向的问题，需求的问题。
+#+begin_quote
+敏捷方法最有价值的地方是解决了重量级方法中的思考方向的问题，需求的问题。
+#+end_quote
 
-### <a name="h4.1">再来几个小故事</a><sup>[&#x2191;top](#top)</sup>
-
+** 再来几个小故事
 为了加强印象，我想再举两个例子。
 
-#### <a name="h4.1.1">我们开房学习</a><sup>[&#x2191;top](#top)</sup>
-
+*** 我们开房学习
 一个老头儿在学校附近开宾馆，发现学生都是成对儿地过来开房。
 有一天，实在是好奇就问他们你们开房都过来做什么？
 于是，学生们就告诉他：学习。
@@ -428,15 +419,17 @@ UML视图可以分为两大类
 
 因为需求分析，大多时候是对人性的挖掘，而这个工作是需要非常良好的独立思考能力的。
 
-#### <a name="h4.1.2">Make it warmer</a><sup>[&#x2191;top](#top)</sup>
+*** Make it warmer
+#+begin_quote
+Make it warmer
+#+end_quote
 
->Make it warmer
-
-如果我没记错的话这句话应该是在[《用户故事与敏捷方法》(User Stories Applied)](https://www.amazon.cn/User-Stories-Applied-For-Agile-Software-Development-Cohn-Mike/dp/0321205685/ref=sr_1_2?s=books&ie=UTF8&qid=1489806165&sr=1-2&keywords=User+Stories+Applied)中看到的。书上没有详细展开来说明这句话。我根据书上描述的场景脑补了一下。
+如果我没记错的话这句话应该是在[[https://www.amazon.cn/User-Stories-Applied-For-Agile-Software-Development-Cohn-Mike/dp/0321205685/ref=sr_1_2?s=books&ie=UTF8&qid=1489806165&sr=1-2&keywords=User+Stories+Applied][《用户故事与敏捷方法》(User Stories Applied)]]中看到的。
+书上没有详细展开来说明这句话。我根据书上描述的场景脑补了一下。
 
 这句话是一个刚学会说话的两三岁的小女孩，对浴缸边上的爸爸说的话。
 
-如果这位爸爸去思考“要不要多加点热水”，“倒多少”等问题，他也在犯强调How的错误。
+如果这位爸爸去思考“要不要多加点热水”，"倒多少"等问题，他也在犯强调How的错误。
 但如果这位爸爸去思考“为什么我的小孩子说这句话”，保持在Why方向上，要解决的问题就会截然不同。
 
 首先，说这句话的人是刚学会说话的小女孩，不是受过教育的青少年。
@@ -447,7 +440,9 @@ UML视图可以分为两大类
 
 我们不得不承认一个事实。
 
->人类的语言、词汇、文字、符号等抽象的沟通工具，还没有达到我们想象的那种精准度和敏锐度。
+#+begin_quote
+人类的语言、词汇、文字、符号等抽象的沟通工具，还没有达到我们想象的那种精准度和敏锐度。
+#+end_quote
 
 敏捷方法中事实上也是杜绝文档形式的沟通的，而且需求文档是被特意点名。
 
@@ -455,17 +450,13 @@ UML视图可以分为两大类
 
 咱们接着来看敏捷方法最为关键的那些要素。
 
-
-## <a name="h5">Scrum中是怎么解决这些问题?它为什么能够解决这些问题？</a><sup>[&#x2191;top](#top)</sup>
-
-### <a name="h5.1">原则、宗旨</a><sup>[&#x2191;top](#top)</sup>
-
+* Scrum中是怎么解决这些问题?它为什么能够解决这些问题？
+** 原则、宗旨
 扫一眼方法论层面的原则或者宗旨，相比某个具体的一个条目如何如何，希望你可以关注他们设置这种条目是什么样的倾向，然后再思考他们为什么会这么做。
 发现有些信息是用中文翻译表达之后有些别扭，如果你喜欢，你也可以去阅读原文，事实上有的原文也比较晦涩。
 
-#### AUP(Agile Unified Process)的宗旨
-
-[英文原文](https://en.wikipedia.org/wiki/Agile_software_development#The_Agile_Manifesto)
+*** AUP(Agile Unified Process)的宗旨
+[[https://en.wikipedia.org/wiki/Agile_software_development#The_Agile_Manifesto][英文原文]]
 
 （这货居然把现象和原则写在一起......）
 
@@ -482,47 +473,46 @@ UML视图可以分为两大类
 11. 最佳架构、需求和设计由自组建的团队产生。
 12. 团队会定期总结如何变得更有效率，并且做相应的调整。
 
-[英文原文](https://en.wikipedia.org/wiki/Agile_Unified_Process)
+[[https://en.wikipedia.org/wiki/Agile_Unified_Process][英文原文]]
 
 1. 你的伙计们知道他们正在干什么。
    他们不会去阅读详细文档，但是他们想要实时的高层次的引导。
-2. 简单. 
+2. 简单.
    所有事情简单明了地描述在能够拿在手上的几张纸上，而不是几千页那种。
-3. 灵活.
-   灵活是敏捷方法价值和原则的保障。
+3. 灵活. 灵活是敏捷方法价值和原则的保障。
 4. 把焦点放在高价值的行动上。
    把焦点放在明确的几个行动上，而不是让项目尽可能覆盖所有可能性。
-5. 与工具无关。
-   只要是最适合的，你可以使用任何工具的集合去完成你的工作。
+5. 与工具无关。 只要是最适合的，你可以使用任何工具的集合去完成你的工作。
 6. 你可以根据你的实际需要裁剪AUP方法中的内容。
 
-#### Scrum的价值
-
-[英文原文](https://en.wikipedia.org/wiki/Scrum_(software_development)#Values)
+*** Scrum的价值
+[[https://en.wikipedia.org/wiki/Scrum_(software_development)#Values][英文原文]]
 
 - 交付: 团队成员在每一个迭代(Sprint)里为了完成团队目标，独立地交付结果。
-- 勇气: 团队成员清楚他们是有勇气一起经历相互矛盾和相互挑战，去完成正确的事情。
-- 聚焦: 团队成员排他性地聚焦团队目标(Goal)和迭代(Sprint)中的代办事项(Backlog)，不应该存在Backlog之外的任何其他事情在迭代内完成。
-- 开放: 团队成员以及利害干系人对工作上的相互透明和相互挑战保持认可的心态。
+- 勇气:
+  团队成员清楚他们是有勇气一起经历相互矛盾和相互挑战，去完成正确的事情。
+- 聚焦:
+  团队成员排他性地聚焦团队目标(Goal)和迭代(Sprint)中的代办事项(Backlog)，不应该存在Backlog之外的任何其他事情在迭代内完成。
+- 开放:
+  团队成员以及利害干系人对工作上的相互透明和相互挑战保持认可的心态。
 - 尊重: 团队成员之间对彼此的胜任能力、对意图正邪的肯定上互相尊重。
 
-再推荐一本书：[硝烟中的Scrum和XP](https://book.douban.com/subject/3390446/)
+再推荐一本书：[[https://book.douban.com/subject/3390446/][硝烟中的Scrum和XP]]
 
-![](./images/Scrum-and-XP-from-the-Trenches.jpg)
+[[./images/Scrum-and-XP-from-the-Trenches.jpg]]
 
-
-### <a name="h5.2">用户故事</a><sup>[&#x2191;top](#top)</sup>
-
->用户故事是敏捷方法的灵魂
+** 用户故事
+#+begin_quote
+用户故事是敏捷方法的灵魂
+#+end_quote
 
 Scrum中，为了确保需求是“真正的用户需求”，而不是重量级方法中的用例详情或者别的其他东西，特意使用了新的词汇－用户故事。
 
 用户故事在不同的国家、不同的公司、不同的团队、不同的文化中大家关注的点都有差异。
 我希望通过这篇文章来让大家对他们关注的信息有个大概的了解。
 
-#### 编写良好的用户故事的10个技巧
-
-[10-tips](http://www.romanpichler.com/blog/10-tips-writing-good-user-stories/)
+*** 编写良好的用户故事的10个技巧
+[[http://www.romanpichler.com/blog/10-tips-writing-good-user-stories/][10-tips]]
 
 1. 用户优先。
 2. 利用角色模型发现正确的用户故事。
@@ -535,24 +525,24 @@ Scrum中，为了确保需求是“真正的用户需求”，而不是重量级
 9. 保持用户故事看得见，并且触手可得。
 10. 不要让故事依赖另一个故事。
 
-#### 用户故事的最佳实践-INVEST
+*** 用户故事的最佳实践-INVEST
+[[https://en.wikipedia.org/wiki/INVEST_(mnemonic)][英文原文]]的
 
-[英文原文](https://en.wikipedia.org/wiki/INVEST_&#40;mnemonic&#41;)的
+对于INVEST，[[https://help.rallydev.com/writing-great-user-story][这篇文章]]也写的特别好。
 
-对于INVEST，[这篇文章](https://help.rallydev.com/writing-great-user-story)也写的特别好。
+| 字母 | 全拼        | 含义                                                                                 |
+|------+-------------+--------------------------------------------------------------------------------------|
+| I    | Independent | 互不依赖。确保我们可以按任何优先顺序进行开发。                                              |
+| N    | Negotiable  | 可协商。避免实现细节来保持故事实现上的灵活性，这样团队就能对实现方案或者故事完成到什么程度进行调整。 |
+| V    | Valuable    | 有价值。用户或者客户从完成的故事中收益。                                                   |
+| E    | Estimable   | 可度量。只有可度量，才能够做计划。                                                        |
+| S    | Small       | 小。很大的故事难以预估投入资源和做计划。                                                   |
+| T    | Testable    | 可测。对于完成设置可接受的条件，或者明确“完成”的定义，以便编写测试用例。                        |
 
-| 字母| 全拼| 含义|
-|---|---|---|
-| I | Independent | 互不依赖。确保我们可以按任何优先顺序进行开发。 |
-| N | Negotiable | 可协商。避免实现细节来保持故事实现上的灵活性，这样团队就能对实现方案或者故事完成到什么程度进行调整。 |
-| V | Valuable | 有价值。用户或者客户从完成的故事中收益。 |
-| E | Estimable | 可度量。只有可度量，才能够做计划。 |
-| S | Small | 小。很大的故事难以预估投入资源和做计划。 |
-| T | Testable | 可测。对于完成设置可接受的条件，或者明确“完成”的定义，以便编写测试用例。 |
-
-### <a name="h5.2.1">用户故事之商业价值</a><sup>[&#x2191;top](#top)</sup>
-
->对每一个Story，都应该明确知道它的商业价值，哪怕你只能找到很牵强的联系。
+** 用户故事之商业价值
+#+begin_quote
+对每一个Story，都应该明确知道它的商业价值，哪怕你只能找到很牵强的联系。
+#+end_quote
 
 这是敏捷方法中非常重要的原则。
 
@@ -585,7 +575,7 @@ Business实际在很多语境中是与金钱交易无关的，所以其实翻译
 对于商业价值，我再举几个硬掰的例子。原因呢，还是这个。
 >对每一个Story，都应该明确知道它的商业价值，哪怕你只能找到很牵强的联系。
 
-#### 蒸汽机
+*** 蒸汽机
 1. 有个小孩子叫瓦特。
 2. 瓦特偶然看到蒸汽的力量可以把水壶盖推动起来。
 3. 长大之后瓦特发明了蒸汽机。
@@ -604,8 +594,7 @@ Business实际在很多语境中是与金钱交易无关的，所以其实翻译
 
 我想说的是所谓的发明创造活动背后的商业价值。
 
-#### 电话
-
+*** 电话
 电话，确实是贝尔在实验过程中注意到了一种物理现象，并且基于它的原理发明出来的新生事物。
 
 但在这背后，
@@ -622,10 +611,9 @@ Business实际在很多语境中是与金钱交易无关的，所以其实翻译
 
 同样，我想说的是所谓的发明创造活动背后的商业价值。
 
-[贝尔马可尼/名人的真实故事系列丛书](https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00BQXP7NK/ref=sr_1_1?ie=UTF8&qid=1490063950&sr=8-1&keywords=%E8%B4%9D%E5%B0%94%E9%A9%AC%E5%8F%AF%E5%B0%BC)
+[[https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00BQXP7NK/ref=sr_1_1?ie=UTF8&qid=1490063950&sr=8-1&keywords=%E8%B4%9D%E5%B0%94%E9%A9%AC%E5%8F%AF%E5%B0%BC][贝尔马可尼/名人的真实故事系列丛书]]
 
-#### 原子弹
-
+*** 原子弹
 原子弹这种大规模杀伤性军事武器，看似离商业价值比较遥远。
 
 但是，我相信你能够理解它的威慑力。对于一个国家，军事威慑力是这个国家任何商业团体安全生产，工人安全工作挣钱的保障。
@@ -634,24 +622,23 @@ Business实际在很多语境中是与金钱交易无关的，所以其实翻译
 
 假设，你有一颗原子弹，如果你有人身安全上保证，你觉得你能不能卖出去它呢？它的价格，又是怎么来定呢？为何它能值钱呢？
 
-#### 相对论
-
+*** 相对论
 我们都知道至今为止，即使基于著名的相对论，星际旅行还是幻想。
 
 我在想，是不是因为在现实世界中这样的理论还没有让人们看到实际的商业价值，与尚未能够聚集足够多的人力和财力有着联系。
 
 （我相信你一定能为自己的Story找到商业价值。）
 
-### <a name="h5.3">计划会议</a><sup>[&#x2191;top](#top)</sup>
-
+** 计划会议
 计划，没有人能够保证将发生的所有一切都会和它吻合，因为你连明天会发生什么事情都无法知道。
 计划的价值在于，上上下下统一意志和方向，用这势能来创造出接近预期的价值。
 
 想到计划会议，我经常会想到我们的义务教育。
-无数次的考试使我们记住各种“事实”和“标准答案”，彻底把人类最宝贵的能力 -- 好奇心扼杀在摇篮里。
-培养出了无数的把迷信当知识的年轻人。
+无数次的考试使我们记住各种“事实”和“标准答案”，彻底把人类最宝贵的能力 --
+好奇心扼杀在摇篮里。 培养出了无数的把迷信当知识的年轻人。
 
-而计划会议过程恰恰特别需要所有团队成员的这种能力 -- 好奇心 -- 能够想到Why的能力。
+而计划会议过程恰恰特别需要所有团队成员的这种能力 -- 好奇心 --
+能够想到Why的能力。
 
 Scrum中计划会议是第一站，也是左右成败最关键的环节。
 
@@ -661,13 +648,13 @@ Scrum中计划会议是第一站，也是左右成败最关键的环节。
 2. 确定它们的商业价值、重要性（优先级）。（尽管产品负责人已经根据自己的初步判断整理过）
 3. 基于1和2，确定用户故事，为4做准备。（可能会对Backlog中的事项进行拆分或者合并）
 4. 确定用户故事的大小。
-3. 综合商业价值、重要性、大小，做最后的调整。（有可能进一步拆分故事，或者调整顺序）
+5. 综合商业价值、重要性、大小，做最后的调整。（有可能进一步拆分故事，或者调整顺序）
 
 要命的是，商业价值、重要性、故事大小，3个要素都是用头脑风暴的方法。
 
 这是在整个业界都把效率挂在嘴边，略微浮夸的大环境里，最容易被人挑战的形式。
 
-因为，“它效率低”。
+因为，"它效率低"。
 
 有人第一次对于它的形式质疑效率的时候，我也有同感，因为是事实。
 
@@ -681,11 +668,13 @@ Scrum方法论书籍中计划会议也是摆在首要位置，也预计它可能
 
 印象比较深刻的是《郎咸平说》和《罗辑思维》里边讲陪审团制度的一些内容。
 
->民主追求的不是最好的结果，而是大家普遍认为不那么差的结果。
+#+begin_quote
+民主追求的不是最好的结果，而是大家普遍认为不那么差的结果。
+#+end_quote
 
-- [奇葩陪审团](http://v.youku.com/v_show/id_XNjU2NDMzMTE2.html)
-- [看不懂的英美法](http://v.youku.com/v_show/id_XNzMyMDI4Mjcy.html)
-- [百度百科-陪审团制度](http://baike.baidu.com/link?url=AVf-BTBnjjNohynqGQJwKXtPM7-4dJwJlnQb6GKCJHQJK0iWtEYZdObCBTZAWHUCuixCHROXmPfcBLx-YtHM1sGAhJYce0zizqstLKTMilu-q97EbMe71WIPbHts83S7zbt6V5F-YcdFDWxGhSdIYa)
+- [[http://v.youku.com/v_show/id_XNjU2NDMzMTE2.html][奇葩陪审团]]
+- [[http://v.youku.com/v_show/id_XNzMyMDI4Mjcy.html][看不懂的英美法]]
+- [[http://baike.baidu.com/link?url=AVf-BTBnjjNohynqGQJwKXtPM7-4dJwJlnQb6GKCJHQJK0iWtEYZdObCBTZAWHUCuixCHROXmPfcBLx-YtHM1sGAhJYce0zizqstLKTMilu-q97EbMe71WIPbHts83S7zbt6V5F-YcdFDWxGhSdIYa][百度百科-陪审团制度]]
 
 尽管Scrum等敏捷方法是日本人提出来的，但是这些日本人可都是那些已经融入到美国社会了的人。
 
@@ -701,7 +690,7 @@ Scrum方法论书籍中计划会议也是摆在首要位置，也预计它可能
 
 其实是寻找社会当中最多数的，最普遍的价值认同感 -- 普世价值观。
 
-什么是“最好”的？“最好”的衡量是谁来做？应该由谁来做？
+什么是“最好”的？"最好"的衡量是谁来做？应该由谁来做？
 
 为什么辛普森一案中，与世隔绝的陪审团，在听取律师的陈述，了解了法庭证据之后，做出来的判断几乎出乎所有每天在媒体前看新闻的人的预料？
 
@@ -711,8 +700,7 @@ Scrum方法论书籍中计划会议也是摆在首要位置，也预计它可能
 
 ... ...
 
-#### <a name="h5.3.1">商业价值、重要性之头脑风暴</a><sup>[&#x2191;top](#top)</sup>
-
+*** 商业价值、重要性之头脑风暴
 我们在日常的产品开发中，会有同样的困惑。
 
 产品的好坏，如何评判？应该由谁来做这个判断？衡量标准是什么？
@@ -730,7 +718,7 @@ Scrum方法事实上是很怕权利，也怕精英，如果团队里边的这个
 更重要的是，这个价值观，永远不可能由少数的精英、工作好多年的经验丰富的老领导来决定的，因为我们的世界每一分每一秒都在变化。
 
 从微博、视频网站，到弹幕视频、直播，再到什么二次元的漫画产品的流行，短视频的社交，哪一项是精英精明的头脑和老道的经验决定它们的趋势的呢？
-每一秒都会有新生儿来到这个世上，他们的成长，随着时间推移，“正在”改变我们的普世价值观。
+每一秒都会有新生儿来到这个世上，他们的成长，随着时间推移，"正在"改变我们的普世价值观。
 
 所以，计划会议里从技术操作上最难的地方在于，怎么样让大家把心里那个“很烂”的感受和想法说出来，然后怎么样再让大家一块来找让它“不那么烂”的方法，最后达到一个平衡状态，而这个状态就是“不错，还可以”。
 
@@ -761,16 +749,16 @@ Scrum在现实中落地执行，有多少团队最终输出的产品是团队所
 
 如果任何人，以任何理由，去做别的事情，这个时候，事实上是需要重新推敲计划内的那些事情的重要性了，为什么有人放着那些最重要的事情不做，去在别的事情上花时间呢？
 
-
-#### <a name="h5.3.2">用户故事大小之头脑风暴</a><sup>[&#x2191;top](#top)</sup>
-
+*** 用户故事大小之头脑风暴
 前面说到Story的价值和重要性的判断是以头脑风暴的形式，确定故事的大小也同样是以头脑风暴形式。
 
-![](./images/CrispPlanningPokerDeck.jpg)
+[[./images/CrispPlanningPokerDeck.jpg]]
 
 但这种形式有很重要的前提：
 
-> 没有人知道那些故事最终会由具体哪一个人来完成。
+#+begin_quote
+没有人知道那些故事最终会由具体哪一个人来完成。
+#+end_quote
 
 因为，任何人只有在假设一件事情是自己做的前提下，才有可能非常认真的去考虑这件事情。
 
@@ -821,6 +809,5 @@ Scrum在现实中落地执行，有多少团队最终输出的产品是团队所
 对不太喜欢用言语与产品负责人争执的研发工程师而言，决定8的权利，够让产品走的更好更远。
 
 这种估算方法，结合着头脑风暴的意义，在倾向的带动上，也避免我们走入重量级方法那种虐心的恶性博弈中。
-
 
 这篇文章，我对Scrum的思考，到此也结束了。不知你有没有为大问号“我们为什么使用敏捷方法?”有了答案。

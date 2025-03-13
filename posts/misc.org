@@ -58,6 +58,43 @@ character-set-server = utf8mb4
 collation-server = utf8mb4_unicode_ci
 #+end_example
 
+* 字体类型
+#+begin_quote
+PostScript是主要用于电子产业和桌面出版领域的一种页面描述语言和编程语言。
+#+end_quote
+
+** TTF (TrueType Font)
+- 1980年代末由Microsoft和Apple共同开发。
+- 保证屏幕与打印输出一致性。
+- 可以随意缩放、旋转，不会出现锯齿。
+- 主要操作系统用。
+- 兼容性高。
+- 扩展名是.ttf。
+
+**  OTF (OpenType Font)
+- 由Microsoft和Adobe共同开发。
+- 基于TTF开发，TTF的超集。
+- 支持的字符集更大。
+- 包含TrueType的扩展名是.ttf
+- 包含PostScript的扩展名是.otf
+
+** EOT (Embeded Open Type)
+- 只能用在IE。
+- 网页字体，体积小。
+- 已死。
+
+** WOFF (Web Open Font Format)
+- 有Mozilla基金会、微软、Opera合作开发。
+- 网页字体，体积小。
+- 主流浏览器都支持。
+
+** WOFF2 (Web Open Font Format 2)
+- WOFF的升级版。
+- 体积更小了。
+
+** VF (Variable Font)
+- [[https://github.com/FoxDaxian/memory/issues/4][更小更灵活的字体]]
+
 * Tomcat虚拟主机
 bin/catalina.sh文件中写到。
 
@@ -119,3 +156,69 @@ export JAVA_OPTS="-Xmx2048m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -Df
 
   <!-- ... -->
 #+end_src
+
+* XLFD (X Logical Font Description)
+密文版的字体描述。
+
+#+begin_example
+-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
+
+-bitstream-charter-medium-r-normal--12-120-75-75-p-68-iso8859-1
+
+-ns-*-*-*-*-*-10-*-*-*-*-*-fontset-standard
+
+-*-Menlo-regular-normal-normal-*-20-*-*-*-m-0-fontset-auto1
+#+end_example
+
+由14个对象构成，格式如下。
+
+|  N | Property         | 含义       | Definition                        |
+|----+------------------+------------+-----------------------------------|
+|  1 | FOUNDRY          | 厂商       | 字体的开发商、设计者等标识。      |
+|    | fndry            |            | FamilyName相同的时候用来区分的。  |
+|----+------------------+------------+-----------------------------------|
+|  2 | FAMILY_NAME      | 字族       | 就是font-family                   |
+|    | fmly             |            |                                   |
+|----+------------------+------------+-----------------------------------|
+|  3 | WEIGHT_NAME      | 粗细       | medium, bold这种...               |
+|    | wght             |            |                                   |
+|----+------------------+------------+-----------------------------------|
+|  4 | SLANT            | 倾斜       | 描述倾斜方向：                    |
+|    | slant            |            |                                   |
+|    |                  |            | - r (Roman-no slant)              |
+|    |                  |            | - i (Italic-slant right)          |
+|    |                  |            | - o (Oblique-slant right)         |
+|    |                  |            | - ri (Reverse Italic-slant left)  |
+|    |                  |            | - ro (Reverse Oblique-slant left) |
+|----+------------------+------------+-----------------------------------|
+|  5 | SETWIDTH_NAME    | 铅字宽度   | 是否有横向拉伸或挤压。            |
+|    | sWdth            |            | normal, narrow, condensed         |
+|----+------------------+------------+-----------------------------------|
+|  6 | ADD_STYLE        | 补充样式   | 厂商决定。                        |
+|    | adstyl           |            | sans, serif                       |
+|----+------------------+------------+-----------------------------------|
+|  7 | PIXEL_SIZE       | 字符尺寸   | 单位是像素。*或0表示可变尺寸。    |
+|    | pxlsz            |            |                                   |
+|----+------------------+------------+-----------------------------------|
+|  8 | POINT_SIZE       | 字符尺寸   | 单位是十分之一“点”                |
+|    | ptSz             |            |                                   |
+|----+------------------+------------+-----------------------------------|
+|  9 | RESOLUTION_X     | 水平分辨率 | 单位是像素或DPI                   |
+|    | resx             |            |                                   |
+|----+------------------+------------+-----------------------------------|
+| 10 | RESOLUTION_Y     | 垂直分辨率 | 同RESOLUTION_Y                    |
+|    | resy             |            |                                   |
+|----+------------------+------------+-----------------------------------|
+| 11 | SPACING          | 留白方式   | - m (Monospace - 等宽)            |
+|    | spc              |            | - p (Proportional space- 协调的)  |
+|    |                  |            | - c (Character cell)              |
+|----+------------------+------------+-----------------------------------|
+| 12 | AVERAGE_WIDTH    | 平均宽度   | 单位是十分之一像素                |
+|    | avgWdth          |            |                                   |
+|----+------------------+------------+-----------------------------------|
+| 13 | CHARSET_REGISTRY | 注册字符集 | iso10646, gb18030, gb2312等       |
+|    | rgstry           | 字元集     |                                   |
+|----+------------------+------------+-----------------------------------|
+| 14 | CHARSET_ENCODING | 字符编码   | 没搞懂是什么。                    |
+|    | encdng           |            |                                   |
+|----+------------------+------------+-----------------------------------|
