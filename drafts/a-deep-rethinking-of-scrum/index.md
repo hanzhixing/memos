@@ -149,21 +149,21 @@ UML是软件工程中最为直接高效的文档形式，尤其是面向技术�
 这种涉及到交互的需求文档很多数人都见过。
 
 自文章[《移动直播App：直播间功能需求文档》](http://www.kejik.com/article/149091.html)。
-![](../images/1459170281762.png)
+![](./images/1459170281762.png)
 ##### 涉众概要文档
-![](../images/audiences.jpg)
+![](./images/audiences.jpg)
 ##### 用例（自然人）
 RUP中用例的概念比较宽泛，主要是指和系统/模块打交道的角色。
 而这个角色有可能是自然人，也有可能是其他模块或者系统
-![](../images/audiences-detailed.jpg)
+![](./images/audiences-detailed.jpg)
 ##### 用例规约
-![](../images/user-case.jpg)
+![](./images/user-case.jpg)
 ##### 非功能性需求
-![](../images/non-functional-requirements.jpg)
+![](./images/non-functional-requirements.jpg)
 ##### 非功能性需求可靠性
-![](../images/non-functional-requirements-reliability.jpg)
+![](./images/non-functional-requirements-reliability.jpg)
 ##### 非功能性需求有效性
-![](../images/non-functional-requirements-validation.jpg)
+![](./images/non-functional-requirements-validation.jpg)
 
 
 #### <a name="h2.1.2">UML</a><sup>[&#x2191;top](#top)</sup>
@@ -176,46 +176,46 @@ UML视图可以分为两大类
 
 >行为视图(Behavior Diagrams)，也叫动态视图(Dynamic Diagrams)。
 
-![](../images/uml-24-diagrams.png)
+![](./images/uml-24-diagrams.png)
 
 
 ##### <a name="h2.1.2.2">结构视图(Structure Diagrams)</a><sup>[&#x2191;top](#top)</sup>
 ###### 类图(Class Diagrams)
-![](../images/class-diagram-implementation-elements.png)
+![](./images/class-diagram-implementation-elements.png)
 ###### 对象图(Object Diagrams)
-![](../images/object-diagram-overview.png)
+![](./images/object-diagram-overview.png)
 ###### 包图(Package Diagrams)
-![](../images/package-diagram-elements.png)
+![](./images/package-diagram-elements.png)
 ###### 模型图(Model Diagrams)
-![](../images/model-diagram-elements.png)
+![](./images/model-diagram-elements.png)
 ###### 集成图(Composite Diagrams)
-![](../images/composite-internal-structure-diagram-elements.png)
+![](./images/composite-internal-structure-diagram-elements.png)
 ###### 组件图(Component Diagrams)
-![](../images/component-diagram-overview.png)
+![](./images/component-diagram-overview.png)
 ###### 实现图(Manifestation Diagrams)
-![](../images/deployment-diagram-overview-manifestation.png)
+![](./images/deployment-diagram-overview-manifestation.png)
 ###### 部署图(Deployment Diagrams)
-![](../images/deployment-diagram-overview-specification.png)
+![](./images/deployment-diagram-overview-specification.png)
 ###### 网络架构图(Network Architecture Diagrams)
-![](../images/network-diagram-overview.png)
+![](./images/network-diagram-overview.png)
 ###### 配置图(Profile Diagrams)
-![](../images/profile-apply.png)
+![](./images/profile-apply.png)
 
 ##### <a name="h2.1.2.3">行为视图(Behavior Diagrams)</a><sup>[&#x2191;top](#top)</sup>
 ###### 用例图(UseCase Diagram)
-![](../images/business-use-case-diagram-elements.png)
+![](./images/business-use-case-diagram-elements.png)
 ###### 活动图(Activity Diagram)
-![](../images/activity-frame.png)
+![](./images/activity-frame.png)
 ###### 状态图(State Machine Diagram)
-![](../images/behavioral-state-machine-frame.png)
+![](./images/behavioral-state-machine-frame.png)
 ###### 交互图(Interaction Overview Diagram)
-![](../images/uml-interaction-overview-diagram-elements.png)
+![](./images/uml-interaction-overview-diagram-elements.png)
 ###### 序列图(Sequence Diagram)
-![](../images/sequence-diagram-overview.png)
+![](./images/sequence-diagram-overview.png)
 ###### 通信图(Communication Diagram)
-![](../images/communication-diagram-overview.png)
+![](./images/communication-diagram-overview.png)
 ###### 计时图(Timing Diagram)
-![](../images/timing-diagrams-overview.png)
+![](./images/timing-diagrams-overview.png)
 
 
 ### <a name="h2.2">我们究竟会碰到哪些问题?</a><sup>[&#x2191;top](#top)</sup>
@@ -263,7 +263,7 @@ UML视图可以分为两大类
 
 先看一下软件工程活动中的主要角色的职责。
 
-![](../images/responsibility.png)
+![](./images/responsibility.png)
 
 #### 产品负责人
 >职责上永远想更早的完成。因为想让用户能够尽快使用到新的Feature解决问题。
@@ -287,7 +287,7 @@ UML视图可以分为两大类
 
 注意上下箭头中的Why和How。
 
-![](../images/give-me-a-cup-of-water.png)
+![](./images/give-me-a-cup-of-water.png)
 
 这和前面提到的重量级方法和敏捷方法有什么关系？
 
@@ -354,7 +354,7 @@ UML视图可以分为两大类
 
 很显然，这种定义方式，和Scrum是不一样的。Scrum中需求应该是这样的。
 
-![](../images/boundary-between-user-and-system.png)
+![](./images/boundary-between-user-and-system.png)
 
 需求永远都是用户和系统的边界上的事物（蓝色粗线）。
 
@@ -508,7 +508,7 @@ UML视图可以分为两大类
 
 再推荐一本书：[硝烟中的Scrum和XP](https://book.douban.com/subject/3390446/)
 
-![](../images/Scrum-and-XP-from-the-Trenches.jpg)
+![](./images/Scrum-and-XP-from-the-Trenches.jpg)
 
 
 ### <a name="h5.2">用户故事</a><sup>[&#x2191;top](#top)</sup>
@@ -766,7 +766,7 @@ Scrum在现实中落地执行，有多少团队最终输出的产品是团队所
 
 前面说到Story的价值和重要性的判断是以头脑风暴的形式，确定故事的大小也同样是以头脑风暴形式。
 
-![](../images/CrispPlanningPokerDeck.jpg)
+![](./images/CrispPlanningPokerDeck.jpg)
 
 但这种形式有很重要的前提：
 

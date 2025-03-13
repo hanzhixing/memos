@@ -18,6 +18,4 @@
 - [[./posts/jenv.md][多版本Java共存]]
 - [[./posts/emacs.org][Emacs的使用]]
 - [[./posts/technical-terminology-pronunciation.md][技术术语读音]]
-- [[./posts/tomcat-vhost.md][Tomcat的虚拟主机]]
-- [[./posts/selenium-protractor-karma.md][Selenium, Protractor, Karma]]
 - [[./posts/misc.org][其他备忘]]

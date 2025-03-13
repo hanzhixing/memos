@@ -1,9 +1,7 @@
-[返回首页](../README.md)
-
 # Selenium, Protractor, Karma
 
 ## 工作原理
-![](../images/SeleniumGridDiagram.png)
+![](./images/SeleniumGridDiagram.png)
 
 ## 远程服务器
 1. 因为要使用jar文件，所以得有java环境。

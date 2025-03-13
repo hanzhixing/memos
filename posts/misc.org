@@ -57,3 +57,65 @@ character-set-client-handshake = FALSE
 character-set-server = utf8mb4
 collation-server = utf8mb4_unicode_ci
 #+end_example
+
+* Tomcat虚拟主机
+bin/catalina.sh文件中写到。
+
+#+begin_example
+# -----------------------------------------------------------------------------
+# Control Script for the CATALINA Server
+#
+# Environment Variable Prerequisites
+#
+#   Do not set the variables in this script. Instead put them into a script
+#   setenv.sh in CATALINA_BASE/bin to keep your customizations separate.
+#
+#+end_example
+
+按照指引，创建bin/setenv.sh文件。
+
+#+begin_src shell
+#!/bin/bash
+
+# 也可以写绝对路径。
+export JAVA_HOME="$(jenv javahome)"
+export JAVA_OPTS="-Xmx2048m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -Dfile.encoding=UTF-8"
+#+end_src shell
+
+虚拟机主机配置在conf/server.xml。
+
+#+begin_src nxml
+<!-- conf/server.xml -->
+
+  <!-- ... -->
+
+  <Engine name="Catalina" defaultHost="localhost">
+
+    <!-- ... -->
+
+    <!-- 添加以下内容 -->
+    <Host
+        <!-- 域名不需要写端口 -->
+        name="mydomain.com"
+        <!-- 编译产出目录的绝对路径 -->
+        appBase="/path/to/the/build/directory/of/your/java/project"
+        unpackWARs="true"
+        autoDeploy="true">
+
+        <!-- 至少在Tomcat7，path="" 和 docBase=""不能少 -->
+        <Context
+            path=""
+            docBase="/path/to/the/build/directory/of/your/java/project" crossContext="false"
+            reloadable="true"
+        />
+
+        <!-- ... -->
+
+    </Host>
+
+    <!-- ... -->
+
+  </Engine>
+
+  <!-- ... -->
+#+end_src
