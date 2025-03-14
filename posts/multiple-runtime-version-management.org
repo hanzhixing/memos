@@ -1,0 +1,37 @@
+#+title: 开发环境软件包多版本共存管理
+
+让开发环境中可以同时存在多个版本的Node.js, Java, Python......
+
+* 通用
+** TODO [[https://asdf-vm.com/][asdf]]
+定位没太看懂，说对标Homebrew吧，命令行能力好像还不太够。
+
+** 虚拟机
+用文件共享功能让虚拟机可以访问文件系统中的部分目录。
+
+编译、运行这种依赖复杂环境的都在虚拟机里完成。
+
+如果特别依赖IDE的图形化调试功能，那没办法。
+
+* Node.js
+** [[https://github.com/nvm-sh/nvm][nvm]]
+推荐用 *git clone* 的方式安装到自定义目录，创建软链到 *~/.nvm* 。
+
+可以使用 * NVM_NODEJS_ORG_MIRROR * 环境变量指定下载Node.js的mirror。
+
+* Python
+** [[https://github.com/pyenv/pyenv][pyenv]]
+推荐用 *git clone* 的方式安装到自定义目录，创建软链到 *~/.pyenv* 。
+
+MacOS下Homebrew的 *brew doctor* 警告需要单独处理。
+
+* Java
+** [[https://github.com/jenv/jenv][jenv]]
+推荐用 *git clone* 的方式安装到自定义目录，创建软链到 *~/.jenv* 。
+
+Java要自己下载解压安装，jenv只管版本和环境变量的切换。
+
+*JAVA_HOME* 应尽量避免在.bashrc或者.profile文件中配置。
+
+* TODO Go
+好像不太需要？

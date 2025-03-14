@@ -117,17 +117,20 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 整体上， *evil-multiedit* 会更容易使用，但是功能没有 *evil-mc* 强大。
 
 ** evil-multiedit
-在VISUAL模式下选中文本，再输入 *R* ，就会选中所有匹配的文本。
+选中文本，输入 *R* ，就会选中并高亮所有匹配的文本。
+
+高亮处进入INPUT模式，就可以同时进行修改。
+
+退出INPUT模式，会同时退出多点编辑模式。
 
 通过 *C-n* （正向）和 *C-p* （反向）移动光标。
 
-按 *RET* （回车键）可以取消选中光标所在处的匹配项。
-
-输入 *I* 或 *A* 进入INPUT模式，就可以根据需要同时修改选中的所有内容。
-
-*ESC* 或 *C-[* 来退出多点编辑模式。
+按 *RET* （回车键）可以取消选中光标位置匹配项。
 
 ** evil-mc
+*** g z m
+在选中文本的所有匹配位置都插入虚拟光标（不会高亮）。
+
 *** g z z
 在光标所在处新建虚拟光标。
 
@@ -141,9 +144,6 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 
 *** g z j (向下) 和 g z k (向上)
 在光标所在位置新建虚拟光标，并移动到下一行。
-
-*** g z m
-在匹配选中文本的所有位置都插入虚拟光标。
 
 *** g z d (正向) 和 g z D (反向)
 在光标所在位置新建虚拟光标，并移动到下一个匹配处。
@@ -181,11 +181,17 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 打开 *scratch* Buffer。
 
 * Org Mode
+** 快速插入Code Block
+输入 *<s TAB* 就会快速插入 *#+begin_src*。
+
+这个是[[https://orgmode.org/manual/Structure-Templates.html][Org Tempo(org-tempo.el)]] 来实现的，有点像snippets的功能。
+
+可以用 *SPC h v* 查看 *org-structure-template-alist* 变量来了解都支持哪些字符。
 
 ** 文件内配置
 添加到org文件头部即可生效。
 
-#+begin_example
+#+begin_example :eval no
 # Local Variables:
 # org-todo-keyword-faces: (("TODO" . "red") ("DOING" . "yellow") ("WAITING" . "orange") ("DONE" . "green") ("CANCEL" . "black"))
 # End:

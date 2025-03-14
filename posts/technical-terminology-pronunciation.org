@@ -1,0 +1,78 @@
+#+title: 技术术语读音
+
+参考顺序:
+- 官方网站
+- Wikipedia
+- Merriam Webster
+
+* 1. Nginx
+#+begin_example
+engine x ['ɛndʒɪn][eks]
+#+end_example
+
+http://nginx.org/en/
+
+#+begin_quote
+nginx [engine x] is an HTTP and reverse proxy
+server, a mail proxy server, and a generic TCP proxy server, originally
+written by Igor Sysoev.
+#+end_quote
+
+* 2. MySQL
+#+begin_example
+  My Ess Que Ell [ɛs][kjuː][ɛl]
+#+end_example
+
+https://dev.mysql.com/doc/refman/8.4/en/what-is-mysql.html
+
+#+begin_quote
+The official way to pronounce “MySQL” is “My Ess Que Ell” (not “my sequel”), but we do not mind if you pronounce it as “my sequel” or in some other localized way.
+#+end_quote
+
+* 3. Linux
+#+begin_example
+[ˈlɪnəks]
+#+end_example
+
+https://en.wikipedia.org/wiki/Linux
+
+[[https://www.youtube.com/watch?v=5IfHm6R5le0][Youtube上Linus本人对Linux发音的回答]]
+
+很像是
+
+#+begin_example
+[ˈlɪnɪks]
+#+end_example
+
+* 4. Git
+#+begin_example
+[ɡɪt]
+#+end_example
+
+Git是Linux的作者Linus Torvalds所编写。
+
+对它没有找到官方的文字记载的音标信息。
+
+[ *git* ] = [ *g* +e t+ ] + [ +k+ *i t* ]
+
+* 5. Ubuntu
+#+begin_example
+|oǒ’boǒntoō|
+#+end_example
+
+[[https://ubuntu.com/about][官方网站介绍]]
+
+#+begin_quote
+Ubuntu is an ancient African word meaning ‘humanity to others’. It is often described as reminding us that ‘I am what I am because of who we all are’. We bring the spirit of Ubuntu to the world of computers and software. The Ubuntu distribution represents the best of what the world’s software community has shared with the world.
+#+end_quote
+
+[[https://www.youtube.com/watch?v=44xbZ8MN1uk][Ubuntu: The Essence of Being Human]]
+
+[[https://www.youtube.com/watch?v=UT-3Eh65kkA][Mandela's Example of Ubuntu(南非黑人反种族隔离活动家-纳尔逊.曼德拉生前视频)]]
+
+* 6. Apache
+#+begin_example
+/əˈpætʃi/ ə-PATCH-ee
+#+end_example
+
+https://en.wikipedia.org/wiki/Apache
