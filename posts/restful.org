@@ -163,42 +163,35 @@ RESTful风格的协议中，
 
 如果你执意把“ *做什么操作？* ”的信息放进URL中，
 反而会给协议的使用者和维护者增加类似
-“ *到底在什么时候用get，什么时候用list，什么时候用fetch? *”的心智负担。
+“ *到底在什么时候用get，什么时候用list，什么时候用fetch? * ”的心智负担。
 
 ** 使用单数，而不是复数
 这一点可能会和你在网络上找到的RESTful最佳实践中的恰恰相反，
 有不少文章是推荐使用复数。
 
 例如：
-#+begin_example
-使用/posts来表达“获取多个帖子”。
-使用/posts/123来表达“在多个帖子中选择编号为123的那个帖子”。
-#+end_example
+- ~/posts~ 来表达“获取多个帖子”。
+- ~/posts/123~ 来表达“在多个帖子中选择编号为123的那个帖子”。
 
 如果用自然语言来理解，这样的确会更自然一些。
 
 但是英语中有很多单复数不规则名词。
 
 例如：
-
-#+begin_quote
-~people~ 既可以是“人”，也可以是“人民”。
-#+end_quote
-
+- ~people~ 既可以是“人”，也可以是“人民”。
 - ~sheep~ 则单复数相同。
-- ~axis~ 的复数既可以用=axes=，也可以用=axises=。
+- ~axis~ 的复数既可以用 ~axes~ ，也可以用 ~axises~ 。
+- ~criterion~ 的复数可以用 ~criteria~ 或 ~criterions~ 。
 
-#+begin_quote
-=criterion=的复数可以用=criteria=或=criterions=。
-#+end_quote
-
-甚至，国内一些项目中也有=childs=当作=child=复数来使用的例子，而=childs=实际为人名“蔡尔兹”。
+甚至，国内一些项目中也有 ~childs~ 当作 ~child~ 复数来使用的例子，
+而 ~childs~ 实际为人名“蔡尔兹”。
 
 笔者过去几年，也是复数的忠实粉丝，因为觉得复数更讲“人话”。
 
-但是经历了几年的实践，经受了复数的各种摧残，再也不会纠结“到底使用单数还是复数？”的问题。
+但是经历了几年的实践，经受了复数的各种摧残，
+再也不会纠结“到底使用单数还是复数？”的问题。
 
-因为*一定会使用“单数”*。
+因为 *一定会使用“单数”* 。
 
 我们在国内环境勉强可以自欺欺人地认为可以适当牺牲英语中精确的词法，来换API表达的直观和易懂，但是如果团队是跨国团队怎么办？
 
@@ -240,32 +233,28 @@ RESTful风格的协议中，
 无论如何，我们都不应该把自身系统中不合理的设计或者小圈子内产生的妥协传播到他系统中去。
 #+end_quote
 
-#+begin_src js
-// Good!
+#+begin_example
+# Good!
 /post/56/comment
 /user/1341/post
 
-// Bad!
+# Bad!
 /posts/56/comments
 /users/1341/posts
-#+end_src
+#+end_example
 
 ** 一致的模式
-:PROPERTIES:
-:CUSTOM_ID: 一致的模式
-:END:
-
 #+begin_quote
 /:实体类型/:实体编号/:实体类型/:实体编号...
 #+end_quote
 
 可以用如下URL的组织方式表达实体之间的关系。
 
-#+begin_src js
+#+begin_example
 // 下方URL都由相同的实体类型构成，但两个URL表达的含义是不一样的。
 /tag/456/post // 从所有的标签中，找到编号为456的标签，并找到拥有该标签的所有帖子。
 /post/123/tag // 从所有的帖子中，找到编号为123的帖子，并检索该帖子的所有标签。
-#+end_src
+#+end_example
 
 我们每天都在使用的域名其实也是这种方式组织信息的。
 
@@ -278,56 +267,53 @@ news.baidu.com. 所有商业类型网站中的，百度公司的，新闻频道�
 希望上面这个域名语义拆解，对你有帮助。
 
 ** 不使用修饰词
-:PROPERTIES:
-:CUSTOM_ID: 不使用修饰词
-:END:
 不要对资源实体对象进行修饰描述。
 
-如果没有这项限制，你很难阻止你的团队的成员在将来定义出postItems、postEntitis、commentObjects等千奇百怪的命名，最后导致你的团队成员们会花费大把的时间互相核对命名。
+如果没有这项限制，你很难阻止你的团队的成员在将来定义出
+~postItems~ 、 ~postEntitis~ 、 ~commentObjects~ 等千奇百怪的命名，
+最后导致你的团队成员们会花费大把的时间互相核对命名。
 
-#+begin_src js
-// Good!
+#+begin_example
+# Good!
 /user // 所有用户
 /tag // 所有标签
 
-// Evil!
+# Evil!
 /userList // List是废话
 /tagItems // Items是废话
-#+end_src
+#+end_example
 
 * Header
 对于HTTP报文，Header本身即是Meta信息，例如:
 ~Authorization~, ~Content-Type~, ~User-Agent~ 等。
 
-在=HTTP=协议中定义的标准=Header=之外，我们多少都需要自定义一些=Header=。
+在HTTP协议中定义的标准Header之外，我们多少都需要自定义一些Header。
 
-我们可以在[[https://www.iana.org/assignments/message-headers/message-headers.xml][IANA官方]]查看所有标准的=HTTP=头，以及目前被列为提案并有可能成为标准的头。
+我们可以在[[https://www.iana.org/assignments/message-headers/message-headers.xml][IANA官方]]查看所有标准的HTTP头，
+以及目前被列为提案并有可能成为标准的头。
 
-[[https://en.wikipedia.org/wiki/List_of_HTTP_header_fields][Wikipedia的List
-of HTTP header fields]]也是比较好的参考资料。
+[[https://en.wikipedia.org/wiki/List_of_HTTP_header_fields][Wikipedia的List of HTTP header fields]]也是比较好的参考资料。
 
-** 关于“X-”开头的=Header=
-:PROPERTIES:
-:CUSTOM_ID: 关于x-开头的header
-:END:
-[[https://datatracker.ietf.org/doc/html/rfc6648][RFC6648]]中已明确废弃自定义=Header=以“X-”开头的推荐。
+** 关于 ~X-~ 开头的Header
+[[https://datatracker.ietf.org/doc/html/rfc6648][RFC6648]]中已明确废弃自定义Header以 ~X-~ 开头的推荐。
 
-随着该RFC的普及，我们可以期待不会再产生似标准又非标准的“X-”开头的=Header=。
+随着该RFC的普及，我们可以期待不会再产生似标准又非标准的 ~X-~ 开头的Header。
 
-但是市面上已经有大量的软件使用了“X-”，它们成为了“事实上的标准”。
+但是市面上已经有大量的软件使用了 ~X-~ ，它们成为了“事实上的标准”。
 
-对于我们更重要的是，了解了这样的RFC产生的背景之后不再继续产生，同时又要克制地使用这些=Header=。
+对于我们更重要的是，了解了这样的RFC产生的背景之后不再继续产生，
+同时又要克制地使用这些Header。
 
-建议任何=RESTful API=协议文档中，单独维护该类型的自定义=Header=列表。
+建议任何RESTful API协议文档中，单独维护该类型的自定义Header列表。
 
-本文档中使用的“X-”开头的=Header=如下。
+本文档中使用的 ~X-~ 开头的Header如下。
 
-| Header        | 值                                                                                          | 含义                             |
-|---------------+---------------------------------------------------------------------------------------------+----------------------------------|
-| X-Total-Count | 大于等于0的整数                                                                             | 服务端查询到的满足条件的记录总数 |
-| X-Request-Id  | [[https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)][UUID v4]] | 客户端单次请求的唯一标识         |
+| Header          | 值              | 含义                             |
+|-----------------+-----------------+----------------------------------|
+| ~X-Total-Count~ | 大于等于0的整数 | 服务端查询到的满足条件的记录总数 |
+| ~X-Request-Id~  | [[https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)][UUID v4]]         | 客户端单次请求的唯一标识         |
 
-** =X-Total-Count=
+** ~X-Total-Count~
 :PROPERTIES:
 :CUSTOM_ID: x-total-count
 :END:
