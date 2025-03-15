@@ -130,10 +130,9 @@ API中有些信息可能直接从文件中读取，
 Meta信息的标识经常与“实体”和“实体属性”标识一起出现，
 所以我们需要使用特殊字符防止它们和Meta信息的冲突。
 
-计算机语言中使用比较多的有“ *=$=* ”和“ *=_=* ”，
-因为肉眼比较好识别。
+计算机语言中使用比较多的有 ~$~ 和 ~_~ ，因为肉眼比较好识别。
 
-但“ *=$=* ”上下匀称，更好看一些。
+但 ~$~ 上下匀称，更好看一些。
 
 * Path
 ** 不使用动词，而是使用名词
@@ -141,12 +140,12 @@ RESTful风格的协议中，
 
 用 *Http Method* 来回答“ *做什么操作？* ”的问题。
 
-- *=HEAD=*: 探
-- *=POST=*: 增
-- *=PATCH=*: 改
-- *=PUT=*: 替
-- *=GET=*: 查
-- *=DELETE=*: 删
+- ~HEAD~: 探
+- ~POST~: 增
+- ~PATCH~: 改
+- ~PUT~: 替
+- ~GET~: 查
+- ~DELETE~: 删
 
 用 *URL* 来回答“ *资源在哪里？* ”的问题。
 
@@ -162,20 +161,19 @@ RESTful风格的协议中，
 /fetchAllComments
 #+end_example
 
-如果你执意把“做什么操作？”的信息放进URL中，反而会给协议的使用者和维护者增加类似“到底在什么时候用get，什么时候用list，什么时候用fetch?”的心智负担。
+如果你执意把“ *做什么操作？* ”的信息放进URL中，
+反而会给协议的使用者和维护者增加类似
+“ *到底在什么时候用get，什么时候用list，什么时候用fetch? *”的心智负担。
 
 ** 使用单数，而不是复数
-:PROPERTIES:
-:CUSTOM_ID: 使用单数而不是复数
-:END:
-这一点可能会和你在网络上找到的RESTful最佳实践中的恰恰相反，有不少文章是推荐使用复数。
+这一点可能会和你在网络上找到的RESTful最佳实践中的恰恰相反，
+有不少文章是推荐使用复数。
 
 例如：
-
-#+begin_quote
+#+begin_example
 使用/posts来表达“获取多个帖子”。
 使用/posts/123来表达“在多个帖子中选择编号为123的那个帖子”。
-#+end_quote
+#+end_example
 
 如果用自然语言来理解，这样的确会更自然一些。
 
@@ -184,16 +182,11 @@ RESTful风格的协议中，
 例如：
 
 #+begin_quote
-=people=既可以是“人”，也可以是“人民”。
+~people~ 既可以是“人”，也可以是“人民”。
 #+end_quote
 
-#+begin_quote
-=sheep=则单复数相同。
-#+end_quote
-
-#+begin_quote
-=axis=的复数既可以用=axes=，也可以用=axises=。
-#+end_quote
+- ~sheep~ 则单复数相同。
+- ~axis~ 的复数既可以用=axes=，也可以用=axises=。
 
 #+begin_quote
 =criterion=的复数可以用=criteria=或=criterions=。
@@ -302,12 +295,9 @@ news.baidu.com. 所有商业类型网站中的，百度公司的，新闻频道�
 /tagItems // Items是废话
 #+end_src
 
-* =Header=
-:PROPERTIES:
-:CUSTOM_ID: header
-:END:
-对于=HTTP=报文，=Header=本身即是=Meta=信息，例如=Authorization=,
-,=Content-Type=, =User-Agent=等。
+* Header
+对于HTTP报文，Header本身即是Meta信息，例如:
+~Authorization~, ~Content-Type~, ~User-Agent~ 等。
 
 在=HTTP=协议中定义的标准=Header=之外，我们多少都需要自定义一些=Header=。
 
