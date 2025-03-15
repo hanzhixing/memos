@@ -50,11 +50,9 @@ API中有些信息可能直接从文件中读取，
 ** 日期和时间 - ISO8601
 日期和时间，因为涉及时区，涉及到Timestamp, GMT, UTC, CST等不同表达方式。
 
-如果不统一，会产生很多问题。
+如果不统一，会产生很多问题。一律使用ISO8601格式的Datetime。
 
-一律按照ISO8601的标准表达Datetime。
-
-以最终存储精度为准，记录最精确的时间。
+API中使用能够存储的最精确的时间，客户端使用时根据需要进行转换。
 
 - 精确到秒: ~YYYY-MM-DDTHH:mm:ssZ~
 
@@ -91,8 +89,8 @@ RESTful API的后端，通常都是关系型数据库。
     "author": "23",
     "content": "..... ...... ......",
     "deleted": false,
-    "ctime": "2024-08-23T21:43:21Z",
-    "utime": "2025-03-15T12:07:59Z",
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
 }
 #+end_example
 
@@ -107,21 +105,21 @@ RESTful API的后端，通常都是关系型数据库。
         "pid": "7",
         "text": "规约设计",
         "deleted": false,
-        "ctime": "2023-12-07T21:43:21Z",
-        "utime": "2023-12-07T21:43:21Z",
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2025-03-15T12:07:59.234Z",
     },
     "author": {
         "id": "1432414132",
         "nickname": "夏天的虫子",
         "username": "hanzhixing"
         "deleted": false,
-        "ctime": "2023-12-07T21:43:21Z",
-        "utime": "2023-12-07T21:43:21Z",
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2025-03-15T12:07:59.234Z",
     },
     "content": "..... ...... ......",
     "deleted": false,
-    "ctime": "2024-08-23T21:43:21Z",
-    "utime": "2025-03-15T12:07:59Z",
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
 }
 #+end_example
 
@@ -938,18 +936,20 @@ Status Code: 409 Conflict
 #+end_example
 
 * Body
-** 增
+** 单实体
+*** 增
 相当于SQL中的INSERT。
 
 创建对象的时候“ID、用户、是否删除、创建时间”等特殊的属性，需要由服务端生成。
 
 这意味着客户端在提交时刻，并不掌握新增实体的所有信息。
 
-所以，需要返回新创建的实体的完整内容，默认返回《元实体》。
+默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
 
 #+begin_example
 # 请求
-# POST /post
+# Request URL: /post
+# Request Method: POST
 {
     "title": "合理设计RESTful API",
     "category": "14",
@@ -965,15 +965,100 @@ Status Code: 409 Conflict
     "author": "23",
     "content": "..... ...... ......",
     "deleted": false,
-    "ctime": "2024-08-23T21:43:21Z",
-    "utime": "2025-03-15T12:07:59Z",
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
 }
 #+end_example
 
-** 删
-** 替
-** 改
-** 查
+*** 删
+相当于SQL中的DELETE，服务端实现大多数为软删除。
+
+逻辑上只能成功一次，对后续相同请求应返回 ~404~ 。
+
+如果删除之后希望返回被删除的对象，需要至少执行两次SQL语句。
+
+所以，一般是用户确认在先，然后再提交删除操作，成功之后反馈结果即可。
+
+不需要返回任何内容。
+
+#+begin_example
+# 请求
+# Request URL: /post/1234513432
+# Request Method: DELETE
+
+# 响应
+# Status Code: 204 No Content
+#+end_example
+
+*** 替
+相当于SQL中的UPDATE，Body相当于SET的参数，URL相当于WHERE。
+
+提交的实体中需要包含，由客户端产生内容的所有属性。
+
+但原本由服务端产生内容的“ID、用户、是否删除、创建时间、更新时间”等属性，
+服务端应该按照安全合理的方式进行处理，不能信任客户端。
+即便客户端提交了，也应该忽略。
+
+响应时和“增”相同，需要返回更改的实体数据。
+
+默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
+
+#+begin_example
+# 请求
+# Request URL: /post/
+# Request Method: PUT
+{
+    "id": "1234513432",
+    "title": "合理设计RESTful API",
+    "category": "14",
+    "author": "23",
+    "content": "..... ...... ......",
+}
+
+# 响应
+# Status Code: 200 Ok
+{
+    "id": "1234513432",
+    "title": "合理设计RESTful API",
+    "category": "14",
+    "author": "23",
+    "content": "..... ...... ......",
+    "deleted": false,
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
+}
+#+end_example
+
+*** 改
+参考《替》。
+
+区别只是把PUT方法改成PATCH，提交时刻所有属性都是可选的。
+
+*** 查
+相当于SQL中的SELECT，URL相当于WHERE。
+
+默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
+
+#+begin_example
+# 请求
+# Request URL: /post/1234513432
+# Request Method: GET
+
+# 响应
+# Status Code: 200 Ok
+{
+    "id": "1234513432",
+    "title": "合理设计RESTful API",
+    "category": "14",
+    "author": "23",
+    "content": "..... ...... ......",
+    "deleted": false,
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
+}
+#+end_example
+
+** 多实体
 * 版本化
 使用[[https://semver.org/][Semantic Versioning]]。
 
