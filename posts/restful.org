@@ -70,14 +70,14 @@ API中有些信息可能直接从文件中读取，
 退而求其次，考虑到跨不同计算机语言的兼容性，我们应该
 
 #+begin_quote
-避免使用 *=kebab-case=* 。
+避免使用 ~kebab-case~ 。
 #+end_quote
 
-有很多计算机语言的标识符中不能包含“ *=-=* ”。
+有很多计算机语言的标识符中不能包含 ~-~ 。
 
-在一些不区分大小写的系统中“ *=PascalCase, camelCase=* ”
+在一些不区分大小写的系统中 ~PascalCase~ , ~camelCase~
 这种以大小写来确定词汇边界的命名方式，
-极有可能变成“ *=pascalcase=, =camelcase=* ”。
+极有可能变成 ~pascalcase~ , ~camelcase~ 。
 
 如果我们把时间看得足够长，
 我们就有机会在区分大小写的系统和不区分大小写的系统之间传播文件名等信息。
@@ -99,20 +99,20 @@ API中有些信息可能直接从文件中读取，
 这些语言之间，很大概率命名风格也不一样。
 
 #+begin_quote
-据统计“ *=snake_case=* ”风格比“ *=camelCase=* ”要容易阅读 *20%* 左右!
+据统计 ~snake_case~ 风格比 ~camelCase~ 要容易阅读 *20%* 左右!
 #+end_quote
 
 所以综合考虑
 
 #+begin_quote
-应该优先使用“ *=snake_case=* ”。
+应该优先使用 ~snake_case~ 。
 #+end_quote
 
 还有有些人可能没有注意到
 
 #+begin_quote
 在浏览器和绝大多数的软件中，
-双击鼠标去选中标识符的时候，“ *=snake_case=* ”一般能够完整的被选中，
+双击鼠标去选中标识符的时候， ~snake_case~ 一般能够完整的被选中，
 复制比较方便。
 #+end_quote
 
