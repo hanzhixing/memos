@@ -181,6 +181,8 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 打开 *scratch* Buffer。
 
 * Org Mode
+** [[https://github.com/snosov1/toc-org]]
+
 ** 快速插入Code Block
 输入 *<s TAB* 就会快速插入 *#+begin_src*。
 
@@ -191,7 +193,7 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 ** 文件内配置
 添加到org文件头部即可生效。
 
-#+begin_example :eval no
+#+begin_example
 # Local Variables:
 # org-todo-keyword-faces: (("TODO" . "red") ("DOING" . "yellow") ("WAITING" . "orange") ("DONE" . "green") ("CANCEL" . "black"))
 # End:
