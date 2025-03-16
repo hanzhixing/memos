@@ -66,7 +66,10 @@ API中使用能够存储的最精确的时间，客户端使用时根据需要�
 
   例如：2023-09-12T00:18:25.513551Z
 
-* 《元实体》和 《富实体》
+* ~基本实体~ 和 ~扩展实体~
+:PROPERTIES:
+:CUSTOM_ID: basic-entity-and-extended-entity
+:END:
 RESTful API的后端，通常都是关系型数据库。
 
 在关系型数据库的语境中，信息通常是 *范式化* 存储。
@@ -79,7 +82,7 @@ RESTful API的后端，通常都是关系型数据库。
 
 注意观察 ~category~ 和 ~author~ 两个属性的区别。
 
-*** 元实体
+*** 基本实体
 没有扩展关联对象的结构。
 #+begin_example
 {
@@ -94,7 +97,7 @@ RESTful API的后端，通常都是关系型数据库。
 }
 #+end_example
 
-*** 富实体
+*** 扩展实体
 扩展了关联对象的结构。
 #+begin_example
 {
@@ -429,6 +432,9 @@ X-Request-Id: 83fbbb94-ae84-4853-bf6c-613a12bfaf32
 #+end_example
 
 * Query
+:PROPERTIES:
+:CUSTOM_ID: query
+:END:
 ** URL Encode
 严格来讲应该按照[[https://datatracker.ietf.org/doc/html/rfc3986][RFC 3986]]进行编码，具体规则可以参考[[https://en.wikipedia.org/wiki/Percent-encoding][URL Encode]]。
 
@@ -560,6 +566,9 @@ GET /user?$sort=-age,sex,-job
 #+end_example
 
 ** 搜索 - ~$keyword~
+:PROPERTIES:
+:CUSTOM_ID: query-keyword
+:END:
 有一些检索场景是没有办法明确指定具体字段，甚至是实体资源类型。
 
 例如，检索标题、摘要或者内容中包含某种关键词的所有帖子的场景。
@@ -734,6 +743,46 @@ LIMIT 1, 5
 因为客户端只是想知道“ *是否有更多* ”，所以服务端和客户端完全可以协商，
 一旦有更多数据就保证响应头中的 ~X-Total-Count~ 大于0（例如1）
 或者大于 ~$count~ 值（例如 ~$count + 1~ ）来表达 ~X-Has-More~ 的含义。
+
+** 属性挑选 - ~$pick~
+:PROPERTIES:
+:CUSTOM_ID: meta-query-pick
+:END:
+只挑选部分属性。
+
+不允许与 ~$omit~ 同时出现。
+
+#+begin_example
+# 只挑选姓名、年龄、性别等3个属性
+/person?$pick=name&$pick=age&$pick=sex
+#+end_example
+
+** 属性排除 - ~$omit~
+:PROPERTIES:
+:CUSTOM_ID: meta-query-omit
+:END:
+排除部分属性。
+
+不允许与 ~$pick~ 同时出现。
+
+#+begin_example
+# 排除内容，创建时间2个属性
+/post?$omit=content&$omit=ctime
+#+end_example
+
+** 属性扩展 - 内嵌 - ~$embed~
+:PROPERTIES:
+:CUSTOM_ID: meta-query-embed
+:END:
+[[#basic-entity-and-extended-entity][基本实体]]基础上，内嵌关联对象。
+
+#+begin_example
+# 内嵌地址对象
+/person?$embed=address
+
+# 内嵌用户对象
+/post?$embed=author
+#+end_example
 
 * 状态码
 [[https://tools.ietf.org/html/rfc2616][HTTP1.1]]一共定义了如下的状态码，总共41个。
@@ -936,7 +985,34 @@ Status Code: 409 Conflict
 #+end_example
 
 * Body
+示例中会适当省略上下无关的Http Header。
+
 ** 单实体
+*** 探
+可用来判断有没有。
+
+#+begin_example
+# 请求
+# Request URL: /image/abc.xml
+# Request Method: HEAD
+
+# 响应
+# Status Code: 404 Not Found
+#+end_example
+
+也可用来获取资源的Meta信息，比如大小、最后修改时间等。
+#+begin_example
+# 请求
+# Request URL: /image/86108637-8cc5-40ea-b9ec-d6ac83bbf13a.png
+# Request Method: HEAD
+
+# 响应
+# Status Code: 200 Ok
+# Date: Wed, 04 Sep 2024 10:33:11 GMT
+# Content-Type: image/png
+# Content-Length: 3241341
+#+end_example
+
 *** 增
 相当于SQL中的INSERT。
 
@@ -944,7 +1020,7 @@ Status Code: 409 Conflict
 
 这意味着客户端在提交时刻，并不掌握新增实体的所有信息。
 
-默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
+默认返回[[#basic-entity-and-extended-entity][基本实体]]，根据 ~query~ 参数相应地改变返回内容。
 
 #+begin_example
 # 请求
@@ -966,7 +1042,7 @@ Status Code: 409 Conflict
     "content": "..... ...... ......",
     "deleted": false,
     "ctime": "2024-08-23T21:43:21.234Z",
-    "utime": "2025-03-15T12:07:59.234Z",
+    "utime": "2024-08-23T21:43:21.234Z",
 }
 #+end_example
 
@@ -991,6 +1067,9 @@ Status Code: 409 Conflict
 #+end_example
 
 *** 替
+:PROPERTIES:
+:CUSTOM_ID: body-single-entity-put
+:END:
 相当于SQL中的UPDATE，Body相当于SET的参数，URL相当于WHERE。
 
 提交的实体中需要包含，由客户端产生内容的所有属性。
@@ -1001,7 +1080,7 @@ Status Code: 409 Conflict
 
 响应时和“增”相同，需要返回更改的实体数据。
 
-默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
+默认返回[[#basic-entity-and-extended-entity][基本实体]]，根据 ~query~ 参数相应地改变返回内容。
 
 #+begin_example
 # 请求
@@ -1030,14 +1109,17 @@ Status Code: 409 Conflict
 #+end_example
 
 *** 改
-参考《替》。
+参考[[#body-single-entity-put][替]]。
 
-区别只是把PUT方法改成PATCH，提交时刻所有属性都是可选的。
+区别只是把 ~PUT~ 方法改成 ~PATCH~ ，提交时刻 ~所有属性都是可选~ 的。
 
 *** 查
+:PROPERTIES:
+:CUSTOM_ID: body-single-entity-get
+:END:
 相当于SQL中的SELECT，URL相当于WHERE。
 
-默认返回《元实体》，根据 ~query~ 参数相应地改变返回内容。
+默认返回[[#basic-entity-and-extended-entity][基本实体]]
 
 #+begin_example
 # 请求
@@ -1058,7 +1140,217 @@ Status Code: 409 Conflict
 }
 #+end_example
 
+**** 属性挑选 - ~$pick~
+#+begin_example
+# 请求
+# Request URL: /post/1234513432?$pick=title&$pick=content&$pick=ctime
+# Request Method: GET
+
+# 响应
+# Status Code: 200 Ok
+{
+    "title": "合理设计RESTful API",
+    "content": "..... ...... ......",
+    "ctime": "2024-08-23T21:43:21.234Z",
+}
+#+end_example
+
+**** 属性排除 - ~$omit~
+#+begin_example
+# 请求
+# Request URL: /post/1234513432?$omit=category&$omit=author&$omit=deleted&$omit=ctime
+# Request Method: GET
+
+# 响应
+# Status Code: 200 Ok
+{
+    "id": "1234513432",
+    "title": "合理设计RESTful API",
+    "content": "..... ...... ......",
+    "utime": "2025-03-15T12:07:59.234Z",
+}
+#+end_example
+
+**** 关联对象 - ~$embed~
+#+begin_example
+# 请求
+# Request URL: /post/1234513432?$embed=category&$embed=author
+# Request Method: GET
+
+# 响应
+# Status Code: 200 Ok
+{
+    "id": "1234513432",
+    "title": "合理设计RESTful API",
+    "category": {
+        "id": "14",
+        "pid": "7",
+        "text": "规约设计",
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2025-03-15T12:07:59.234Z",
+    },
+    "author": {
+        "id": "1432414132",
+        "nickname": "夏天的虫子",
+        "username": "hanzhixing"
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2025-03-15T12:07:59.234Z",
+    },
+    "content": "..... ...... ......",
+    "deleted": false,
+    "ctime": "2024-08-23T21:43:21.234Z",
+    "utime": "2025-03-15T12:07:59.234Z",
+}
+
 ** 多实体
+*** 探
+应用场景不是很多。
+
+#+begin_example
+# 请求
+# Request URL: /post?category_23
+# Request Method: HEAD
+
+# 响应
+# Status Code: 200 Ok
+# X-Total-Count: 34
+#+end_example
+
+*** 增
+部分成功可以用 ~404~ 返回详细情况。
+
+默认返回[[#basic-entity-and-extended-entity][基本实体]]，根据 ~query~ 参数相应地改变返回内容。
+
+#+begin_example
+# 请求
+# Request URL: /post
+# Request Method: POST
+[
+    {
+        "title": "合理设计RESTful API",
+        "category": "14",
+        "content": "..... ...... ......",
+    },
+    {
+        "title": "设计高可用架构的方法",
+        "category": "14",
+        "content": "..... ...... ......",
+    }
+]
+
+# 响应
+# Status Code: 201 Created
+[
+    {
+        "id": "1234513432",
+        "title": "合理设计RESTful API",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2024-08-23T21:43:21.234Z",
+    }
+    {
+        "id": "1234513432",
+        "title": "设计高可用架构的方法",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2024-08-23T21:43:21.234Z",
+    }
+]
+#+end_example
+
+*** 删
+部分成功可以用 ~404~ 返回详细情况。
+
+成功不需要返回任何内容。
+
+#+begin_example
+# 请求
+# Request URL: /post?id=3413&id=5353
+# Request Method: DELETE
+
+# 响应
+# Status Code: 204 No Content
+#+end_example
+
+*** 替
+:PROPERTIES:
+:CUSTOM_ID: body-multiple-entity-put
+:ID:       81d22665-ac49-4553-ace4-e28c33ae12ae
+:END:
+部分成功可以用 ~404~ 返回详细情况。
+
+默认返回[[#basic-entity-and-extended-entity][基本实体]]，根据 ~query~ 参数相应地改变返回内容。
+
+#+begin_example
+# 请求
+# Request URL: /post
+# Request Method: PUT
+[
+    {
+        "id": "1234513432",
+        "title": "合理设计RESTful API",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+    },
+    {
+        "id": "2234513432",
+        "title": "设计高可用架构的方法",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+    }
+]
+
+# 响应
+# Status Code: 201 Created
+[
+    {
+        "id": "1234513432",
+        "title": "合理设计RESTful API",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2024-08-23T21:43:21.234Z",
+    }
+    {
+        "id": "2234513432",
+        "title": "设计高可用架构的方法",
+        "category": "14",
+        "author": "23",
+        "content": "..... ...... ......",
+        "deleted": false,
+        "ctime": "2024-08-23T21:43:21.234Z",
+        "utime": "2024-08-23T21:43:21.234Z",
+    }
+]
+#+end_example
+
+*** 改
+参考[[#body-multiple-entity-put][Body - 多实体 - 替]]。
+
+区别只是把 ~PUT~ 方法改成 ~PATCH~ ，提交时刻所有属性都是可选的。
+
+*** 查
+参考[[#query][Query]]。
+
+参考[[#body-single-entity-get][Body-单实体-查]] ，Body是数组。
+
+*** 搜
+参考[[#query-keyword][Query - 搜索 - $keyword]]。
+
+参考[[#body-single-entity-get][Body-单实体-查]] ，Body是数组。
+
 * 版本化
 使用[[https://semver.org/][Semantic Versioning]]。
 
