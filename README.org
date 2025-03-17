@@ -1,7 +1,7 @@
 #+title: There are ways to get there...
 
 #+begin_quote
->Github支持markdown或者org-mode格式。
+Github支持markdown或者org-mode格式。
 #+end_quote
 
 - [[./posts/principles-for-good-coding.org][优秀编码原则]]
