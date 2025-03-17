@@ -153,7 +153,6 @@ cat /etc/resolv.conf
 ![09](images/09.png "09")
 
 ## 验证网络通信
-
 打开宿主机（主机）的终端（Terminal)，通过ssh连接虚拟机。
 
 ```shell
@@ -163,3 +162,35 @@ ssh actor@192.168.56.11
 ![10](images/10.png "10")
 
 如果能够成功连接，则说明我们大功告成。
+
+## 配置共享目录（可选）
+填写共享目录信息。
+
+![11](images/11.png "11")
+
+想使用共享目录功能，需要安装`Guest Additions`。
+
+启动虚拟机之后在菜单中依次选择`Devices - Insert Guest Additions CD images...`。
+
+![14](images/14.png "14")
+
+挂载`cdrom`。
+
+```shell
+mount /dev/cdrom /media/cdrom
+ls /media/cdrom
+```
+
+![12](images/12.png "12")
+
+安装`Guest Additions`。
+
+```shell
+cd /media/cdrom
+./VBoxLinuxAdditions.run
+```
+![13](images/13.png "13")
+
+安装成功之后，共享目录就自动挂载了。
+
+![15](images/15.png "15")
