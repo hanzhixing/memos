@@ -94,7 +94,7 @@ Live Syncing(Mirror) Daemon
 
 基于inotify或fsevents通过rsync等传输工具实现实时同步文件。
 
-* MySQL
+* MariaDB/MySQL
 保证utf-8为默认字符集。
 
 #+begin_example
@@ -107,7 +107,7 @@ default-character-set = utf8mb4
 [mysqld]
 character-set-client-handshake = FALSE
 character-set-server = utf8mb4
-collation-server = utf8mb4_unicode_ci
+collation-server = utf8mb4_unicode_520_ci
 #+end_example
 
 * 字体类型

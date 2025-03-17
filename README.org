@@ -5,7 +5,7 @@
 #+end_quote
 
 - [[./posts/principles-for-good-coding.org][优秀编码原则]]
-- [[./posts/restful.md][合理设计RESTful API]]
+- [[./posts/restful.org][合理设计RESTful API]]
 - [[./posts/virtualbox-minium-debian12/index.md][VirtualBox最小化安装Debian12]]
 - [[./posts/virtualbox-clone-and-init/index.md][VirtualBox初始化虚拟机]]
 - [[./posts/virtualbox-k8s-cluster/index.md][VirtualBox搭建k8s集群]]
