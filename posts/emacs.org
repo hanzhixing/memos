@@ -39,11 +39,21 @@ codesign --force --deep --sign - -v --strip-disallowed-xattrs /usr/local/Cellar/
 #+end_src
 
 * Chemacs2
-Emacs 29增加了--init-directory参数，但是解决不了env的问题。
-
 Chemacs2在已经安装好doomemacs和spacemacs之后切换是好用。
 
 但是更改配置重新执行doom sync或者启动spacemacs，总是会出问题。
+
+Emacs 29增加了--init-directory参数，但是解决不了env的问题。
+
+在设置环境变量 ~DOOMDIR~ , ~SPACEMACSDIR~ 的前提下，
+
+指定 ~--init-directory~ 启动Emacs，或者创建 ~/.emacs.d的软链接，
+
+都可以从命令行加载正确的配置文件启动Emacs。
+
+但是GUI无法正确加载Doom Emacs或Spacemacs的用户自定义配置。
+
+[[https://github.com/doomemacs/doomemacs/blob/master/profiles/README.org][Doom Emacs也提供了切换profile的能力]]，但好像还在完善当中，可以持续关注。
 
 Doom Emacs和Spacemacs都可以通过创建2个软链接进行替换。
 
