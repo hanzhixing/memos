@@ -43,7 +43,7 @@ Chemacs2在已经安装好doomemacs和spacemacs之后切换是好用。
 
 但是更改配置重新执行doom sync或者启动spacemacs，总是会出问题。
 
-Emacs 29增加了--init-directory参数，但是解决不了env的问题。
+Emacs 29增加了--init-directory参数。
 
 在设置环境变量 ~DOOMDIR~ , ~SPACEMACSDIR~ 的前提下，
 
@@ -51,11 +51,16 @@ Emacs 29增加了--init-directory参数，但是解决不了env的问题。
 
 都可以从命令行加载正确的配置文件启动Emacs。
 
-但是GUI无法正确加载Doom Emacs或Spacemacs的用户自定义配置。
+但是 ~Emacs.app~ 无法正确加载Doom Emacs或Spacemacs的用户自定义配置。
+
+- Doom Emacs是刻意没把 ~DOOMDIR~ 写进 ~env~文件中。
+- Spacemacs是即便把 ~SPACEMACSDIR~ 写进 ~/.spacemacs.env~ 文件中也不行。
+
+应该是对于 ~Emacs.app~ 这两个变量实际没有在读取用户配置文件之前生效。
+
+不过 ~Doom Emacs~ 和 ~Spacemacs~ 都可以通过创建2个软链接的方式进行切换。
 
 [[https://github.com/doomemacs/doomemacs/blob/master/profiles/README.org][Doom Emacs也提供了切换profile的能力]]，但好像还在完善当中，可以持续关注。
-
-Doom Emacs和Spacemacs都可以通过创建2个软链接进行替换。
 
 感觉Chemacs2的用处不大。
 
