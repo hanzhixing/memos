@@ -187,6 +187,8 @@ ls /media/cdrom
 
 ```shell
 cd /media/cdrom
+# 安装Kernel Headers
+apt install linux-headers-$(uname -r)
 ./VBoxLinuxAdditions.run
 ```
 ![13](images/13.png "13")

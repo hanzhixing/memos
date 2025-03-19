@@ -1,40 +1,5 @@
 #+title: 其他备忘
 
-* [[https://pandoc.org/][Pandoc]]
-#+begin_quote
-A universal document converter
-#+end_quote
-
-各种文档格式之间相互转换，支持市面上看到的绝大多数文档格式。
-
-#+begin_src shell
-pandoc -f markdown -t org -o output.org input.md
-#+end_src
-
-* FFmpeg
-#+begin_quote
-A complete, cross-platform solution to record, convert and stream audio and video.
-#+end_quote
-
-#+begin_src shell
-# 旋转视频
-ffmpeg -display_rotation -90 -i INPUT -c copy OUTPUT
-
-# 修改视频的分辨率
-ffmpeg -i INPUT -vf scale=1440:-1 OUTPUT
-
-# 剪辑视频片段
-ffmpeg -i INPUT -ss 00:05:10 -to 00:15:30 -c copy OUPUT
-
-# 拼接多个视频
-touch files.txt
-echo "file '/path/to/input/file1'"
-echo "file '/path/to/input/file2'"
-echo "file '/path/to/input/file3'"
-
-ffmpeg -f concat -i files.txt -c copy OUTPUT
-#+end_src
-
 * 只查询手动安装的软件包
 ** Homebrew
 *** 方法1
@@ -87,12 +52,65 @@ brew info CASKNAME
 npm list --global --parseable --depth=0 | grep 'node_modules' | xargs basename | grep -v -E '(npm|corepack)' | paste -s -d' ' -
 #+end_src
 
-* [[https://github.com/lsyncd/lsyncd][Lsyncd]]
+** pip
+虽然不是完全准确，但勉强能用。
+
+#+begin_src shell
+pip list --not-required | grep -v 'pip' | tail -n +3 | awk '{print $1}' | paste -s -d' ' -
+#+end_src
+
+** go
+查了半天资料，没找到如何列出安装到$GOPATH中的所有软件包。
+
+还是查 ~$GOPATH/bin~ 目录把。
+
+* 选择最快的 ~apt~ 源
+#+begin_src shell
+apt install netselect-apt
+
+netselect-apt
+
+cp /etc/apt/sources.list /etc/apt/sources.list.backup
+cp sources.list /etc/apt/sources.list
+
+apt update
+#+end_src
+
+把生成的source.list复制到
+* [[https://pandoc.org/][Pandoc]]
 #+begin_quote
-Live Syncing(Mirror) Daemon
+A universal document converter
 #+end_quote
 
-基于inotify或fsevents通过rsync等传输工具实现实时同步文件。
+各种文档格式之间相互转换，支持市面上看到的绝大多数文档格式。
+
+#+begin_src shell
+pandoc -f markdown -t org -o output.org input.md
+#+end_src
+
+* FFmpeg
+#+begin_quote
+A complete, cross-platform solution to record, convert and stream audio and video.
+#+end_quote
+
+#+begin_src shell
+# 旋转视频
+ffmpeg -display_rotation -90 -i INPUT -c copy OUTPUT
+
+# 修改视频的分辨率
+ffmpeg -i INPUT -vf scale=1440:-1 OUTPUT
+
+# 剪辑视频片段
+ffmpeg -i INPUT -ss 00:05:10 -to 00:15:30 -c copy OUPUT
+
+# 拼接多个视频
+touch files.txt
+echo "file '/path/to/input/file1'"
+echo "file '/path/to/input/file2'"
+echo "file '/path/to/input/file3'"
+
+ffmpeg -f concat -i files.txt -c copy OUTPUT
+#+end_src
 
 * MariaDB/MySQL
 保证utf-8为默认字符集。
@@ -223,6 +241,13 @@ export JAVA_OPTS="-Xmx2048m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -Df
 
   <!-- ... -->
 #+end_src
+
+* [[https://github.com/lsyncd/lsyncd][Lsyncd]]
+#+begin_quote
+Live Syncing(Mirror) Daemon
+#+end_quote
+
+基于inotify或fsevents通过rsync等传输工具实现实时同步文件。
 
 * XLFD (X Logical Font Description)
 密文版的字体描述。
