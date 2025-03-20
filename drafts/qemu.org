@@ -1,0 +1,307 @@
+#+title: Qemu
+
+* QEMU命令
+安装之后有
+- qemu-edid
+- qemu-img
+- qemu-io
+- qemu-nbd
+- qemu-storage-daemon
+- qemu-system-XXX
+
+* qemu-system-x86_64
+整机虚拟主要用这个命令。
+
+#+begin_example
+qemu-system-x86_64 [machine opts] \
+                   [cpu opts] \
+                   [accelerator opts] \
+                   [device opts] \
+                   [backend opts] \
+                   [interface opts] \
+                   [boot opts]
+
+#+end_example
+
+
+
+* 主板
+对应的参数
+** ~--machine~
+  主要是指定 ~type~ 和 ~accel~ 两个属性。
+
+  分别对应主板芯片组和硬件加速模式。
+
+*** ~type~
+可以用命令查看支持的类型，以及默认值。
+#+begin_src shell :noeval
+qemu-system-x86_64 -machine type,help
+#+end_src
+
+默认是 ~pc-i440fx-9.2~ ，我们要使用 ~q35~ 。
+
+区别可以看链接。
+- https://zhuanlan.zhihu.com/p/664866414
+- https://remimin.github.io/2019/07/09/qemu_machine_type/
+- https://www.linux-kvm.org/images/0/06/2012-forum-Q35.pdf
+
+***  ~accel~
+有 ~kvm, xen, hvf, nvmm, whpx, tcg~ ，默认是 ~tcg~ (Tiny Code Generator)。
+
+~tcg~ 相当于软件模拟，很慢，但不受宿主机环境的限制。
+
+主要根据宿主机情况选。
+
+- ~Linux~ 选 ~kvm~
+- ~Windows~ 选 ~hax~
+- ~MacOS~ 选 ~hvf~
+
+段位到了可以看看其他的。
+
+* CPU
+** ~-cpu~
+可以用命令查看支持的模型。
+
+很多，其实不查阅大量资料基本看不懂，肯定也写不出来正确的。
+
+#+begin_src shell :noeval
+qemu-system-x86_64 -cpu help
+#+end_src
+
+除非会把虚拟机迁移到别的机器上，选 ~host~ 就对了。
+
+~CPUID~ 更多，需要懂CPU的专业知识。
+
+** ~smp~
+模拟多CPU的架构，一般用不着。
+
+* 内存
+~-m~ 指定内存大小即可。
+
+* 磁盘
+#+begin_src shell :noeval
+qemu-img create -f qcow2 harddisk.qcow2 20G
+#+end_src
+
+* 网络
+https://developer.apple.com/documentation/vmnet
+https://taoshu.in/unix/qemu-bridge-on-macos.html
+
+不喜欢桥接
+
+https://gist.github.com/andriytk/bd3def8c30cbd474490280436c779027
+已经不支持tuntap了。
+
+https://github.com/ghik/kubernetes-the-harder-way/blob/main/docs/01_Learning_How_to_Run_VMs_with_QEMU.md
+
+虚拟完整操作系统，我们主要关心 ~qemu-system-x86_64~ 。
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+  -netdev vmnet-bridged,id=net0,ifname=en0 \
+  -device virtio-net,netdev=net0
+#+end_src
+
+* 虚拟目录
+https://wiki.qemu.org/Documentation/9psetup
+
+* 最后命令
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -machine type=q35 \
+    -machine type=q35,accel=hvf \
+    -cpu host \
+    -m 2G \
+    -rtc base=localtime,clock=host \
+    -drive file=harddisk.qcow2 \
+    -drive file=debian-12.10.0-amd64-netinst.iso,media=cdrom
+#+end_src
+
+#+begin_src shell :noeval
+qemu-system-x86_64
+-boot order=d,menu=on,reboot-timeout=5000
+-m size=4096,slots=0,maxmem=4294967296
+-k en-us
+-name Win10_21H2_English_x64.iso,process=Win10_21H2_English_x64.iso_0
+-device virtio-scsi-pci,id=scsi0
+-device virtio-vga-gl
+-display sdl,gl=on
+-audiodev pa,id=snd0
+-device ich9-intel-hda
+-device hda-output,audiodev=snd0
+-device virtio-net-pci,romfile=,netdev=net0
+-netdev user,id=net0,hostfwd=tcp::60037-:22
+-machine type=q35,accel=kvm,usb=on,pcspk-audiodev=snd0
+-global ICH9-LPC.disable_s3=1
+-enable-kvm
+-device scsi-cd,bus=scsi0.0,drive=cdrom0
+-drive id=cdrom0,if=none,format=raw,media=cdrom,read-only=on,file=Win10_21H2_English_x64.iso
+-cpu host,hv-relaxed,hv-vapic,hv-spinlocks=0x1fff,hv-time
+-device qemu-xhci
+-device usb-tablet
+-drive file=virtio-win-0.1.217.iso,media=cdrom
+-hdd win10
+-serial stdio
+-no-reboot
+#+end_src
+
+#+begin_src shell :noeval
+#!/bin/sh
+
+# change to where the files actually are
+w10="$HOME"/archiso/iso-and-img/hd-img/win10
+winiso="$HOME"/archiso/iso-and-img/iso-img/Win10_21H2_English_x64.iso
+virtio="$HOME"/archiso/iso-and-img/iso-img/virtio-win-0.1.217.iso
+dummy="$HOME"/archiso/iso-and-img/qcow-img/dummy
+
+
+# install windows 10 to a virtual disk file
+inst_win() {
+    qemu-system-x86_64 -enable-kvm  \
+        -machine type=q35 \
+        -cpu host,hv-relaxed,hv-vapic,hv-spinlocks=0x1fff,hv-time \
+        -device qemu-xhci -device usb-tablet \
+        -drive file="${w10}",index=0,media=disk,if=virtio \
+        -drive file="${winiso}",index=2,media=cdrom \
+        -drive file="${virtio}",index=3,media=cdrom \
+        -boot menu=on \
+        -net nic -net user,hostname=windows1064 \
+        -m 4G \
+        -monitor stdio \
+        -name "Windows 10 64 bits"
+}
+
+# install virtio driver in safe mode
+virtio_win() {
+    qemu-system-x86_64 -enable-kvm \
+        -machine type=q35 \
+        -cpu host,hv-relaxed,hv-vapic,hv-spinlocks=0x1fff,hv-time \
+        -m 4G \
+        -drive file="${w10}",if=ide \
+        -drive file="${dummy}",if=virtio \
+        -cdrom "${virtio}"
+}
+
+# use windows 10 installed VM
+use_win() {
+    qemu-system-x86_64 -enable-kvm  \
+        -machine type=q35 \
+        -cpu host,hv-relaxed,hv-vapic,hv-spinlocks=0x1fff,hv-time \
+        -device qemu-xhci -device usb-tablet \
+        -drive file="${w10}",index=0,media=disk,if=virtio \
+        -boot menu=on \
+        -net nic -net user,hostname=windows1064 \
+        -m 4G \
+        -monitor stdio \
+        -name "Windows 10 64 bits"
+}
+
+pass() {
+[ "$1" = 'i' ] && inst_win
+[ "$1" = 'v' ] && virtio_inst
+[ "$1" = 'u' ] && use_win
+}
+pass "$@"
+#+end_src
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -drive file=WindowsVM.img,format=qcow2,if=virtio \
+    -drive file=WindowsXXXXXX.iso,media=cdrom \
+    -drive file=virtio-win-X.X.XXX.iso,media=cdrom \
+    -boot order=d \
+    -device qemu-xhci \
+    -device usb-tablet \
+    -enable-kvm \
+    -machine type=q35 \
+    -cpu host,hv_relaxed,hv_spinlocks=0x1fff,hv_time,hv_vapic,hv_vendor_id=0xDEADBEEFFF \
+    -rtc clock=host,base=localtime \
+    -m 32G \
+    -smp sockets=1,cores=6,threads=1 \
+    -vga virtio \
+    -display sdl,gl=on -name "Windows 10 1709 64 bit"
+#+end_src
+
+* UTM
+** Win10
+https://github.com/utmapp/UTM/issues/5665
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -L /Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Library/Caches/qemu \
+    -S \
+    -spice unix=on,addr=4C1DF0AB-0DCF-49D1-9979-A3D5AE6AAA7F.spice,disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=on \
+    -chardev spiceport,name=org.qemu.monitor.qmp.0,id=org.qemu.monitor.qmp \
+    -mon chardev=org.qemu.monitor.qmp,mode=control \
+    -nodefaults \
+    -vga none \
+    -device e1000,mac=FE:72:1D:DD:65:41,netdev=net0 \
+    -netdev vmnet-bridged,id=net0,ifname=en0 \
+    -device virtio-vga-gl \
+    -cpu Skylake-Client \
+    -smp cpus=2,sockets=1,cores=2,threads=1 \
+    -machine q35,vmport=off,hpet=off \
+    -accel hvf \
+    -global PIIX4_PM.disable_s3=1 \
+    -global ICH9-LPC.disable_s3=1 \
+    -drive if=pflash,format=raw,unit=0,file.filename=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Library/Caches/qemu/edk2-x86_64-secure-code.fd,file.locking=off,readonly=on \
+    -drive if=pflash,unit=1,file=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Documents/Win10.utm/Data/efi_vars.fd \
+    -m 16384 \
+    -audiodev spice,id=audio0 \
+    -device intel-hda \
+    -device hda-duplex,audiodev=audio0 \
+    -device ide-cd,bus=ide.0,drive=driveBC3AB3A4-F31E-481F-9FAA-A2416B10A552,bootindex=0 \
+    -drive if=none,media=cdrom,id=driveBC3AB3A4-F31E-481F-9FAA-A2416B10A552,file.filename=/Users/hanzhixing/any/Installers/ISO/Win10_22H2_Chinese_Simplified_x64v1.iso,file.locking=off,readonly=on \
+    -device ide-hd,bus=ide.1,drive=drive25E5E3B1-1251-440F-BEF5-B81F4C7B2BEA,bootindex=1 \
+    -drive if=none,media=disk,id=drive25E5E3B1-1251-440F-BEF5-B81F4C7B2BEA,file.filename=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Documents/Win10.utm/Data/25E5E3B1-1251-440F-BEF5-B81F4C7B2BEA.qcow2,discard=unmap,detect-zeroes=unmap \
+    -device ide-cd,bus=ide.2,drive=drive3FEE9A51-8288-45B1-8651-0BCB2F78DC62,bootindex=2 \
+    -drive "if=none,media=cdrom,id=drive3FEE9A51-8288-45B1-8651-0BCB2F78DC62,file.filename=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Library/Application Support/GuestSupportTools/utm-guest-tools-latest.iso,file.locking=off,readonly=on" \
+    -device virtio-serial \
+    -device virtserialport,chardev=org.qemu.guest_agent,name=org.qemu.guest_agent.0 \
+    -chardev spiceport,name=org.qemu.guest_agent.0,id=org.qemu.guest_agent \
+    -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
+    -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
+    -device virtserialport,chardev=charchannel1,id=channel1,name=org.spice-space.webdav.0 \
+    -chardev spiceport,name=org.spice-space.webdav.0,id=charchannel1 \
+    -name Win10 \
+    -uuid 4C1DF0AB-0DCF-49D1-9979-A3D5AE6AAA7F \
+    -rtc base=localtime \
+    -device virtio-rng-pci \
+    -chardev socket,id=chrtpm0,path=4C1DF0AB-0DCF-49D1-9979-A3D5AE6AAA7F.swtpm \
+    -tpmdev emulator,id=tpm0,chardev=chrtpm0 \
+    -device tpm-tis,tpmdev=tpm0
+#+end_src
+** Debian12
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -L /Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Library/Caches/qemu \
+    -S \
+    -spice unix=on,addr=12BAD731-30C1-4E2A-A85F-29983A9F11A4.spice,disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=off \
+    -chardev spiceport,name=org.qemu.monitor.qmp.0,id=org.qemu.monitor.qmp \
+    -mon chardev=org.qemu.monitor.qmp,mode=control \
+    -nodefaults \
+    -vga none \
+    -device e1000,mac=A2:4A:80:C4:E0:18,netdev=net0 \
+    -netdev vmnet-bridged,id=net0,ifname=en0 \
+    -device e1000,mac=5A:46:A4:1C:4E:C0,netdev=net1 \
+    -netdev vmnet-host,id=net1 \
+    -device VGA \
+    -cpu Skylake-Client \
+    -smp cpus=2,sockets=1,cores=2,threads=1 \
+    -machine q35,vmport=off,hpet=off \
+    -accel hvf \
+    -global PIIX4_PM.disable_s3=1 \
+    -global ICH9-LPC.disable_s3=1 \
+    -drive if=pflash,format=raw,unit=0,file.filename=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Library/Caches/qemu/edk2-x86_64-code.fd,file.locking=off,readonly=on \
+    -drive if=pflash,unit=1,file=/Users/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Documents/Debian12.utm/Data/efi_vars.fd -m 4096 \
+    -audio none \
+    -audiodev spice,id=audio0 -device ide-cd,bus=ide.0,drive=driveF03C4E63-E7D7-4ABD-8EC9-475DD601CD16,bootindex=0 \
+    -drive if=none,media=cdrom,id=driveF03C4E63-E7D7-4ABD-8EC9-475DD601CD16,file.filename=/Users/hanzhixing/any/Installers/ISO/debian-12.10.0-amd64-netinst.iso,file.locking=off,readonly=on \
+    -device ide-hd,bus=ide.1,drive=driveC61E8845-673D-4A72-8C71-8EEEBE52D82B,bootindex=1 \
+    -drive if=none,media=disk,id=driveC61E8845-673D-4A72-8C71-8EEEBE52D82B,file.filename=/Use       rs/hanzhixing/Library/Containers/com.utmapp.UTM/Data/Documents/Debian12.utm/Data/C61E8845-673D-4A72-8C71-8EEEBE52D82B.qcow2,discard=unmap,detect-zeroes=unmap \
+    -device virtio-serial \
+    -device virtserialport,chardev=org.qemu.guest_agent,name=org.qemu.guest_agent.0 \
+    -chardev spiceport,name=org.qemu.guest_agent.0,id=org.qemu.guest_agent \
+    -fsdev local,id=virtfs0,path=/Users/hanzhixing/any/vboxsf,security_model=mapped-xattr \
+    -device virtio-9p-pci,fsdev=virtfs0,mount_tag=share -name Debian12 -uuid 12BAD731-30C1-4E2A-A85F-29983A9F11A4 \
+    -device virtio-rng-pci
+#+end_src

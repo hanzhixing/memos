@@ -3,6 +3,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://gongzhitaao.org/orgcss/org.css"/>
 #+PANDOC_OPTIONS: css:'https://gist.githubusercontent.com/subchen/67816d94e6074002aab9/raw/3c510c007f70b5a534d44817e9f85c966fcdef42/github-markdown.css'
 
+
 * 原则
 图形界面作为面向用户的用户接口，一般都需要考虑用户体验。
 
@@ -2108,5 +2109,5 @@ Request Method: GET
 X-HTTP-Method-Override: PUT
 #+end_example
 
-
-
+* 未经允许，禁止转载，转载请注明出处
+转载不能修改原文的标题和内容。
