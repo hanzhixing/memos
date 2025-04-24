@@ -76,38 +76,35 @@ qemu-system-x86_64
 知名的开源终端软件 ~PuTTY~ ,
 其实也是支持通过串行接口数据线连接之后，充当目标计算机的控制台设备。
 
-它们的特点都是：输入和输出“字符”的字符设备。
+它们的特点都是：只能输入输出“字符”的字符设备。
 
 ** QEMU终端
-前面看到的QEMU终端，事实上是多个不同的虚拟控制台。
+前面看到的QEMU终端，事实上是多个不同的虚拟控制台(Vitual Console)。
 
 可以从官方文档[[https://www.qemu.org/docs/master/system/keys.html][Keys in the graphical frontends]]章节中了解使用方式。
 
-用快捷键 ~Ctrl-Alt-数字~ 进行切换，它们都是字符设备。
+用快捷键 ~Ctrl-Alt-n~ 进行切换，它们都是字符设备。
 
-- ~Ctrl-Alt-1~ 虚拟机的虚拟控制台。
+- ~Ctrl-Alt-1~ 虚拟机的显示设备。
 - ~Ctrl-Alt-2~ 是[[https://www.qemu.org/docs/master/system/monitor.html][QEMU的Monitor]]虚拟控制台。
 - ~Ctrl-Alt-3~ 串行接口的虚拟控制台。
 - ~Ctrl-Alt-4~ 并行接口的虚拟控制台。
 
-我们启动虚拟机时可以指定 ~-nographic~ 参数。
+我们启动虚拟机时如果指定 ~-nographic~ 参数，就不会打开QEMU终端窗口。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 -nographic
 #+end_src
 
-这样就不会打开QEMU终端窗口。
-
 为了能够让我们在没有虚拟控制台的情况下也能够调试虚拟机，
 QEMU会把上面几个字符设备以多路复用的方式重定向到我们的Shell终端上。
+我们就可以把我们Shell的标准输入和标准输出当作控制台了。
 
-这样，我们就可以把我们Shell的标准输入和标准输出当作控制台了。
+原来在QEMU终端窗口显示的内容，也会直接显示在我们的Shell终端里了。
 
-原来在QEMU终端窗口显示的内容，也直接显示在我们的Shell终端里了。
+这时 ~Ctrl-Alt-数字~ 再也不好用，也无法用 ~Ctrl-c~ 终止进程。
 
-但是很快会发现，这时 ~Ctrl-Alt-数字~ 再也不好用了，连 ~Ctrl-c~ 也失灵了。
-
-是时候打开官方文档[[https://www.qemu.org/docs/master/system/mux-chardev.html]]
+这时需要参考官方文档[[https://www.qemu.org/docs/master/system/mux-chardev.html][Keys in the character backend multiplexer]]章节。
 
 由于我们没有安装任何操作系统，做不了什么。
 
@@ -116,13 +113,11 @@ QEMU会把上面几个字符设备以多路复用的方式重定向到我们的S
 (发现 ~QEMU Monitor~ 中输入 ~system_reset~ 重启时按 ~Ctrl-b~ 并不好用。)
 
 ** 用 ~iPXE~ 安装操作系统
-[[https://ipxe.org/][iPXE]]是网络启动固件的引导程序。
+[[https://ipxe.org/][iPXE]]是用来网络启动的引导程序。
 
-输入 ~help~ 可以查看如何使用它，或者到 ~iPXE~ 的官网查阅使用方法。
+输入 ~help~ 可以查看如何使用它，或者到[[https://ipxe.org/][iPXE官网]]查阅使用方法。
 
-这里以 ~Debian~ 举例，其他的应该也类似。
-
-~Debian~ 是在它的官网最底部，有关于网络安装的链接。
+以[[https://www.debian.org/intro/][Debian]]为例，在它的官网最底部，有关于网络安装的链接。
 
 [[./images/debian1.png]]
 
@@ -137,7 +132,7 @@ QEMU会把上面几个字符设备以多路复用的方式重定向到我们的S
 - https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
 - https://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/initrd.gz
 
-启动虚拟机。（经实验如果不指定内存，会报错退出引导）
+启动虚拟机。（如果不指定内存，会报错终止引导。）
 
 #+begin_src shell :noeval
 qemu-system-x86_64 -m 4G
@@ -150,10 +145,11 @@ dhcp net0
 #+end_src
 接着在iPXE命令行依次输入3个命令， ~kernel~ , ~initrd~, ~boot~ 。
 
-至少文章中使用的QEMU版本 ~9.2.2~ 提供的 ~iPXE~ 是不支持 ~https~ ，
-在命令行中也没有办法粘贴长文本。
+正常 ~iPXE~ 是不支持 ~https~ ，在命令行中也没有办法粘贴长文本。
 
-如果不想把文件下载下来部署到自己搭建好的WEB服务器上，我们只能手敲输入。
+所以通常会把文件放到自己搭建的Web服务器上，直接下载脚本执行。
+
+这里我们手敲输入。
 
 #+begin_src shell :noeval
 kernel http://deb.debian.org/debian/dists/bookworm/main/installer-amd64/current/images/netboot/debian-installer/amd64/linux
@@ -180,13 +176,13 @@ boot
 到此，我们也达到了简单了解 ~iPXE~ 方式安装的目的。
 
 * 最小化虚拟设备
-当我们没有指定任何参数启动QEMU时，除了QEMU本身的Monitor之外，
+当我们没有指定任何参数启动QEMU时，除了特殊的QEMU Monitor之外，
 也至少会为我们的虚拟机提供以下3个设备。
-- 虚拟机的虚拟控制台 (~Ctrl-Alt-1~)
+- 虚拟机的显示设备 (~Ctrl-Alt-1~)
 - 串行接口虚拟控制台 (~Ctrl-Alt-3~)
 - 并行接口虚拟控制台 (~Ctrl-Alt-4~)
 
-为了最小化定制，我们可以指定 ~nodefaults~ 参数，这样虚拟机是什么设备都没有。
+按照官方文档，为了最小化定制，我们可以指定 ~-nodefaults~ 参数禁用所有设备。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 -nodefaults
@@ -194,100 +190,141 @@ qemu-system-x86_64 -nodefaults
 
 [[./images/empty1.png]]
 
-在这个终端中，按之前切换设备的快捷键也毫无反应。
-
-我们平时使用的计算机，在它的主板上会焊接很多芯片组和接口。
-
-例如，
-- 北桥芯片组负责与像CPU、内存、显卡等高速设备通信。
-- 南桥芯片组负责与像硬盘、USB、网络、音频、IO等低速设备通信。
-- 还有BISO芯片、板载网络芯片、板载显示芯片、蓝牙芯片、电源管理芯片等等。
-
-指定 ~nodefaults~ 相当于什么设备都没有。
+在这个终端中，按任何快捷键都没有反馈，也比较符合预期
 
 后面我们会基于这个前提，一点点自定义虚拟设备提供给虚拟机。
 
-为了理解命令行参数，我们需要再了解一点点QEMU中的概念。
+为了理解命令行参数，我们也需要再了解一点点QEMU中的概念。
 
-** 设备前端和设备后端
+** QEMU Monitor
+前面提到QEMU Monitor是用来查看和控制虚拟机状态的特殊的控制台。
+
+为了了解QEMU默认行为，加上 ~-S~ 参数重新执行命令。
+
+~-S~ 参数的作用是启动qemu之后，不启动CPU。
+
+#+begin_src shell :noeval
+qemu-system-x86_64 -S
+#+end_src
+
+[[./images/defaults1.png]]
+
+因为没有启动CPU，所以虚拟机显示设备没有输出。
+
+输入 ~Ctrl-Alt-2~ 切换到Monitor，输入 ~info qtree~ 查看设备树。
+
+以 ~dev:~ 开头的行就是设备。
+
+我们只关心
+
+- 目前有反馈的键盘、鼠标。
+- 与4个控制台有关的设备信息。
+  - 虚拟机显示设备：主要查看有没有VGA这种传统显示设备相关信息。
+  - QEMU Monitor：与虚拟机本身无关
+  - 串行接口：串行接口，即serial。
+  - 并行接口：并行接口，即parallel。
+- 虚拟机控制台中的输出内容
+  - 软盘驱动器
+  - 光盘驱动器
+  - iPXE网络启动
+
+[[./images/defaults2.png]]
+
+[[./images/defaults3.png]]
+
+除了看到VGA接口的设备信息，还可以知道加载了一个VGA的BIOS文件。
+
+这类文件通常都在 ~QEMU安装目录/share~ 目录下。
+
+~Homebrew~ 安装的路径是 ~/usr/local/share/qemu/vgabios-stdvga.bin~ 。
+
+[[./images/defaults4.png]]
+
+我们接着输入 ~c~ 启动CPU，输入 ~Ctrl-Alt-1~ 切换到虚拟机的显示设备，
+就能看到和不带参数启动时一样的输出内容。
+
+[[./images/defaults5.png]]
+
+从输出中可以看到默认虚拟的还有 ~Floppy~, ~CDROM~, ~iPXE~ 网络启动。
+
+从 ~iPXE~ 启动上下文也看到网卡 ~net0~ 的mac地址，并且分配了IP。
+
+所以至少需要网卡。
+
+[[./images/defaults6.png]]
+
+[[./images/defaults7.png]]
+
+[[./images/defaults8.png]]
+
+除了网卡设备之外，还能看到加载的固件文件是哪个。
+
+** 设备 ~前端~ 和 ~后端~
 在官方文档[[https://www.qemu.org/docs/master/system/device-emulation.html][Device Emulation]]章节中有大致的说明。
 
-即便不理解的很深，至少需要了解前端和后端是相对虚拟的操作系统而言的。
+即便不理解的很深，至少需要理解
+#+begin_quote
+~前端~ 和 ~后端~ 是 ~相对虚拟机内部~ 而言的。
+#+end_quote
 
-前端主要是指操作系统视角上看到的设备管理器里的那些设备。
+前端主要是指虚拟机操作系统“看得见”的设备管理器里的那些设备。
 如果操作系统能够识别到设备，在安装过程中通常能够自动安装相应的驱动程序。
 
-后端主要是指在QEMU中，前端的那些设备是如何被虚拟或者仿真的。
-比如像打印机这样的字符设备，我们可以虚拟后端设备，重定向到某个文件上。
+后端主要是指在QEMU中，前端的那些设备在背后是如何被虚拟或者仿真的。
+比如像打印机这样的字符设备，我们通过虚拟后端，重定向到某个文件上。
 这么一来，虚拟机中的操作系统认为自己成功调用系统中看到的打印机，
 但实际上，它打印的内容是通过后端的虚拟设备“打印”到了宿主机文件中。
 
-很多设备的模拟中，还需要指定如何连接前端设备和后端设备。
+很多设备的模拟中，前后端都是成对的。
 
-** 机型
-QEMU是通过 ~machine~ 参数的 ~type~ 属性指定机型。
+** 手动还原QEMU终端的默认状态
+我们继续使用 ~-nodefaults~ ，一个一个手动指定设备，最后达到默认状态。
 
-这有点像选择主板型号。
+*** 创建虚拟机的显示设备
+结合前面查到的VGA的信息和官方文档关于 ~-vga~ 参数的说明。
 
-现实中，我们使用的CPU类型不一样，主板型号也会不一样。
+[[./images/defaults3.png]]
 
-QEMU中也是一样的，甚至创建虚拟机的命令干脆也分成了 ~qemu-system-x86_64~ ，
-~qemu-system-aarch64~ 等等很多个。
-
-我们要实际使用的 ~qemu-system-x86_64~ 命令的 ~type~ 也有很多选项。
-
-但由于我们目前更关心最小化的虚拟设备，尝试以下 ~type~ 的 ~none~ 选项。
-
-它表示我们的主板是“空”的。
-
-理论上，QEMU即使为我们创建那3个默认设备，
-但由于主板是“空”的，所以应该什么设备都看不到。
-
-我们去掉 ~nodefaults~ ，执行以下命令看一下效果。
+指定 ~-vga~ 参数启动。
 
 #+begin_src shell :noeval
-qemu-system-x86_64 -machine type=none
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga std
 #+end_src
 
-[[./images/empty2.png]]
-
-弹出的终端中，能看到QEMU Monitor虚拟控制台（ ~Ctrl-Alt-1~ ）。
-
-但是切换设备的快捷键都是没有任何作用的，和我们假设一致。
-
-至少QEMU为我们创建了QEMU Monitor控制台，
-让我们能够用手工的方式管理虚拟机的设备。
-
-** 自定义设备还原QEMU终端的默认状态
-这一步，我们继续使用 ~nodefaults~ 。
+[[./images/minimal1.png]]
 
 *** 创建QEMU Monitor控制台
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -chardev vc,id=foo1 \
     -mon foo1
 #+end_src
 
-- 我们用 ~-chardev~ 参数创建类型为 ~vc~ (Virtual Console)的字符设备，
-  设置它的 ~id~ 为 ~foo1~ ，以便可以用该标识连接其他设备。（后端）
-- 我们用 ~-mon~ 指定QEMU的Monitor要连接叫做 ~foo1~ 的后端设备。（前端）
+- 我们用 ~-chardev~ 参数创建类型为 ~vc~ (Virtual Console)的字符设备后端，
+  设置它的 ~id~ 为 ~foo1~ 。（后端）
+- 我们用 ~-mon~ 指定QEMU的Monitor使用叫做 ~foo1~ 的设备后端。（前端）
 
 该命令与以下简写形式等价。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -monitor vc
 #+end_src
 
-但用 ~-chardev vc~ + ~-mon~ 这种形式，可以个性化定制虚拟控制台。
+但用 ~-chardev vc~ + ~-mon~ 这种形式，可以个性化定制虚拟控制台的属性。
 
 例如，虚拟控制台屏幕的宽高、显示的行数和列数。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -chardev vc,id=foo1,rows=30,cols=78 \
     -mon foo1
 #+end_src
@@ -303,26 +340,22 @@ QEMU中，有一些前端设备参数是分成了两种，有些前端设备则�
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -monitor vc \
     -chardev vc,id=bar1,rows=25,cols=78 \
     -serial chardev:bar1
 #+end_src
 
 - 我们用 ~-chardev~ 参数创建类型为 ~vc~ (Virtual Console)的字符设备，
-  设置它的 ~id~ 为 ~bar1~ ，以便可以用该标识连接其他设备，
-  同时它在屏幕上同时只能显示25行，78列字符。（后端）
-- 我们用 ~-serial~ 指定该串行接口设备要连接叫做 ~bar1~ 的字符设备。（前端）
-
-因为我们的虚拟机现在还没有操作系统或者引导程序，所以QEMU终端中，
-第一个控制台是QEMU Monitor控制台，第二个控制台是刚才创建的串行接口设备。
-
-用 ~Ctrl-Alt-1~ 和 ~Ctrl-Alt-2~ 来切换这两个控制台。
+  设置它的 ~id~ 为 ~bar1~ ，屏幕显示25行，78列字符。（后端）
+- 我们用 ~-serial~ 指定该串行接口使用叫做 ~bar1~ 的字符设备。（前端）
 
 同样，如果没有自定义字符设备具体属性的需求，可以简写。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -monitor vc \
     -serial vc
 #+end_src
@@ -333,6 +366,7 @@ qemu-system-x86_64 \
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -monitor vc \
     -serial vc \
     -chardev vc,id=baz1,width=500,cols=300 \
@@ -340,81 +374,128 @@ qemu-system-x86_64 \
 #+end_src
 
 - 我们用 ~-chardev~ 参数创建类型为 ~vc~ (Virtual Console)的字符设备，
-  设置它的 ~id~ 为 ~baz1~ ，以便可以用该标识连接其他设备，
-  同时它的宽高分别是500, 300像素。（后端）
-- 我们用 ~-parallel~ 指定该串行接口设备要连接叫做 ~bar1~ 的字符设备。（前端）
-
-这时QEMU终端中，可以用 ~Ctrl-Alt-1~ ， ~Ctrl-Alt-2~ ， ~Ctrl-Alt-3~ 来切换三个控制台。但是顺序可能和QEMU默认终端不一样。
+  设置它的 ~id~ 为 ~baz1~ ，屏幕宽高分别是500, 300像素。（后端）
+- 我们用 ~-parallel~ 指定该串行接口使用叫做 ~bar1~ 的字符设备。（前端）
 
 可以简写为。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
+    -vga std \
     -monitor vc \
     -serial vc \
     -parallel vc
 #+end_src
 
-*** 多路复用
-在前面使用 ~nographic~ 参数时，我们看到了多路复用的效果。
+*** 软盘驱动器
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -device floppy
+#+end_src
 
-以上方式创建的设备，都是每个前端设备各自连接自己的后端字符设备。
+- 用 ~-device~ 参数创建类型为 ~floppy~ 的设备。（前端）
 
-我们可以让这3个前端设备多路复用的方式连接到同一个后端字符设备。
+可以用以下命令查看支持的类型
+#+begin_src shell :noeval
+qemu-system-x86_64 -device help
+#+end_src
+
+不过如果想虚拟实际有内容的软盘，就需要用后端参数 ~-blockdev~ 。
+
+设备的前端参数 ~-device~ 和后端参数 ~-blockdev~ 为一对。
+
+我们目前不需要虚拟真正有内容的软盘介质，所以不需要用 ~-blockdev~ 。
+
+这两个参数组合可以用 ~-drive~ 参数简写。
+
+上面的命令也可以写成
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
-    -chardev vc,mux=on,id=c3in1 \
-    -mon c3in1 \
-    -serial chardev:c3in1 \
-    -parallel chardev:c3in1
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -drive if=floppy
 #+end_src
 
-按 ~Ctrl-a c~ 来切换不同的控制台。
+*** 光盘驱动器
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -device floppy \
+    -device ide-cd
+#+end_src
 
-由于设备名一样，串行接口和并行接口又没有输出内容。
-
-所以只能根据按快捷键的次数，和QEMU Monitor控制台的显示来确认发生切换。
-
-如果想要 ~nographic~ 参数那样，输出到Shell终端。可以改成
+该命令也可以写成。
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
     -nodefaults \
-    -chardev stdio,mux=on,id=c3in1 \
-    -mon c3in1 \
-    -serial chardev:c3in1 \
-    -parallel chardev:c3in1
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -device floppy \
+    -drive if=ide,media=cdrom
 #+end_src
 
-- ~stdio~ 表示标准输入输出，即我们Shell中的标准输入输出。
+*** 网卡
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -device floppy \
+    -device ide-cd \
+    -netdev user,id=net0 \
+    -device e1000,netdev=net0,romfile=efi-e1000.rom
+#+end_src
 
-*** 虚拟机的控制台?
-到此位置，确实少了虚拟机本身的控制台。
+- 用 ~-netdev~ 参数指定模式为 ~user~ 的网络设备（后端）。
+  指定 ~id~ 为 ~net0~ 。
+- 用 ~-device~ 参数创建类型为 ~e1000~ 的网络设备。（前端）
+  连接叫做 ~net0~ 的后端，加载固件文件 ~efi-e1000.rom~ 。
 
-我们的虚拟机不仅没有设备，还没有操作系统，甚至连引导程序都没有。
+~-netdev~ 和 ~-device~ 的组合关系，也可以用 ~-nic~ 参数简写。
 
-所以它确实没有办法连接到任何控制台。
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga std \
+    -monitor vc \
+    -serial vc \
+    -parallel vc \
+    -device floppy \
+    -device ide-cd \
+    -nic user,model=e1000
+#+end_src
 
-* 可引导的虚拟机
-我们为了最小化，继续使用 ~nodefault~ ，但要指定虚拟机工作必不可少的参数。
+只要网络设备型号选择 ~e1000~ ， QEMU会自动加载默认的 ~romfile~ 。
+
+到这里我们差不多还原了QEMU默认终端窗口的样子。
+
+* 可引导的最小化虚拟机
+我们为了最小化设备，继续使用 ~nodefault~ ，只指定虚拟机工作必不可少的参数。
 
 ** VGA
-如果没有控制台，我们没有办法观察虚拟机的内部情况。
+VGA换成性能更高的 ~virtio~ 。
 
-我们可以像默认启动那样，在串口上连接虚拟控制台。
-
-#+begin_src shell :noeval
-qemu-system-x86_64 \
-    -nodefaults \
-    -serial vc
-#+end_src
-
-但是这次我们换一个方式，用VGA作为我们控制台的标准输出接口。
-
-窗口会大一些，有的时候还能显示串行接口的虚拟控制台无法显示的内容。
+- https://forsworns.github.io/zh/blogs/20210226/
+- https://blogs.oracle.com/linux/post/introduction-to-VirtIO
 
 #+begin_src shell :noeval
 qemu-system-x86_64 \
@@ -422,22 +503,11 @@ qemu-system-x86_64 \
     -vga virtio
 #+end_src
 
-关于 ~virtio~ 可以看下面的文章。
-
-- https://forsworns.github.io/zh/blogs/20210226/
-- https://blogs.oracle.com/linux/post/introduction-to-VirtIO
-
-执行命令之后，会意外发现即便我们指定 ~nodefaults~ ，QEMU仍然会加载BIOS。
-
-[[./images/bios1.png]]
-
-是的，BIOS(Basic Input/Output System)作为管控所有硬件设备的固件程序，
-没有它计算机什么也做不了。
-
 ** BISO
-QEMU默认使用SeaBIOS，一种适用于PC的老式BIOS，具体加载文件是 ~bios-256k~ 。
+QEMU默认使用SeaBIOS，一种适用于PC的老式BIOS，具体加载文件是 ~bios.bin~ 。
 
-~Homebrew~ 安装的位置在 ~/usr/local/share/qemu/bios-256k.bin~ 。
+~Homebrew~ 安装的位置在 ~/usr/local/share/qemu/bios.bin~ 。
+
 [[./images/bios1.png]]
 
 我们前面执行的命令
@@ -453,7 +523,7 @@ qemu-system-x86_64 \
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -bios /usr/local/share/qemu/bios-256k.bin
+    -bios /usr/local/share/qemu/bios.bin
 #+end_src
 
 表现来看这个默认的BIOS应该是不支持人机交互的。
@@ -498,7 +568,9 @@ VGA的虚拟终端中，可以使用 ~fn + ▲▼~ 滚动屏幕。
 
 [[./images/bios3.png]]
 
-我们到此已经看到了为只有主板、显示器、键盘的计算机接通电源启动后的样子。
+~UEFI BIOS~ 的指定方式，只为了完整性，我们并不需要UEFI的特性，命令也较长。
+
+接下来继续让QEMU使用默认的BIOS。
 
 ** 主板和CPU
 因为我们的目标不是开发驱动或者学习关于主板芯片组或CPU的硬件知识，
@@ -526,7 +598,6 @@ qemu-system-x86_64 -machine type,help
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -drive if=pflash,format=raw,unit=0,file=/usr/local/share/qemu/edk2-x86_64-code.fd,read-only=on \
     -machine type=q35
 #+end_src
 
@@ -549,7 +620,6 @@ qemu-system-x86_64 -cpu help
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -drive if=pflash,format=raw,unit=0,file=/usr/local/share/qemu/edk2-x86_64-code.fd,read-only=on \
     -machine type=q35 \
     -cpu host
 #+end_src
@@ -579,7 +649,6 @@ QEMU默认使用的是 ~TCG~ (Tiny Code Generator)。
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -drive if=pflash,format=raw,unit=0,file=/usr/local/share/qemu/edk2-x86_64-code.fd,read-only=on \
     -machine type=q35 \
     -cpu host \
     -accel hvf
@@ -594,7 +663,6 @@ qemu-system-x86_64 \
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -drive if=pflash,format=raw,unit=0,file=/usr/local/share/qemu/edk2-x86_64-code.fd,read-only=on \
     -machine type=q35 \
     -cpu host \
     -accel hvf \
@@ -619,7 +687,6 @@ qemu-system-x86_64 \
 qemu-system-x86_64 \
     -nodefaults \
     -vga virtio \
-    -drive if=pflash,format=raw,unit=0,file=/usr/local/share/qemu/edk2-x86_64-code.fd,read-only=on \
     -machine type=q35 \
     -cpu host \
     -accel hvf \
@@ -629,3 +696,38 @@ qemu-system-x86_64 \
 
 ** 硬盘
 前面我们已经看到没有硬盘，操作系统的安装过程是无法完成的。
+
+先创建磁盘镜像文件。
+
+#+begin_src shell :noeval
+qemu-img create -f qcow2 debian12.qcow2 10G
+#+end_src
+
+加载磁盘镜像。
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -drive file=debian12.qcow2,if=virtio,format=qcow2,discard=unmap
+#+end_src
+
+~-discard=unmap~ 支持TRIM指令优化SSD存储
+
+** 网络配置
+QEMU有
+QEMU默认的网络模式是 ~user~ 模式，但是它有众多的局限性。
+
+
+| 特性          | ~user~              | ~vmnet~                     |
+|---------------+---------------------+-----------------------------|
+| 网络类型      | 宿主机做网关        | 原生网络栈（桥接/共享/NAT） |
+| 性能          | 低（用户态）        | 高，接近物理网卡（内核态）  |
+| IP            | 固定 ~10.0.2.15/24~ | DHCP或手动配置              |
+| SSH访问虚拟机 | 必须配置端口转发    | 同真机                      |
+| 多机通信      | 无法直接互通        | 虚拟机可直接互通            |
