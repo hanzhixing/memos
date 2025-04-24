@@ -107,9 +107,12 @@ ffmpeg -i INPUT -ss 00:05:20 -t 00:10:00 -c:a copy OUTPUT
 ffmpeg -i INPUT -ss 00:05:10 -to 00:15:30 -c copy OUPUT
 
 # -sseof 从末尾剪辑，负数，持续长度(秒)或位置
-ffmpeg -i INPUT -sseof -600 -c copy OUTPUT
+ffmpeg -sseof -600 -i INPUT -c copy OUTPUT
 
-ffmpeg -i INPUT -sseof -00:10:00 -c copy OUTPUT
+ffmpeg -sseof -00:10:00 -i INPUT -c copy OUTPUT
+
+# 不同的文件中提取视频和音频进行合并
+ffmpeg -i INPUT1 -i INPUT2 -map 0:v -map 1:a -c copy OUTPUT
 
 # 拼接多个视频
 touch files.txt
