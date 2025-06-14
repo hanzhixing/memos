@@ -731,3 +731,9 @@ QEMU默认的网络模式是 ~user~ 模式，但是它有众多的局限性。
 | IP            | 固定 ~10.0.2.15/24~ | DHCP或手动配置              |
 | SSH访问虚拟机 | 必须配置端口转发    | 同真机                      |
 | 多机通信      | 无法直接互通        | 虚拟机可直接互通            |
+
+*** ~vmnet~ 分为以下三种类型：
+
+- ~vmnet-host~ 只能和宿主机通信，相当于 ~VirtualBox~ 的 ~Host-only~
+- ~vmnet-shared~ 可通过宿主机访问网络，相当于 ~VirtualBox~ 的 ~NAT~
+- ~vmnet-bridged~ 于宿主机处在同一段网络，相当于 ~VirtualBox~ 的 ~Bridged~
