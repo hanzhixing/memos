@@ -1,4 +1,4 @@
-#+title: Qemu
+#+title: 初识QEMU
 #+OPTIONS: toc:nil
 #+OPTIONS: num:nil
 #+OPTIONS: ^:{}
