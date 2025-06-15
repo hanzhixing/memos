@@ -9,6 +9,7 @@ Github支持markdown或者org-mode格式。
 - [[./posts/virtualbox-minium-debian12/index.md][VirtualBox最小化安装Debian12]]
 - [[./posts/virtualbox-clone-and-init/index.md][VirtualBox初始化虚拟机]]
 - [[./posts/virtualbox-k8s-cluster/index.md][VirtualBox搭建k8s集群]]
+- [[./posts/hello-qemu/index.org][初识QEMU]]
 - [[./posts/uuid-usage.org][UUID的使用]]
 - [[./posts/iso-8601.org][日期和时间格式ISO8601和RFC3339]]
 - [[./posts/regular-expression.org][正则表达式]]

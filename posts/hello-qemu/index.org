@@ -714,10 +714,85 @@ qemu-system-x86_64 \
     -accel hvf \
     -smp cpus=4,cores=2,threads=2,sockets=1 \
     -m 4G \
-    -drive file=debian12.qcow2,if=virtio,format=qcow2,discard=unmap
+    -blockdev node-name=disk,driver=qcow2,file.driver=file,file.filename=debian12.qcow2,discard=unmap \
+    -device virtio-blk-pci,drive=disk
 #+end_src
 
 ~-discard=unmap~ 支持TRIM指令优化SSD存储
+
+可以简写成
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -drive file=debian12.qcow2,if=virtio,format=qcow2,media=disk,discard=unmap
+#+end_src
+
+可以进一步简写成
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2
+#+end_src
+
+** 启动光盘
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -blockdev driver=file,read-only=on,filename=debian-12.10.0-amd64-netinst.iso,node-name=cdrom \
+    -device virtio-blk-pci,drive=cdrom
+#+end_src
+
+可以简写成
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -drive file=debian-12.10.0-amd64-netinst.iso,media=cdrom
+#+end_src
+
+可以进一步简写成
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -cdrom debian-12.10.0-amd64-netinst.iso
+#+end_src
 
 ** 网络配置
 QEMU有
@@ -732,8 +807,57 @@ QEMU默认的网络模式是 ~user~ 模式，但是它有众多的局限性。
 | SSH访问虚拟机 | 必须配置端口转发    | 同真机                      |
 | 多机通信      | 无法直接互通        | 虚拟机可直接互通            |
 
-*** ~vmnet~ 分为以下三种类型：
+~vmnet~ 分为以下三种类型：
 
 - ~vmnet-host~ 只能和宿主机通信，相当于 ~VirtualBox~ 的 ~Host-only~
 - ~vmnet-shared~ 可通过宿主机访问网络，相当于 ~VirtualBox~ 的 ~NAT~
 - ~vmnet-bridged~ 于宿主机处在同一段网络，相当于 ~VirtualBox~ 的 ~Bridged~
+
+我们不需要把虚拟机暴露在宿主机的网段中，所以使用 ~vmnet-shared~ 。
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -cdrom debian-12.10.0-amd64-netinst.iso \
+    -netdev vmnet-shared,id=net0 \
+    -device virtio-net-pci,netdev=net0
+#+end_src
+
+可以简写成
+
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -cdrom debian-12.10.0-amd64-netinst.iso \
+    -nic vmnet-shared
+#+end_src
+
+启动之后可以安装虚拟机的操作系统。
+
+* 启动虚拟机
+#+begin_src shell :noeval
+qemu-system-x86_64 \
+    -nodefaults \
+    -vga virtio \
+    -machine type=q35 \
+    -cpu host \
+    -accel hvf \
+    -smp cpus=4,cores=2,threads=2,sockets=1 \
+    -m 4G \
+    -hda debian12.qcow2 \
+    -nic vmnet-shared
+#+end_src
