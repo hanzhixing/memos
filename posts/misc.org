@@ -121,6 +121,17 @@ echo "file '/path/to/input/file2'"
 echo "file '/path/to/input/file3'"
 
 ffmpeg -f concat -i files.txt -c copy OUTPUT
+
+# 把字幕和音频文件烧录到空白背景的视频文件中
+ffmpeg \
+-f lavfi -i color=black:s=1920x1080:r=25 \
+-i INPUT.mp3 \
+-vf "ass=INPUT.ass" \
+-shortest \
+-c:v libx264 -preset medium -crf 23 \
+-c:a aac -b:a 192k \
+-pix_fmt yuv420p \
+OUTPUT.mp4
 #+end_src
 
 * MariaDB/MySQL
