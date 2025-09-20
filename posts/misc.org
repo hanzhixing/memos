@@ -132,7 +132,18 @@ ffmpeg \
 -c:a aac -b:a 192k \
 -pix_fmt yuv420p \
 OUTPUT.mp4
+
+# 获取视频裁剪信息
+# 需要关注输出中的crop=1280:720:0:0，它表示视频有效区域。
+# 格式: crop=w:h:x:y
+ffmpeg -ss 90 -i INPUT.mp4 -vframe 10 -vf cropdetect -f null -
+
+# 预览裁剪效果
+ffplay -vf crop=1280:720:0:0 INPUT.mp4
 #+end_src
+
+# 指定参数裁剪
+ffmpeg -i INPUT.mp4 -vf crop=1280:720:0:0 OUTPUT.mp4
 
 * MariaDB/MySQL
 保证utf-8为默认字符集。
