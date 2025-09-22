@@ -140,10 +140,15 @@ ffmpeg -ss 90 -i INPUT.mp4 -vframe 10 -vf cropdetect -f null -
 
 # 预览裁剪效果
 ffplay -vf crop=1280:720:0:0 INPUT.mp4
-#+end_src
 
 # 指定参数裁剪
 ffmpeg -i INPUT.mp4 -vf crop=1280:720:0:0 OUTPUT.mp4
+
+# 把左右不一样两个声道合并成一个音频复制到左右声道。
+# -t 可以指定时间（秒）进行验证
+ffmpeg -i INPUT.mp4 -t 60 -af "pan=stereo|c0=c0+c1|c1=c0+c1" -c:v copy OUTPUT.mp4
+#
+#+end_src
 
 * MariaDB/MySQL
 保证utf-8为默认字符集。
