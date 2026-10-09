@@ -28,41 +28,64 @@ emacs-plus没有这个问题，最新版为30.1。
 
 见https://github.com/d12frosted/homebrew-emacs-plus/issues/742
 
+31开始不再支持通过命令行参数指定图标，2026-03-14开始彻底废弃。
+
+想使用自定义图标，就必须从源码编译。
+
+图标需要用 ~~/.config/emacs-plus/build.yml~ 来指定。
+
+安装之后需要好好看 ~brew info emacs-plus~ 的输出。
+
 #+begin_src shell
 brew tap d12frosted/emacs-plus
 
-brew install emacs-plus --with-modern-black-dragon-icon
+brew install emacs-plus
 
-osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus@30/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
-
-codesign --force --deep --sign - -v --strip-disallowed-xattrs /usr/local/Cellar/emacs-plus@30/30.1/Emacs.app
+osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
+osascript -e 'tell application "Finder" to make alias file to posix file "/usr/local/opt/emacs-plus/Emacs Client.app" at posix file "/Applications" with properties {name:"Emacs Client.app"}'
 #+end_src
 
+* 关于 ~DOOMDIR~ , ~SPACEMACSDIR~
+~Emacs 29~ 开始可以通过 ~--init-directory~ 参数指定自定义的 ~~.emacs.d~ 目录。
+
+
+结合 ~--init-directory~ 参数，设置这两个变量，
+理论上可以从任何自定义目录加载配置，一是框架，二是用户配置。
+事实上从 ~shell~ 环境执行 ~emacs~ 命令启动确实也是能够正确加载配置。
+
+但是 ~DOOMDIR~ , ~SPACEMACSDIR~ 这两个环境变量比较特殊。
+
+这涉及到 ~Doomemacs~ 和 ~Spacemacs~ 的环境变量缓存文件。
+这个缓存文件是专门用来为 ~Emacs.app~ 注入环境变量的。
+从缓存文件的内容来看，
+~Doom Emacs~ 是写入了 ~DOOMDIR~ , ~Spacemacs~ 则没有写入 ~SPACEMACSDIR~ 。
+
+但不管怎样，从最终结果来看，双击 ~Emacs.app~ 启动之后，这两个变量都不会生效。
+所以，只要是依赖该变量的功能都会有问题，这里也包括 ~snippets~ 。
+
+从框架的角度，这个变量存在的意义就是从自定义的目录加载配置。
+所以它的值是需要从外部读取，不能是从缓存文件。先有蛋还是先有鸡的问题。
+
+而想让 ~Emacs.app~ 也像从 ~shell~ 启动 ~emacs~ 那样一切正常，
+就需要让 ~Emacs.app~ 也能够识别这两个环境变量。
+
+但是这比想象中的要麻烦。
+
+因为个人更喜欢把 ~Emacs.app~ 拖入 ~Dock~ 双击启动，然后一直开着。
+
+想让它识别这两个环境变量，就需要用 ~launchctl setenv DOOM_ENV "路径"~ 来注入，
+但这个不会一直有效，重启就会丢失，还得再来一遍。
+
+想让它永久生效，就需要修改 ~Emacs.app~ 内部的 ~plist~ 文件， 同样需要写入静态值。
+这么一来每次重新安装 ~Emacs~ 都要干一样的事情。
+要么要往系统相应目录写入 ~plist~ 文件。
+
+综合来看，不如配置文件在任意位置管理，但在主目录下创建需要的软链接。
+
+写个创建和替换2个软链的脚本即可。
+
 * Chemacs2
-Chemacs2在已经安装好doomemacs和spacemacs之后切换是好用。
-
-但是更改配置重新执行doom sync或者启动spacemacs，总是会出问题。
-
-Emacs 29增加了--init-directory参数。
-
-在设置环境变量 ~DOOMDIR~ , ~SPACEMACSDIR~ 的前提下，
-
-指定 ~--init-directory~ 启动Emacs，或者创建 ~/.emacs.d的软链接，
-
-都可以从命令行加载正确的配置文件启动Emacs。
-
-但是 ~Emacs.app~ 无法正确加载Doom Emacs或Spacemacs的用户自定义配置。
-
-- Doom Emacs是刻意没把 ~DOOMDIR~ 写进 ~env~文件中。
-- Spacemacs是即便把 ~SPACEMACSDIR~ 写进 ~/.spacemacs.env~ 文件中也不行。
-
-应该是对于 ~Emacs.app~ 这两个变量实际没有在读取用户配置文件之前生效。
-
-不过 ~Doom Emacs~ 和 ~Spacemacs~ 都可以通过创建2个软链接的方式进行切换。
-
-[[https://github.com/doomemacs/doomemacs/blob/master/profiles/README.org][Doom Emacs也提供了切换profile的能力]]，但好像还在完善当中，可以持续关注。
-
-感觉Chemacs2的用处不大。
+不如上面的方法方便。
 
 * 特殊文件
 ** .project
@@ -181,7 +204,7 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 * Narrowing和Widening
 两个功能都是Emacs特有的编辑方式。
 
-文本替换时，有时我们只希望把一部分文本块中的特定内容替换成其他的。
+** 文本替换时，有时我们只希望把一部分文本块中的特定内容替换成其他的。
 
 这个时候Narrowing和Widening功能就比较有用。
 
@@ -194,6 +217,15 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 
 ** SPC x
 打开 *scratch* Buffer。
+
+** 关于Live Preview
+虽然可以配合 ~grip-mode~ 可以同步预览，但作用有限。
+
+可以直接导出 ~HTML~ 再在浏览里看效果。
+
+输入 *SPC m e* 之后，导出可以选择用 ~org-mode~ 自带或者用 ~pandoc~ 的。
+
+都可以使用自定义的 ~css~ 文件，并且决定是否使用 *TOC* 。
 
 * Org Mode
 ** [[https://github.com/snosov1/toc-org]]
@@ -209,7 +241,7 @@ Doom Emacs通过[[https://github.com/hlissner/evil-multiedit][evil-multiedit]]�
 添加到org文件头部即可生效。
 
 #+begin_example
-# Local Variables:
+# Local Variables(示例):
 # org-todo-keyword-faces: (("TODO" . "red") ("DOING" . "yellow") ("WAITING" . "orange") ("DONE" . "green") ("CANCEL" . "black"))
 # End:
 #+TODO: TODO(t) DOING(i) WAITING(w) | DONE(d) CANCEL(c)
